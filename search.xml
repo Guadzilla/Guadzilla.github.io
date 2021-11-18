@@ -4,7 +4,6 @@
     <title>Pytorch Geometric 学习笔记</title>
     <url>/2021/11/18/Pytorch%20Geometric/</url>
     <content><![CDATA[<hr>
-<hr>
 <p>官网永远是最好的学习资料：<a href="https://pytorch-geometric.readthedocs.io/en/latest/">https://pytorch-geometric.readthedocs.io/en/latest/</a></p>
 <p>跟着配套colaboratory的教程走，大概一天能学完五个教程，学完也算基本入门pytroch-geometric了。</p>
 <hr>
@@ -312,6 +311,7 @@ pip install xxx.whl
         <category>代码阅读</category>
       </categories>
       <tags>
+        <tag>pytorch</tag>
         <tag>SASRec</tag>
       </tags>
   </entry>
@@ -515,7 +515,7 @@ pip install xxx.whl
   </entry>
   <entry>
     <title>模板</title>
-    <url>/2021/11/17/%E6%A8%A1%E6%9D%BF/</url>
+    <url>/2021/11/18/%E6%A8%A1%E6%9D%BF/</url>
     <content><![CDATA[<hr>
 <p>原paper：</p>
 <p>源码解读：</p>
