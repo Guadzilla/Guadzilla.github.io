@@ -10,6 +10,8 @@
 <h3 id="动机："><a href="#动机：" class="headerlink" title="动机："></a>动机：</h3><p>大多数现有的基于会话的推荐技术并没有很好地设计来捕捉复杂的转换动态(complex transition dynamics)，这些动态表现为时间有序和多层次相互依赖的关系结构。</p>
 <p>complex transition dynamics 的”complex”体现在：multi-level relation(intra- and inter-session item relation) . 会话内：short-term and long-term item transition，会话间：long-range cross-session dependencies。复杂依赖的例子见Figure 1.</p>
 <p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/MTD-1.png" alt="MTD-1"></p>
+<span id="more"></span>
+
 <h3 id="主要贡献："><a href="#主要贡献：" class="headerlink" title="主要贡献："></a>主要贡献：</h3><p>1.开发了一种新的会话推荐框架，可以捕获会话内和会话间的物品转换模式（多层次转换动态）</p>
 <p>2.开发了一种位置感知的注意力机，用于学习会话内的序列行为和session-specific knowledge。此外，在图神经网络范例的基础上，建立了全局上下文增强的会话间关系编码器，赋予MTD来捕获会话间项目依赖关系。</p>
 <p>3.在三个数据集上取得了SOTA，Yoochoose、Diginetica、Retailrocket。</p>
