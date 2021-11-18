@@ -20,38 +20,22 @@
     var CONFIG = {"hostname":"guadzilla.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="原paper：https:&#x2F;&#x2F;ieeexplore.ieee.org&#x2F;document&#x2F;8594844 源码解读：https:&#x2F;&#x2F;github.com&#x2F;Guadzilla&#x2F;Paper_notebook&#x2F;tree&#x2F;main&#x2F;SASRec  中译：自注意序列推荐 总结：比较早使用self-attention的序列推荐模型">
+  <meta name="description" content="官网永远是最好的学习资料：https:&#x2F;&#x2F;pytorch-geometric.readthedocs.io&#x2F;en&#x2F;latest&#x2F; 跟着配套colaboratory的教程走，大概一天能学完五个教程，学完也算基本入门pytroch-geometric了。  1. Introduction.ipynb - Colaboratory (google.com)  This concludes the f">
 <meta property="og:type" content="article">
-<meta property="og:title" content="论文笔记：《Self-Attentive Sequential Recommendation》">
-<meta property="og:url" content="http://guadzilla.github.io/2021/11/17/SASRec/index.html">
+<meta property="og:title" content="Pytorch Geometric 学习笔记">
+<meta property="og:url" content="http://guadzilla.github.io/2021/11/18/Pytorch%20Geometric/index.html">
 <meta property="og:site_name" content="瓜斯拉的逆袭">
-<meta property="og:description" content="原paper：https:&#x2F;&#x2F;ieeexplore.ieee.org&#x2F;document&#x2F;8594844 源码解读：https:&#x2F;&#x2F;github.com&#x2F;Guadzilla&#x2F;Paper_notebook&#x2F;tree&#x2F;main&#x2F;SASRec  中译：自注意序列推荐 总结：比较早使用self-attention的序列推荐模型">
+<meta property="og:description" content="官网永远是最好的学习资料：https:&#x2F;&#x2F;pytorch-geometric.readthedocs.io&#x2F;en&#x2F;latest&#x2F; 跟着配套colaboratory的教程走，大概一天能学完五个教程，学完也算基本入门pytroch-geometric了。  1. Introduction.ipynb - Colaboratory (google.com)  This concludes the f">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117230533153.png">
-<meta property="og:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211115114043810.png">
-<meta property="og:image" content="https://pic4.zhimg.com/80/v2-6127cd6bfcdc00f007ba287f11c1f55f_720w.jpg">
-<meta property="og:image" content="https://pic1.zhimg.com/80/v2-558fcc53330d91271fc2850a3998e704_720w.jpg">
-<meta property="og:image" content="https://pic4.zhimg.com/80/v2-4ad7a98ce285113021eade4349199c5f_720w.jpg">
-<meta property="og:image" content="https://pic2.zhimg.com/80/v2-bdfa1cac41b3f4aa676e81d54a72671d_720w.jpg">
-<meta property="og:image" content="https://pic3.zhimg.com/80/v2-cdc40ee5705587460d39e19649625942_720w.jpg">
-<meta property="og:image" content="https://pic2.zhimg.com/80/v2-873157dd4336dcbbd818227c7ced3f25_720w.jpg">
-<meta property="og:image" content="https://pic1.zhimg.com/80/v2-684099a2a86837c0b3ad701ea2169710_720w.jpg">
-<meta property="og:image" content="https://pic4.zhimg.com/80/v2-3d4d8db1c48964728a0c6830ecc4a71b_720w.jpg">
-<meta property="og:image" content="https://pic1.zhimg.com/80/v2-1cd0b2b09e9bc3fba57281ab76f2d478_720w.jpg">
-<meta property="og:image" content="https://pic4.zhimg.com/80/v2-e789c62c7c2e998f0713341ebc43155f_720w.jpg">
-<meta property="og:image" content="https://pic2.zhimg.com/80/v2-155ea54d12922a3d1aafcece005b5731_720w.jpg">
-<meta property="og:image" content="https://pic4.zhimg.com/80/v2-b4a0692c6cf9b0a335dae79eba2ed723_720w.jpg">
-<meta property="og:image" content="https://pic1.zhimg.com/80/v2-1a7f5f0f47c7ada0e2ccd22b23078584_720w.jpg">
-<meta property="article:published_time" content="2021-11-17T12:39:02.000Z">
-<meta property="article:modified_time" content="2021-11-18T09:02:04.268Z">
+<meta property="og:image" content="c:/Users/pc/OneDrive/Typora文档/images/image-20211115211342742.png">
+<meta property="article:published_time" content="2021-11-18T09:24:11.622Z">
+<meta property="article:modified_time" content="2021-11-18T09:29:07.309Z">
 <meta property="article:author" content="Guadzilla">
-<meta property="article:tag" content="序列推荐">
-<meta property="article:tag" content="SASRec">
-<meta property="article:tag" content="自注意力">
+<meta property="article:tag" content="pytorch">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117230533153.png">
+<meta name="twitter:image" content="c:/Users/pc/OneDrive/Typora文档/images/image-20211115211342742.png">
 
-<link rel="canonical" href="http://guadzilla.github.io/2021/11/17/SASRec/">
+<link rel="canonical" href="http://guadzilla.github.io/2021/11/18/Pytorch%20Geometric/">
 
 
 <script id="page-configurations">
@@ -64,7 +48,7 @@
   };
 </script>
 
-  <title>论文笔记：《Self-Attentive Sequential Recommendation》 | 瓜斯拉的逆袭</title>
+  <title>Pytorch Geometric 学习笔记 | 瓜斯拉的逆袭</title>
   
 
 
@@ -216,7 +200,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://guadzilla.github.io/2021/11/17/SASRec/">
+    <link itemprop="mainEntityOfPage" href="http://guadzilla.github.io/2021/11/18/Pytorch%20Geometric/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/touxiang.jpg">
@@ -229,7 +213,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          论文笔记：《Self-Attentive Sequential Recommendation》
+          Pytorch Geometric 学习笔记
         </h1>
 
         <div class="post-meta">
@@ -238,23 +222,17 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2021-11-17 20:39:02" itemprop="dateCreated datePublished" datetime="2021-11-17T20:39:02+08:00">2021-11-17</time>
+              <time title="创建时间：2021-11-18 17:24:11 / 修改时间：17:29:07" itemprop="dateCreated datePublished" datetime="2021-11-18T17:24:11+08:00">2021-11-18</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-11-18 17:02:04" itemprop="dateModified" datetime="2021-11-18T17:02:04+08:00">2021-11-18</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">论文笔记</span></a>
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
                 </span>
             </span>
 
@@ -271,14 +249,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>2.4k</span>
+              <span>4.1k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>6 分钟</span>
+              <span>10 分钟</span>
             </span>
 
         </div>
@@ -290,124 +268,102 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117230533153.png" alt="image-20211117230533153"></p>
+        <hr>
 <hr>
-<p>原paper：<a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/document/8594844">https://ieeexplore.ieee.org/document/8594844</a></p>
-<p>源码解读：<a target="_blank" rel="noopener" href="https://github.com/Guadzilla/Paper_notebook/tree/main/SASRec">https://github.com/Guadzilla/Paper_notebook/tree/main/SASRec</a></p>
+<p>官网永远是最好的学习资料：<a target="_blank" rel="noopener" href="https://pytorch-geometric.readthedocs.io/en/latest/">https://pytorch-geometric.readthedocs.io/en/latest/</a></p>
+<p>跟着配套colaboratory的教程走，大概一天能学完五个教程，学完也算基本入门pytroch-geometric了。</p>
 <hr>
-<p>中译：自注意序列推荐</p>
-<p>总结：比较早使用self-attention的序列推荐模型</p>
-<hr>
+<p><a target="_blank" rel="noopener" href="https://colab.research.google.com/drive/1h3-vJGRVloF5zStxL5I0rSy4ZUPNsjy8?usp=sharing#scrollTo=gUFSrDPxuQ23">1. Introduction.ipynb - Colaboratory (google.com)</a></p>
+<ul>
+<li>This concludes the first introduction into the world of GNNs and PyTorch Geometric. In the follow-up sessions, you will learn how to achieve state-of-the-art classification results on a number of real-world graph datasets.</li>
+<li>概要：介绍图的基本结构，GCN怎么用。</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://colab.research.google.com/drive/14OvFnAXggxB8vM4e8vSURUp1TaKnovzX">2. Node Classification.ipynb - Colaboratory (google.com)</a></p>
+<ul>
+<li>In this chapter, you have seen how to apply GNNs to real-world problems, and, in particular, how they can effectively be used for boosting a model’s performance. In the next section, we will look into how GNNs can be used for the task of graph classification.</li>
+<li>概要：用GNN实现某些真实的节点分类任务，与MLP效果更好。</li>
+</ul>
 <span id="more"></span>
 
-<h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><ul>
-<li>  question作者想解决什么问题？  </li>
-</ul>
-<p>序列动态是许多当代推荐系统的一个重要特征，它试图根据用户最近执行的操作来捕捉用户活动的“上下文“。RNN模型可以在稠密数据集上捕捉长期语义。（马尔科夫链）MC模型可以在稀疏数据集上仅根据最近几次action做出预测。本文想平衡这两个目标：在稀疏和稠密数据集上做到捕捉长期语义、依赖较少的action做预测。</p>
+<p><a target="_blank" rel="noopener" href="https://colab.research.google.com/drive/1I8a0DfQ3fI7Njc62__mVXUlcAleUclnb?usp=sharing#scrollTo=CN3sRVuaQ88l">3. Graph Classification.ipynb - Colaboratory (google.com)</a></p>
 <ul>
-<li>  method作者通过什么理论/模型来解决这个问题？</li>
-</ul>
-<p>本文提出了一个基于self-attention的序列模型（SASRec），在每个时间步寻找与用户历史最相关的物品作为next item的预测。</p>
-<ul>
-<li>  answer作者给出的答案是什么？</li>
-</ul>
-<p>在稀疏和稠密数据集上，与MC/CNN/RNN方法相比都取得了SOTA效果。</p>
-<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><ul>
-<li>  why作者为什么研究这个课题？    </li>
-</ul>
-<p>MC方法模型简单，但因为它的强假设（当前预测仅取决于最近n次）使得它在稀疏数据上表现好，但是不能捕捉更复杂的动态转换。RNN方法需要稠密数据，并且计算复杂。最近出现新的序列模型Transformer，它是基于self-attention的，效率高并且可以捕获句子中单词的句法和语义模式。受self-attention方法启发，应用到序列推荐上。</p>
-<ul>
-<li>  how当前研究到了哪一阶段？ </li>
-</ul>
-<p>第一个将transformer里的self-attention应用到了序列推荐上。</p>
-<ul>
-<li>  what作者基于什么样的假设（看不懂最后去查）？</li>
-</ul>
-<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><ul>
-<li>优点 <ul>
-<li>  SASRec模型建模了整个序列，自适应地考虑items来预测</li>
-<li>  在dense和sparse的数据集上效果都很好</li>
-<li>  比CNN/RNN方法快了一个数量级</li>
-</ul>
+<li><p>In this chapter, you have learned how to apply GNNs to the task of graph classification. You have learned how graphs can be batched together for better GPU utilization, and how to apply readout layers for obtaining graph embeddings rather than node embeddings.</p>
+<p>In the next session, you will learn how you can utilize PyTorch Geometric to let Graph Neural Networks scale to single large graphs.</p>
 </li>
-<li>  缺点</li>
-<li>展望<ul>
-<li>  引进更多上下文信息，比如等待时间、行为类型、位置、设备等。</li>
-<li>  探索处理超长序列（如clicks）的方法</li>
+<li><p>概要：学习了应用GNN实现图分类。学习了GNN上的mini-batch是如何构造以更好利用GPU。学习了如何用readout层获取图的表示。</p>
+<ul>
+<li>和图像一样用padding和rescaling让图大小相同太浪费空间，所以用对角矩阵相连的方法处理。在torch里是用稀疏矩阵存储的，所以开销不大。</li>
+<li><img src="C:\Users\pc\OneDrive\Typora文档\images\image-20211115211342742.png" alt="image-20211115211342742"></li>
+<li>Dataloader和torch里差不多 <code>train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)</code>。</li>
+<li><code>DataBatch(edge_index=[2, 2636], x=[1188, 7], edge_attr=[2636, 4], y=[64], batch=[1188], ptr=[65])</code> 里的batch记录的是每个节点在哪个图里，batch = [0,…,0,1,…,1,2,…,2]表示一个batch里有三张图</li>
+<li>nn.GraphConv() 有residual connection。</li>
+<li>图的表示可以写成所有节点的均值<code>x = global_mean_pool(x, batch)</code> </li>
 </ul>
 </li>
 </ul>
-<h2 id="Dataset-amp-Metric"><a href="#Dataset-amp-Metric" class="headerlink" title="Dataset &amp; Metric"></a>Dataset &amp; Metric</h2><ul>
-<li>数据来源 （都开源）<ul>
-<li>  Amazon</li>
-<li>  Steam 作者爬的，开源了</li>
-<li>  Movielens</li>
+<p><a target="_blank" rel="noopener" href="https://colab.research.google.com/drive/1XAjcjRHrSR_ypCk_feIWFbcBKyT4Lirs#scrollTo=SDOmdUe0C3U1">4. Scaling GNNs.ipynb - Colaboratory (google.com)</a></p>
+<ul>
+<li><p>In this chapter, you have been presented a method to scale GNNs to large graphs, which otherwise would not fit into GPU memory.</p>
+<p>This also concludes the hands-on tutorial on <strong>deep graph learning with PyTorch Geometric</strong>. If you want to learn more about GNNs or PyTorch Geometric, feel free to check out <strong><a target="_blank" rel="noopener" href="https://pytorch-geometric.readthedocs.io/en/latest/?badge=latest">PyG’s documentation</a></strong>, <strong><a target="_blank" rel="noopener" href="https://github.com/rusty1s/pytorch_geometric">its list of implemented methods</a></strong> as well as <strong><a target="_blank" rel="noopener" href="https://github.com/rusty1s/pytorch_geometric/tree/master/examples">its provided examples</a></strong>, which cover additional topics such as <strong>link prediction</strong>, <strong>graph attention</strong>, <strong>mesh or point cloud convolutions</strong> and <strong>other methods for scaling up GNNs</strong>.</p>
+<p><em>Happy hacking!</em></p>
+</li>
+<li><p>概要：介绍了了降低显存的方法，cluster-gnn，使得训练超大图成为可能。</p>
+</li>
+<li><p>不再在整个图上划分mini-batch，先分成sub-graph再分mini-batch，解决了邻居爆炸（。。邻居数量）问题</p>
+</li>
+<li><p>分太开也不好，所以cluster以后随机对sub-graph再连接</p>
+<ul>
+<li><code>ClusterData</code> converts a <code>Data</code> object into a dataset of subgraphs containing <code>num_parts</code> partitions.</li>
+<li>Given a user-defined <code>batch_size</code>, <code>ClusterLoader</code> implements the stochastic partitioning scheme in order to create mini-batches.</li>
 </ul>
 </li>
-<li>重要指标 <ul>
-<li>  Hit@10</li>
-<li>  NDCG@10</li>
+<li><p>这种采样方法，只用改划分数据的代码，训练过程不变。</p>
+</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://colab.research.google.com/drive/1D45E5bUK3gQ40YpZo65ozs7hg5l-eo_U?usp=sharing#scrollTo=iWRxB3JYFXNF">5. Point Cloud Classification.ipynb - Colaboratory (google.com)</a></p>
+<ul>
+<li>概要：介绍了点云分类任务的三大步骤。又在PointNet++和PPFNet的实践中，介绍了如何自定义MessagePassing以及采样策略。</li>
+<li>PointNet++<ul>
+<li><p>Grouping阶段，用knn graph或者半径图</p>
+<ul>
+<li><p>```python<br>from torch_cluster import knn_graph<br>根据点的坐标计算最近的k个点，连起来</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- 邻居聚合阶段。聚合邻居信息</span><br><span class="line"></span><br><span class="line">  - 从</span><br><span class="line"></span><br><span class="line">    ```python</span><br><span class="line">    class PointNetLayer(torch_geometric.nn.MessagePassing)：</span><br><span class="line">    	def __init__(self, in_channels, out_channels):</span><br><span class="line">            pass</span><br><span class="line">        def forward(self, h, pos, edge_index):</span><br><span class="line">            pass</span><br><span class="line">        def message(self, h_j, pos_j, pos_i):</span><br><span class="line">            pass</span><br></pre></td></tr></table></figure>
+
+<p>继承，并定义出一个与<code>GraphConv()</code> 、<code>GCNConv()</code> 同一级别的类，例如一种新的卷积层。</p>
+</li>
+<li><p>MessagePassing接口通过自动处理消息传播，来帮助我们创建<strong>消息传递图神经网络</strong>。只需要定义 message 功能即可。</p>
+</li>
+<li><p><code>def message()</code>  定义如何构建一个可学习的message给每条边（每个边对应一个邻居，所以也可以看成定义message给每个邻居），以及传播的规则</p>
+</li>
+<li><p><code>def forward()</code>  调用propagate()，开始传播</p>
+</li>
+<li><p>PPFNet，解决旋转不变性</p>
+</li>
+</ul>
+</li>
+<li><p>downsampling（下采样）阶段</p>
+<ul>
+<li><p><strong>Farthest Point Sampling</strong> (FPS) 最远点采样。使得每次采点都和已经采样的点距离最远。这种方式证明比随机采样更能覆盖整个点集。</p>
+</li>
+<li><p>不同batch中fps是独立的，所以要传入batch向量</p>
+<ul>
+<li><pre><code class="python">index = fps(pos, batch, ratio=0.5)
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[6. GNN Explanation.ipynb - Colaboratory (google.com)](https://colab.research.google.com/drive/1fLJbFPz0yMCQg81DdCP5I8jXw9LoggKO?usp=sharing#scrollTo=F1op-CbyLuN4)</span><br><span class="line"></span><br><span class="line">- 占坑</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 安装</span><br><span class="line"></span><br><span class="line">建个新环境</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+conda create -n pyg python==3.8.0
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">安装torch</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+pip install torch==1.10.0
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">安装依赖包</span><br><span class="line"></span><br><span class="line">## 方法1：</span><br><span class="line"></span><br><span class="line">![image-20211115163907936](C:\Users\pc\OneDrive\Typora文档\images\image-20211115163907936.png)</span><br><span class="line"></span><br><span class="line">官网安装比较省事，但是可以看到只有最新的几个版本，如果你的pytorch版本比较旧（旧也是为了稳定...）可以尝试方法2。</span><br><span class="line"></span><br><span class="line">## 方法2：</span><br><span class="line"></span><br><span class="line">https://data.pyg.org/whl/</span><br><span class="line"></span><br><span class="line">根据pytorch版本和cuda版本，在这个网站选择对应版本进入，例如我是torch-1.10和cuda-10.2，所以进入https://data.pyg.org/whl/torch-1.10.0+cu102.html</span><br><span class="line"></span><br><span class="line">然后根据系统类型和python版本，下好安装包，如下</span><br><span class="line"></span><br><span class="line">torch_**scatter**-2.0.9-cp38-cp38-linux_x86_64.whl</span><br><span class="line"></span><br><span class="line">torch_**sparse**-0.6.12-cp38-cp38-linux_x86_64.whl</span><br><span class="line"></span><br><span class="line">torch_**cluster**-1.5.9-cp38-cp38-linux_x86_64.whl</span><br><span class="line"></span><br><span class="line">torch_spline_conv-1.2.1-cp38-cp38-linux_x86_64.whl</span><br><span class="line"></span><br><span class="line">最后用pip离线离线安装</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+pip install xxx.whl
+</code></pre>
+</li>
 </ul>
 </li>
 </ul>
-<h2 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h2><p>这部分直接转载了知乎[[1]](<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/277660092?utm_source=qq">推荐算法炼丹笔记：序列化推荐算法SASRec - 知乎 (zhihu.com)</a>)</p>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211115114043810.png" alt="image-20211115114043810"></p>
-<p><strong>1.Embedding层</strong></p>
-<p><img src="https://pic4.zhimg.com/80/v2-6127cd6bfcdc00f007ba287f11c1f55f_720w.jpg" alt="img"></p>
-<p><strong>A. Positional Embedding</strong></p>
-<p><img src="https://pic1.zhimg.com/80/v2-558fcc53330d91271fc2850a3998e704_720w.jpg" alt="img"></p>
-<p><strong>2.Self-Attention Block</strong></p>
-<p><strong>A.Self-Attention Layer</strong></p>
-<p><img src="https://pic4.zhimg.com/80/v2-4ad7a98ce285113021eade4349199c5f_720w.jpg" alt="img"></p>
-<p><strong>C.Point-Wise Feed-Forward Network</strong>: 尽管self-attention能将之前item的emebdding使用自适应的权重进行集成，但仍然是一个先线性模型,为了加入非线性能力, 我们使用两层的DDN,</p>
-<p><img src="https://pic2.zhimg.com/80/v2-bdfa1cac41b3f4aa676e81d54a72671d_720w.jpg" alt="img"></p>
-<p><strong>3.Stacking Self-Attention Blocks</strong></p>
-<p>在第一个self-attention block之后,学习item的迁移可以学习更加复杂的item迁移,所以我们对self-attention block进行stacking,第b(b&gt;1)的block可以用下面的形式进行定义：</p>
-<p><img src="https://pic3.zhimg.com/80/v2-cdc40ee5705587460d39e19649625942_720w.jpg" alt="img"></p>
-<p><strong>4.Prediction Layer</strong></p>
-<p><img src="https://pic2.zhimg.com/80/v2-873157dd4336dcbbd818227c7ced3f25_720w.jpg" alt="img"></p>
-<p>使用同质(homogeneous)商品embedding的一个潜在问题是，它们的内部产品不能代表不对称的商品转换。然而，我们的模型没有这个问题，因为它学习了一个非线性变换。例如，前馈网络可以很容易地实现同项嵌入的不对称性,<strong>经验上使用共享的商品embedding也可以大大提升模型的效果;</strong></p>
-<p><strong>显示的用户建模</strong>：为了提供个性化的推荐,现有的方法常用两种方法,(1).学习显示的用户embedding表示用户的喜好;(2).考虑之前的行为并且引入隐式的用户embedding。此处使用并没有带来提升。</p>
-<p><strong>5.网络训练</strong></p>
-<p><img src="https://pic1.zhimg.com/80/v2-684099a2a86837c0b3ad701ea2169710_720w.jpg" alt="img"></p>
-<p><strong>6.方案复杂度分析</strong></p>
-<p><strong>a. 空间复杂度</strong></p>
-<p>模型中学习的参数来自于self-attention.ffn以及layer normalization的参数,总的参数为:</p>
-<p><img src="https://pic4.zhimg.com/80/v2-3d4d8db1c48964728a0c6830ecc4a71b_720w.jpg" alt="img"></p>
-<p><strong>b. 时间复杂度</strong></p>
-<p>我们模型的计算复杂度主要在于self-attention layer和FFN网络,</p>
-<p><img src="https://pic1.zhimg.com/80/v2-1cd0b2b09e9bc3fba57281ab76f2d478_720w.jpg" alt="img"></p>
-<p>里面最耗时间的还是self-attention layer, 不过这个可以进行并行化。</p>
-<h2 id="Experiment-amp-Table"><a href="#Experiment-amp-Table" class="headerlink" title="Experiment &amp; Table"></a>Experiment &amp; Table</h2><p>该次实验主要为了验证下面的四个问题：</p>
-<ol>
-<li>是否SASRec比现有最好的模型(CNN/RNN)要好？</li>
-<li>在SASRec框架中不同的成份的影响怎么样？</li>
-<li>SASRec的训练效率和可扩展性怎么样？</li>
-<li>attention的权重是否可以学习得到关于位置和商品属性的有意义的模式?</li>
-</ol>
-<p><strong>1. 推荐效果比较</strong></p>
-<p><img src="https://pic4.zhimg.com/80/v2-e789c62c7c2e998f0713341ebc43155f_720w.jpg" alt="img"></p>
-<ul>
-<li>SASRec在稀疏的和dense的数据集合熵比所有的baseline都要好, 获得了6.9%的Hit Rate提升以及9.6%的NDCG提升；</li>
+</li>
 </ul>
-<p><strong>2. SASRec框架中不同成份的影响</strong></p>
-<p><img src="https://pic2.zhimg.com/80/v2-155ea54d12922a3d1aafcece005b5731_720w.jpg" alt="img"></p>
-<ul>
-<li>删除PE: 删除位置embedding ,在稀疏的数据集上,删除PE效果变好,但是在稠密的数据集上,删除PE的效果变差了。</li>
-<li>不共享IE(Item Embedding): 使用共享的item embedding比不使用要好很多;</li>
-<li>删除RC(Residual Connection):不实用残差连接,性能会变差非常多;</li>
-<li>删除Dropout: dropout可以帮助模型,尤其是在稀疏的数据集上,Dropout的作用更加明显;</li>
-<li>blocks的个数：没有block的时候,效果最差,在dense数据集上,相比稀疏数据多一些block的效果好一些;</li>
-<li>Multi-head:在我们数据集上,single-head效果最好.</li>
+</li>
 </ul>
-<p><strong>3. SASRec的训练效率和可扩展性</strong></p>
-<p><img src="https://pic4.zhimg.com/80/v2-b4a0692c6cf9b0a335dae79eba2ed723_720w.jpg" alt="img"></p>
-<p><img src="https://pic1.zhimg.com/80/v2-1a7f5f0f47c7ada0e2ccd22b23078584_720w.jpg" alt="img"></p>
-<ul>
-<li>SASRec是最快的;</li>
-<li>序列长度可以扩展至500左右.</li>
-</ul>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/277660092?utm_source=qq">[1]推荐算法炼丹笔记：序列化推荐算法SASRec</a></p>
+<p>注意要切换到安装目录，且按顺序安装 scatter–&gt;sparse–&gt;cluster–&gt;spline</p>
 
     </div>
 
@@ -417,9 +373,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E5%BA%8F%E5%88%97%E6%8E%A8%E8%8D%90/" rel="tag"># 序列推荐</a>
-              <a href="/tags/SASRec/" rel="tag"># SASRec</a>
-              <a href="/tags/%E8%87%AA%E6%B3%A8%E6%84%8F%E5%8A%9B/" rel="tag"># 自注意力</a>
+              <a href="/tags/pytorch/" rel="tag"># pytorch</a>
           </div>
 
         
@@ -428,13 +382,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/11/17/TiSASRec/" rel="prev" title="论文笔记：《Time Interval Aware Self-Attention for Sequential Recommendation》">
-      <i class="fa fa-chevron-left"></i> 论文笔记：《Time Interval Aware Self-Attention for Sequential Recommendation》
+    <a href="/2021/11/18/SASRec%E4%BB%A3%E7%A0%81/" rel="prev" title="SASRec代码笔记">
+      <i class="fa fa-chevron-left"></i> SASRec代码笔记
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2021/11/18/SASRec%E4%BB%A3%E7%A0%81/" rel="next" title="SASRec代码笔记">
-      SASRec代码笔记 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -498,7 +449,6 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Abstract"><span class="nav-number">1.</span> <span class="nav-text">Abstract</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction"><span class="nav-number">2.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion"><span class="nav-number">3.</span> <span class="nav-text">Conclusion</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Dataset-amp-Metric"><span class="nav-number">4.</span> <span class="nav-text">Dataset &amp; Metric</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Method"><span class="nav-number">5.</span> <span class="nav-text">Method</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Experiment-amp-Table"><span class="nav-number">6.</span> <span class="nav-text">Experiment &amp; Table</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">7.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
