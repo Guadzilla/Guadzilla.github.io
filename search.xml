@@ -60,7 +60,9 @@
 <li><p>概要：学习了应用GNN实现图分类。学习了GNN上的mini-batch是如何构造以更好利用GPU。学习了如何用readout层获取图的表示。</p>
 <ul>
 <li>和图像一样用padding和rescaling让图大小相同太浪费空间，所以用对角矩阵相连的方法处理。在torch里是用稀疏矩阵存储的，所以开销不大。</li>
-<li><img src="C:\Users\pc\OneDrive\Typora文档\images\image-20211115211342742.png" alt="image-20211115211342742"></li>
+</ul>
+<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211118204147577.png" alt="image-20211118204147577"></p>
+<ul>
 <li>Dataloader和torch里差不多 <code>train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)</code>。</li>
 <li><code>DataBatch(edge_index=[2, 2636], x=[1188, 7], edge_attr=[2636, 4], y=[64], batch=[1188], ptr=[65])</code> 里的batch记录的是每个节点在哪个图里，batch = [0,…,0,1,…,1,2,…,2]表示一个batch里有三张图</li>
 <li>nn.GraphConv() 有residual connection。</li>
