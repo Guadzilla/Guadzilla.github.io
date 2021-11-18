@@ -419,10 +419,10 @@ pip install xxx.whl
 </ul>
 <p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211116223530787.png" alt="image-20211116223530787"></p>
 <p><strong>1.个性化的时间间隔（time interval）</strong></p>
-<p>规定了序列$S$的maxlen（n），小于n的用items来padding。但是时间序列$T$用第一个item的timestamps来padding（到这里还只是时间戳）。</p>
-<p>对每个用户制定个性化的时间间隔。对用户$u$来说，时间戳序列$t=(t_1,t_2,…,t_n)$，用任意两个物品的时间戳之差表示物品之间的时间间隔，作为任意两个物品之间的关系（relation）$r_{ij}$，得到时间间隔集合$R^u$。规定一个缩放系数$r^u_{min}=min(R^u)$，即序列里的最小时间间隔，再对所有时间间隔缩放$r^u_{ij}=\lfloor\frac{|r_i-r_j|}{r^u_{min}}\rfloor$，得到时间间隔矩阵$M^u\in N^{n\times n}$。</p>
+<p>规定了序列$S$的maxlen（n），长度小于n的序列用[0]来padding。时间序列$T$用第一个item的timestamps来padding（到这里还只是时间戳）。</p>
+<p>对每个用户制定个性化的时间间隔，个性化指的其实就是下面介绍的缩放操作。对用户$u$来说，时间戳序列$t=(t_1,t_2,…,t_n)$，用任意两个物品的时间戳之差表示物品之间的时间间隔，作为任意两个物品之间的关系（relation）$r_{ij}$，于是得到时间间隔集合$R^u$。规定一个缩放系数$r^u_{min}=min(R^u)$，即序列里的最小时间间隔，再对所有时间间隔缩放$r^u_{ij}=\lfloor\frac{|r_i-r_j|}{r^u_{min}}\rfloor$，得到时间间隔矩阵$M^u\in N^{n\times n}$。</p>
 <p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211116225152019.png" alt="image-20211116225152019"></p>
-<p>还规定了每个$r^u_{ij}$的阈值，对大于阈值的做了一个clip操作得到$M^u_{clipped}$。</p>
+<p>另外，论文还规定了每个$r^u_{ij}$的阈值，对大于阈值的做了一个clip操作得到$M^u_{clipped}$。</p>
 <p><strong>2.Embedding层</strong></p>
 <ul>
 <li>item的表示：padding item用$\vec0$表示，其它每个item用d维向量表示，构成$M^I\in R^{|I|\times d}$的item embedding矩阵，则前n个item的表示为$E^I\in R^{n\times d}$。</li>
