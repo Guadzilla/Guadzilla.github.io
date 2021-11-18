@@ -25,7 +25,7 @@
 <li>  answer作者给出的答案是什么？</li>
 </ul>
 <p>在稀疏和稠密数据集上，与MC/CNN/RNN方法相比都取得了SOTA效果。</p>
-<h2 id="Instruction"><a href="#Instruction" class="headerlink" title="Instruction"></a>Instruction</h2><ul>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><ul>
 <li>  why作者为什么研究这个课题？    </li>
 </ul>
 <p>MC方法模型简单，但因为它的强假设（当前预测仅取决于最近n次）使得它在稀疏数据上表现好，但是不能捕捉更复杂的动态转换。RNN方法需要稠密数据，并且计算复杂。最近出现新的序列模型Transformer，它是基于self-attention的，效率高并且可以捕获句子中单词的句法和语义模式。受self-attention方法启发，应用到序列推荐上。</p>
@@ -232,7 +232,7 @@
 <li>  <strong>answer作者给出的答案是什么？</strong></li>
 </ul>
 <p>展示了不同设定下TiSASRec的特点，比较了不同位置编码下自注意力模块的表现。在dense和sparse数据集都取得了SOTA。</p>
-<h2 id="Instruction"><a href="#Instruction" class="headerlink" title="Instruction"></a>Instruction</h2><ul>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><ul>
 <li>  <strong>why作者为什么研究这个课题？</strong></li>
 </ul>
 <p>Temporal recommendation（实时推荐）主要建模“绝对时间”来捕获用户与物品的实时动态，即挖掘实时模式、依据时间建模。Sequential recommendation（序列推荐）主要依据交互的顺序挖掘序列模式。序列推荐只用timestamps来决定item顺序，其实假设了所有交互之间是等间隔的。但一天之内产生的序列和一个月内产生的序列显然对next item的影响区别很大。</p>
@@ -427,7 +427,7 @@
 <ul>
 <li>answer作者给出的答案是什么？</li>
 </ul>
-<h2 id="Instruction"><a href="#Instruction" class="headerlink" title="Instruction"></a>Instruction</h2><ul>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><ul>
 <li>why作者为什么研究这个课题？    </li>
 </ul>
 <ul>
