@@ -1,41 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>论文笔记：《Graph-Enhanced Multi-Task Learning of Multi-Level Transition Dynamics for Session-based Recommendation》</title>
-    <url>/2021/10/20/MTD/</url>
-    <content><![CDATA[<hr>
-<p>原paper：<a href="https://ojs.aaai.org/index.php/AAAI/article/view/16534">https://ojs.aaai.org/index.php/AAAI/article/view/16534</a></p>
-<p>开源代码：<a href="https://github.com/sessionRec/MTD">https://github.com/sessionRec/MTD</a></p>
-<hr>
-<h3 id="动机："><a href="#动机：" class="headerlink" title="动机："></a>动机：</h3><p>大多数现有的基于会话的推荐技术并没有很好地设计来捕捉复杂的转换动态(complex transition dynamics)，这些动态表现为时间有序和多层次相互依赖的关系结构。</p>
-<p>complex transition dynamics 的”complex”体现在：multi-level relation(intra- and inter-session item relation) . 会话内：short-term and long-term item transition，会话间：long-range cross-session dependencies。复杂依赖的例子见Figure 1.</p>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/MTD-1.png" alt="MTD-1"></p>
-<span id="more"></span>
-
-<h3 id="主要贡献："><a href="#主要贡献：" class="headerlink" title="主要贡献："></a>主要贡献：</h3><p>1.开发了一种新的会话推荐框架，可以捕获会话内和会话间的物品转换模式（多层次转换动态）</p>
-<p>2.开发了一种位置感知的注意力机，用于学习会话内的序列行为和session-specific knowledge。此外，在图神经网络范例的基础上，建立了全局上下文增强的会话间关系编码器，赋予MTD来捕获会话间项目依赖关系。</p>
-<p>3.在三个数据集上取得了SOTA，Yoochoose、Diginetica、Retailrocket。</p>
-<h3 id="网络图："><a href="#网络图：" class="headerlink" title="网络图："></a>网络图：</h3><p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/MTD-2.png" alt="MTD-2"></p>
-<h3 id="方法论："><a href="#方法论：" class="headerlink" title="方法论："></a>方法论：</h3><h4 id="1-学习会话内的物品关系"><a href="#1-学习会话内的物品关系" class="headerlink" title="1.学习会话内的物品关系"></a>1.学习会话内的物品关系</h4><p>1）Self-attention层：</p>
-<p>QKV self-attention + feed forward network</p>
-<p>2）位置感知的物品级的注意力聚合模块：<br>$$<br>\alpha _ i = \delta(\mathbf{g}^T \cdot \sigma(\mathbf{W} _ 3\cdot\mathbf{x} _ {s,I} + \mathbf{W} _ 4\cdot\mathbf{x} _ {s,i}))<br>$$</p>
-<p>$$<br>\mathbf{x}^* _ s = \sum_{i=1}^I\alpha _ i\cdot\mathbf{x _ \mathit{s,i}}<br>$$</p>
-<p>$$<br>\mathbf{q} _ s = \mathbf{W} _ c[\mathbf{x} _ {s,I},\mathbf{x}^* _ s,\mathbf{p} _ s]<br>$$</p>
-<p>$\mathbf{x}_{s,I}$表示最后一次点击，$\mathbf{x^*_s}$表示聚合后的会话表示，$\mathbf{p}_s$表示加入物品相对位置信息的会话表示，$\mathbf{q}_s $是最后的会话表示。</p>
-<p>3）loss = $\mathit{L_in}$</p>
-<h4 id="2-对全局转换动态建模"><a href="#2-对全局转换动态建模" class="headerlink" title="2.对全局转换动态建模"></a>2.对全局转换动态建模</h4><p>1）用图神经网络结构和GCN对inter-session的依赖建模</p>
-<p>2）用<strong>互信息学习</strong>来增强跨会话的建模物品间关系的encoder</p>
-<p>3）loss = $\mathit{L_cr}$</p>
-<h4 id="3-Model-Inference"><a href="#3-Model-Inference" class="headerlink" title="3.Model Inference"></a>3.Model Inference</h4><p>定义loss：<br>$$<br>\mathit{L}=\mathit{L} _ {cr} + \lambda_1\mathit{L} _ {in}+\lambda_2||\Theta||^2 _ 2<br>$$</p>
-]]></content>
-      <categories>
-        <category>论文笔记</category>
-      </categories>
-      <tags>
-        <tag>GNN</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Pytorch Geometric 学习笔记</title>
     <url>/2021/11/14/Pytorch%20Geometric/</url>
     <content><![CDATA[<hr>
@@ -275,11 +240,46 @@ pip install xxx.whl
       </tags>
   </entry>
   <entry>
+    <title>论文笔记：《Graph-Enhanced Multi-Task Learning of Multi-Level Transition Dynamics for Session-based Recommendation》</title>
+    <url>/2021/10/20/MTD/</url>
+    <content><![CDATA[<hr>
+<p>原paper：<a href="https://ojs.aaai.org/index.php/AAAI/article/view/16534">https://ojs.aaai.org/index.php/AAAI/article/view/16534</a></p>
+<p>开源代码：<a href="https://github.com/sessionRec/MTD">https://github.com/sessionRec/MTD</a></p>
+<hr>
+<h3 id="动机："><a href="#动机：" class="headerlink" title="动机："></a>动机：</h3><p>大多数现有的基于会话的推荐技术并没有很好地设计来捕捉复杂的转换动态(complex transition dynamics)，这些动态表现为时间有序和多层次相互依赖的关系结构。</p>
+<p>complex transition dynamics 的”complex”体现在：multi-level relation(intra- and inter-session item relation) . 会话内：short-term and long-term item transition，会话间：long-range cross-session dependencies。复杂依赖的例子见Figure 1.</p>
+<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/MTD-1.png" alt="MTD-1"></p>
+<span id="more"></span>
+
+<h3 id="主要贡献："><a href="#主要贡献：" class="headerlink" title="主要贡献："></a>主要贡献：</h3><p>1.开发了一种新的会话推荐框架，可以捕获会话内和会话间的物品转换模式（多层次转换动态）</p>
+<p>2.开发了一种位置感知的注意力机，用于学习会话内的序列行为和session-specific knowledge。此外，在图神经网络范例的基础上，建立了全局上下文增强的会话间关系编码器，赋予MTD来捕获会话间项目依赖关系。</p>
+<p>3.在三个数据集上取得了SOTA，Yoochoose、Diginetica、Retailrocket。</p>
+<h3 id="网络图："><a href="#网络图：" class="headerlink" title="网络图："></a>网络图：</h3><p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/MTD-2.png" alt="MTD-2"></p>
+<h3 id="方法论："><a href="#方法论：" class="headerlink" title="方法论："></a>方法论：</h3><h4 id="1-学习会话内的物品关系"><a href="#1-学习会话内的物品关系" class="headerlink" title="1.学习会话内的物品关系"></a>1.学习会话内的物品关系</h4><p>1）Self-attention层：</p>
+<p>QKV self-attention + feed forward network</p>
+<p>2）位置感知的物品级的注意力聚合模块：<br>$$<br>\alpha _ i = \delta(\mathbf{g}^T \cdot \sigma(\mathbf{W} _ 3\cdot\mathbf{x} _ {s,I} + \mathbf{W} _ 4\cdot\mathbf{x} _ {s,i}))<br>$$</p>
+<p>$$<br>\mathbf{x}^* _ s = \sum_{i=1}^I\alpha _ i\cdot\mathbf{x _ \mathit{s,i}}<br>$$</p>
+<p>$$<br>\mathbf{q} _ s = \mathbf{W} _ c[\mathbf{x} _ {s,I},\mathbf{x}^* _ s,\mathbf{p} _ s]<br>$$</p>
+<p>$\mathbf{x}_{s,I}$表示最后一次点击，$\mathbf{x^*_s}$表示聚合后的会话表示，$\mathbf{p}_s$表示加入物品相对位置信息的会话表示，$\mathbf{q}_s $是最后的会话表示。</p>
+<p>3）loss = $\mathit{L_in}$</p>
+<h4 id="2-对全局转换动态建模"><a href="#2-对全局转换动态建模" class="headerlink" title="2.对全局转换动态建模"></a>2.对全局转换动态建模</h4><p>1）用图神经网络结构和GCN对inter-session的依赖建模</p>
+<p>2）用<strong>互信息学习</strong>来增强跨会话的建模物品间关系的encoder</p>
+<p>3）loss = $\mathit{L_cr}$</p>
+<h4 id="3-Model-Inference"><a href="#3-Model-Inference" class="headerlink" title="3.Model Inference"></a>3.Model Inference</h4><p>定义loss：<br>$$<br>\mathit{L}=\mathit{L} _ {cr} + \lambda_1\mathit{L} _ {in}+\lambda_2||\Theta||^2 _ 2<br>$$</p>
+]]></content>
+      <categories>
+        <category>论文笔记</category>
+      </categories>
+      <tags>
+        <tag>GNN</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>SASRec代码笔记</title>
     <url>/2021/11/06/SASRec%E4%BB%A3%E7%A0%81/</url>
     <content><![CDATA[<hr>
 <p>完整的代码注释：<a href="https://github.com/Guadzilla/Paper_notebook/tree/main/SASRec">https://github.com/Guadzilla/Paper_notebook/tree/main/SASRec</a></p>
-<p>论文笔记：<a href="https://guadzilla.github.io/2021/11/17/SASRec/">https://guadzilla.github.io/2021/11/17/SASRec/</a></p>
+<p>论文笔记：<a href="https://guadzilla.github.io/2021/11/03/SASRec/">https://guadzilla.github.io/2021/11/03/SASRec/</a></p>
 <hr>
 <h2 id="collections-defaultdict-list"><a href="#collections-defaultdict-list" class="headerlink" title="collections.defaultdict(list)"></a>collections.defaultdict(list)</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">collections</span>.<span class="title">defaultdict</span>(<span class="params">default_factory=<span class="literal">None</span>, /[, ...]</span>)</span></span><br></pre></td></tr></table></figure>
 
@@ -594,27 +594,6 @@ pip install xxx.whl
       </tags>
   </entry>
   <entry>
-    <title>（待更新）推荐系统：经典算法——协同过滤（Collebrative Filtering）</title>
-    <url>/2021/11/23/%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4/</url>
-    <content><![CDATA[<h2 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h2><p>经典Movielens数据集</p>
-<blockquote>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">All ratings are contained in the file &quot;ratings.dat&quot; and are in the</span><br><span class="line">following format:</span><br><span class="line"></span><br><span class="line">UserID::MovieID::Rating::Timestamp</span><br><span class="line"></span><br><span class="line">- UserIDs range between 1 and 6040 </span><br><span class="line">- MovieIDs range between 1 and 3952</span><br><span class="line">- Ratings are made on a 5-star scale (whole-star ratings only)</span><br><span class="line">- Timestamp is represented in seconds since the epoch as returned by time(2)</span><br><span class="line">- Each user has at least 20 ratings</span><br></pre></td></tr></table></figure>
-</blockquote>
-<h2 id="实验设计"><a href="#实验设计" class="headerlink" title="实验设计"></a>实验设计</h2><p>采用K-fold交叉验证，将用户行为数据均匀分成K份，其中一份作为测试集，K-1份作为训练集。协同过滤算法只考虑物品/用户的共现关系，所以用户序列都用集合表示。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 划分数据集</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">SplitData</span>(<span class="params">data, M, k, seed</span>):</span></span><br><span class="line">    test = []</span><br><span class="line">    train = []</span><br><span class="line">    random.seed(seed)</span><br><span class="line">    <span class="keyword">for</span> user, item <span class="keyword">in</span> data:</span><br><span class="line">        <span class="keyword">if</span> random.randint(<span class="number">0</span>, M) == k:</span><br><span class="line">            test.append([user, item])</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            train.append([user, item])</span><br><span class="line">    train_ = defaultdict(<span class="built_in">set</span>)</span><br><span class="line">    test_ = defaultdict(<span class="built_in">set</span>)</span><br><span class="line">    <span class="keyword">for</span> user, item <span class="keyword">in</span> train:</span><br><span class="line">        train_[user].add(item)</span><br><span class="line">    <span class="keyword">for</span> user, item <span class="keyword">in</span> test:</span><br><span class="line">        test_[user].add(item)</span><br><span class="line">    <span class="keyword">return</span> train_, test_</span><br></pre></td></tr></table></figure>
-
-<h2 id="评价指标"><a href="#评价指标" class="headerlink" title="评价指标"></a>评价指标</h2><p>召回率Recall，准确率Precision，覆盖率Coverage，新颖度Popularity。</p>
-<span id="more"></span>
-
-<p>召回率Recall：正确推荐的商品占所有应该推荐的商品的比例，即应该推荐的推荐了多少。公式描述：对用户u推荐N个物品（$R(u)$），令用户在测试集上喜欢的物品集合为$T(u)$，则<br>$$<br>Recall=\frac{\sum_u|R(u) \cap T(u)|}{\sum_u |T(u)|}<br>$$<br>准确率Precision：正确推荐的商品占推荐的商品列表的比例，即有多少推荐对了。公式描述：<br>$$<br>Precision=\frac{\sum_u|R(u) \cap T(u)|}{\sum_u |R(u)|}<br>$$<br>覆盖率Coverage：推荐的商品占所有商品的比例，即推荐的商品覆盖了多少所有商品。反映发掘长尾的能力。<br>$$<br>Coverage = \frac{\bigcup_u R(u)}{|I|} \ \  , \ \bigcup:并集<br>$$<br>新颖度Popularity：刻画推荐物品的平均流行度，平均流行度（Popularity）越高，新颖度越低。$Popularity(x)$定义为$x$在所有用户序列中出现的次数，出现次数越多，流行度越高。<br>$$<br>Popularity= \sum _u \sum _ { i \in R(u) } \log (Popularity(i)+1)<br>$$</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 评价指标:召回率、准确率</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Metric</span>(<span class="params">train, test, N, all_recommend_list</span>):</span>  <span class="comment"># N:推荐N个物品</span></span><br><span class="line">    hit = <span class="number">0</span></span><br><span class="line">    recall_all = <span class="number">0</span>      <span class="comment"># recall 的分母</span></span><br><span class="line">    precision_all = <span class="number">0</span>   <span class="comment"># precision 的分母</span></span><br><span class="line">    <span class="keyword">for</span> user <span class="keyword">in</span> train.keys():</span><br><span class="line">        tu = test[user]</span><br><span class="line">        rank = all_recommend_list[user][<span class="number">0</span>:N]</span><br><span class="line">        <span class="keyword">for</span> item, pui <span class="keyword">in</span> rank:</span><br><span class="line">            <span class="keyword">if</span> item <span class="keyword">in</span> tu:</span><br><span class="line">                hit += <span class="number">1</span></span><br><span class="line">        recall_all += <span class="built_in">len</span>(tu)</span><br><span class="line">        precision_all += N</span><br><span class="line">    recall = hit / (recall_all * <span class="number">1.0</span>)</span><br><span class="line">    precision = hit / (precision_all * <span class="number">1.0</span>)</span><br><span class="line">    <span class="keyword">return</span> recall, precision</span><br><span class="line"></span><br><span class="line"><span class="comment"># 评价指标：覆盖率</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Coverage</span>(<span class="params">train, test, N, all_recommend_list</span>):</span>  <span class="comment"># N:推荐N个物品</span></span><br><span class="line">    recommend_items = <span class="built_in">set</span>()</span><br><span class="line">    all_items = <span class="built_in">set</span>()</span><br><span class="line">    <span class="keyword">for</span> user <span class="keyword">in</span> train.keys():</span><br><span class="line">        <span class="keyword">for</span> item <span class="keyword">in</span> train[user]:</span><br><span class="line">            all_items.add(item)</span><br><span class="line">        <span class="keyword">for</span> item, pui <span class="keyword">in</span> rank:</span><br><span class="line">            recommend_items.add(item)</span><br><span class="line">    coverage = <span class="built_in">len</span>(recommend_items) / (<span class="built_in">len</span>(all_items) * <span class="number">1.0</span>)</span><br><span class="line">    <span class="keyword">return</span> coverage</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 评价指标：新颖度</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Popularity</span>(<span class="params">train, test, N, recommend_res</span>):</span>	<span class="comment"># N:推荐N个物品</span></span><br><span class="line">    item_popularity = <span class="built_in">dict</span>()</span><br><span class="line">    <span class="keyword">for</span> user, items <span class="keyword">in</span> train.items():</span><br><span class="line">        <span class="keyword">for</span> item <span class="keyword">in</span> items:</span><br><span class="line">            <span class="keyword">if</span> item <span class="keyword">not</span> <span class="keyword">in</span> item_popularity:</span><br><span class="line">                item_popularity[item] = <span class="number">0</span></span><br><span class="line">            item_popularity[item] += <span class="number">1</span></span><br><span class="line">    popularity = <span class="number">0</span></span><br><span class="line">    n = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> user <span class="keyword">in</span> train.keys():</span><br><span class="line">        rank = recommend_res[user][<span class="number">0</span>:N]</span><br><span class="line">        <span class="keyword">for</span> item, pui <span class="keyword">in</span> rank:</span><br><span class="line">            popularity += math.log(<span class="number">1</span> + item_popularity[item])</span><br><span class="line">            n += <span class="number">1</span></span><br><span class="line">    popularity /= n * <span class="number">1.0</span></span><br><span class="line">    <span class="keyword">return</span> popularity</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>推荐系统实战</category>
-      </categories>
-  </entry>
-  <entry>
     <title>模板</title>
     <url>/2021/10/17/%E6%A8%A1%E6%9D%BF/</url>
     <content><![CDATA[<hr>
@@ -673,5 +652,26 @@ pip install xxx.whl
 <p>2.</p>
 <p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211118185724771.png" alt="image-20211118185724771"></p>
 ]]></content>
+  </entry>
+  <entry>
+    <title>（待更新）推荐系统：经典算法——协同过滤（Collebrative Filtering）</title>
+    <url>/2021/11/23/%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4/</url>
+    <content><![CDATA[<h2 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h2><p>经典Movielens数据集</p>
+<blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">All ratings are contained in the file &quot;ratings.dat&quot; and are in the</span><br><span class="line">following format:</span><br><span class="line"></span><br><span class="line">UserID::MovieID::Rating::Timestamp</span><br><span class="line"></span><br><span class="line">- UserIDs range between 1 and 6040 </span><br><span class="line">- MovieIDs range between 1 and 3952</span><br><span class="line">- Ratings are made on a 5-star scale (whole-star ratings only)</span><br><span class="line">- Timestamp is represented in seconds since the epoch as returned by time(2)</span><br><span class="line">- Each user has at least 20 ratings</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h2 id="实验设计"><a href="#实验设计" class="headerlink" title="实验设计"></a>实验设计</h2><p>采用K-fold交叉验证，将用户行为数据均匀分成K份，其中一份作为测试集，K-1份作为训练集。协同过滤算法只考虑物品/用户的共现关系，所以用户序列都用集合表示。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 划分数据集</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">SplitData</span>(<span class="params">data, M, k, seed</span>):</span></span><br><span class="line">    test = []</span><br><span class="line">    train = []</span><br><span class="line">    random.seed(seed)</span><br><span class="line">    <span class="keyword">for</span> user, item <span class="keyword">in</span> data:</span><br><span class="line">        <span class="keyword">if</span> random.randint(<span class="number">0</span>, M) == k:</span><br><span class="line">            test.append([user, item])</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            train.append([user, item])</span><br><span class="line">    train_ = defaultdict(<span class="built_in">set</span>)</span><br><span class="line">    test_ = defaultdict(<span class="built_in">set</span>)</span><br><span class="line">    <span class="keyword">for</span> user, item <span class="keyword">in</span> train:</span><br><span class="line">        train_[user].add(item)</span><br><span class="line">    <span class="keyword">for</span> user, item <span class="keyword">in</span> test:</span><br><span class="line">        test_[user].add(item)</span><br><span class="line">    <span class="keyword">return</span> train_, test_</span><br></pre></td></tr></table></figure>
+
+<h2 id="评价指标"><a href="#评价指标" class="headerlink" title="评价指标"></a>评价指标</h2><p>召回率Recall，准确率Precision，覆盖率Coverage，新颖度Popularity。</p>
+<span id="more"></span>
+
+<p>召回率Recall：正确推荐的商品占所有应该推荐的商品的比例，即应该推荐的推荐了多少。公式描述：对用户u推荐N个物品（$R(u)$），令用户在测试集上喜欢的物品集合为$T(u)$，则<br>$$<br>Recall=\frac{\sum_u|R(u) \cap T(u)|}{\sum_u |T(u)|}<br>$$<br>准确率Precision：正确推荐的商品占推荐的商品列表的比例，即有多少推荐对了。公式描述：<br>$$<br>Precision=\frac{\sum_u|R(u) \cap T(u)|}{\sum_u |R(u)|}<br>$$<br>覆盖率Coverage：推荐的商品占所有商品的比例，即推荐的商品覆盖了多少所有商品。反映发掘长尾的能力。<br>$$<br>Coverage = \frac{\bigcup_u R(u)}{|I|} \ \  , \ \bigcup:并集<br>$$<br>新颖度Popularity：刻画推荐物品的平均流行度，平均流行度（Popularity）越高，新颖度越低。$Popularity(x)$定义为$x$在所有用户序列中出现的次数，出现次数越多，流行度越高。<br>$$<br>Popularity= \sum _u \sum _ { i \in R(u) } \log (Popularity(i)+1)<br>$$</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 评价指标:召回率、准确率</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Metric</span>(<span class="params">train, test, N, all_recommend_list</span>):</span>  <span class="comment"># N:推荐N个物品</span></span><br><span class="line">    hit = <span class="number">0</span></span><br><span class="line">    recall_all = <span class="number">0</span>      <span class="comment"># recall 的分母</span></span><br><span class="line">    precision_all = <span class="number">0</span>   <span class="comment"># precision 的分母</span></span><br><span class="line">    <span class="keyword">for</span> user <span class="keyword">in</span> train.keys():</span><br><span class="line">        tu = test[user]</span><br><span class="line">        rank = all_recommend_list[user][<span class="number">0</span>:N]</span><br><span class="line">        <span class="keyword">for</span> item, pui <span class="keyword">in</span> rank:</span><br><span class="line">            <span class="keyword">if</span> item <span class="keyword">in</span> tu:</span><br><span class="line">                hit += <span class="number">1</span></span><br><span class="line">        recall_all += <span class="built_in">len</span>(tu)</span><br><span class="line">        precision_all += N</span><br><span class="line">    recall = hit / (recall_all * <span class="number">1.0</span>)</span><br><span class="line">    precision = hit / (precision_all * <span class="number">1.0</span>)</span><br><span class="line">    <span class="keyword">return</span> recall, precision</span><br><span class="line"></span><br><span class="line"><span class="comment"># 评价指标：覆盖率</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Coverage</span>(<span class="params">train, test, N, all_recommend_list</span>):</span>  <span class="comment"># N:推荐N个物品</span></span><br><span class="line">    recommend_items = <span class="built_in">set</span>()</span><br><span class="line">    all_items = <span class="built_in">set</span>()</span><br><span class="line">    <span class="keyword">for</span> user <span class="keyword">in</span> train.keys():</span><br><span class="line">        <span class="keyword">for</span> item <span class="keyword">in</span> train[user]:</span><br><span class="line">            all_items.add(item)</span><br><span class="line">        <span class="keyword">for</span> item, pui <span class="keyword">in</span> rank:</span><br><span class="line">            recommend_items.add(item)</span><br><span class="line">    coverage = <span class="built_in">len</span>(recommend_items) / (<span class="built_in">len</span>(all_items) * <span class="number">1.0</span>)</span><br><span class="line">    <span class="keyword">return</span> coverage</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 评价指标：新颖度</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Popularity</span>(<span class="params">train, test, N, recommend_res</span>):</span>	<span class="comment"># N:推荐N个物品</span></span><br><span class="line">    item_popularity = <span class="built_in">dict</span>()</span><br><span class="line">    <span class="keyword">for</span> user, items <span class="keyword">in</span> train.items():</span><br><span class="line">        <span class="keyword">for</span> item <span class="keyword">in</span> items:</span><br><span class="line">            <span class="keyword">if</span> item <span class="keyword">not</span> <span class="keyword">in</span> item_popularity:</span><br><span class="line">                item_popularity[item] = <span class="number">0</span></span><br><span class="line">            item_popularity[item] += <span class="number">1</span></span><br><span class="line">    popularity = <span class="number">0</span></span><br><span class="line">    n = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> user <span class="keyword">in</span> train.keys():</span><br><span class="line">        rank = recommend_res[user][<span class="number">0</span>:N]</span><br><span class="line">        <span class="keyword">for</span> item, pui <span class="keyword">in</span> rank:</span><br><span class="line">            popularity += math.log(<span class="number">1</span> + item_popularity[item])</span><br><span class="line">            n += <span class="number">1</span></span><br><span class="line">    popularity /= n * <span class="number">1.0</span></span><br><span class="line">    <span class="keyword">return</span> popularity</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>推荐系统实战</category>
+      </categories>
   </entry>
 </search>
