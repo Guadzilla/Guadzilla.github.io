@@ -190,7 +190,7 @@ pip install xxx.whl
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">python run_recbole.py --model=SASRec --dataset=book ----config_files=test.yaml</span><br></pre></td></tr></table></figure>
 
 <p>如果看不懂参数的话，点进run_recbole.py看一下就明白了！</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>RecBole是个集成度很高，也比较方便用于复现一些基本推荐模型。需要用recbole跑自己的baseline时，只需要三步：</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>RecBole是个集成度很高，也比较方便用于复现一些基本推荐模型的开源库（在此致敬中国人民大学AI BOX小组！），需要用recbole跑自己的baseline时，只需要三步：</p>
 <ol>
 <li>构造满足原子文件的数据集</li>
 <li>写好.yaml格式的配置文件</li>
