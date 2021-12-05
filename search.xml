@@ -1,6 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>论文笔记：《Graph-Enhanced Multi-Task Learning of Multi-Level Transition Dynamics for Session-based Recommendation》</title>
+    <url>/2021/10/20/MTD/</url>
+    <content><![CDATA[<hr>
+<p>原paper：<a href="https://ojs.aaai.org/index.php/AAAI/article/view/16534">https://ojs.aaai.org/index.php/AAAI/article/view/16534</a></p>
+<p>开源代码：<a href="https://github.com/sessionRec/MTD">https://github.com/sessionRec/MTD</a></p>
+<hr>
+<h3 id="动机："><a href="#动机：" class="headerlink" title="动机："></a>动机：</h3><p>大多数现有的基于会话的推荐技术并没有很好地设计来捕捉复杂的转换动态(complex transition dynamics)，这些动态表现为时间有序和多层次相互依赖的关系结构。</p>
+<p>complex transition dynamics 的”complex”体现在：multi-level relation(intra- and inter-session item relation) . 会话内：short-term and long-term item transition，会话间：long-range cross-session dependencies。复杂依赖的例子见Figure 1.</p>
+<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/MTD-1.png" alt="MTD-1"></p>
+<span id="more"></span>
+
+<h3 id="主要贡献："><a href="#主要贡献：" class="headerlink" title="主要贡献："></a>主要贡献：</h3><p>1.开发了一种新的会话推荐框架，可以捕获会话内和会话间的物品转换模式（多层次转换动态）</p>
+<p>2.开发了一种位置感知的注意力机，用于学习会话内的序列行为和session-specific knowledge。此外，在图神经网络范例的基础上，建立了全局上下文增强的会话间关系编码器，赋予MTD来捕获会话间项目依赖关系。</p>
+<p>3.在三个数据集上取得了SOTA，Yoochoose、Diginetica、Retailrocket。</p>
+<h3 id="网络图："><a href="#网络图：" class="headerlink" title="网络图："></a>网络图：</h3><p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/MTD-2.png" alt="MTD-2"></p>
+<h3 id="方法论："><a href="#方法论：" class="headerlink" title="方法论："></a>方法论：</h3><h4 id="1-学习会话内的物品关系"><a href="#1-学习会话内的物品关系" class="headerlink" title="1.学习会话内的物品关系"></a>1.学习会话内的物品关系</h4><p>1）Self-attention层：</p>
+<p>QKV self-attention + feed forward network</p>
+<p>2）位置感知的物品级的注意力聚合模块：<br>$$<br>\alpha _ i = \delta(\mathbf{g}^T \cdot \sigma(\mathbf{W} _ 3\cdot\mathbf{x} _ {s,I} + \mathbf{W} _ 4\cdot\mathbf{x} _ {s,i}))<br>$$</p>
+<p>$$<br>\mathbf{x}^* _ s = \sum_{i=1}^I\alpha _ i\cdot\mathbf{x _ \mathit{s,i}}<br>$$</p>
+<p>$$<br>\mathbf{q} _ s = \mathbf{W} _ c[\mathbf{x} _ {s,I},\mathbf{x}^* _ s,\mathbf{p} _ s]<br>$$</p>
+<p>$\mathbf{x}_{s,I}$表示最后一次点击，$\mathbf{x^*_s}$表示聚合后的会话表示，$\mathbf{p}_s$表示加入物品相对位置信息的会话表示，$\mathbf{q}_s $是最后的会话表示。</p>
+<p>3）loss = $\mathit{L_in}$</p>
+<h4 id="2-对全局转换动态建模"><a href="#2-对全局转换动态建模" class="headerlink" title="2.对全局转换动态建模"></a>2.对全局转换动态建模</h4><p>1）用图神经网络结构和GCN对inter-session的依赖建模</p>
+<p>2）用<strong>互信息学习</strong>来增强跨会话的建模物品间关系的encoder</p>
+<p>3）loss = $\mathit{L_cr}$</p>
+<h4 id="3-Model-Inference"><a href="#3-Model-Inference" class="headerlink" title="3.Model Inference"></a>3.Model Inference</h4><p>定义loss：<br>$$<br>\mathit{L}=\mathit{L} _ {cr} + \lambda_1\mathit{L} _ {in}+\lambda_2||\Theta||^2 _ 2<br>$$</p>
+]]></content>
+      <categories>
+        <category>论文笔记</category>
+      </categories>
+      <tags>
+        <tag>GNN</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Pytorch Geometric 学习笔记</title>
     <url>/2021/11/14/Pytorch%20Geometric/</url>
     <content><![CDATA[<hr>
@@ -106,6 +141,94 @@ pip install xxx.whl
       </categories>
       <tags>
         <tag>pytorch</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Recbole避坑手册</title>
+    <url>/2021/12/05/Recbole%E9%81%BF%E5%9D%91%E6%89%8B%E5%86%8C/</url>
+    <content><![CDATA[<p>RecBole是个非常好的开源库，这几天做评测的时候用上了，奈何本人能力有限，遇到了非常多bug（可能是自己行为造成的），简单记录一下。可以参考这个：<a href="https://blog.csdn.net/turinger_2000/category_10624007.html">RecBole小白入门系列_Turinger_2000的博客-CSDN博客</a></p>
+<p><strong>使用方法</strong>就是：<a href="https://github.com/RUCAIBox/RecBole">RUCAIBox/RecBole (github.com)</a>，下载下来unzip或者clone到设备上。然后再RecBole主目录下编写一个test.yaml文件记录一些配置，再运行run_recbole.py就可以。test.yaml大概要设置4类东西：dateset setting, model setting, train setting, evaluate setting.</p>
+<p>整个项目文件如下，几个比较重要的文件夹和文件标出来了，后面会说到。</p>
+<span id="more"></span>
+
+<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/lenovo/image-20211205143321872.png" alt="image-20211205143321872"></p>
+<p>接下来以一个<strong>用自己数据集跑SASRec模型</strong>的例子说明如何使用RecBole。</p>
+<h2 id="配置test-yaml文件"><a href="#配置test-yaml文件" class="headerlink" title="配置test.yaml文件"></a>配置test.yaml文件</h2><h3 id="构造数据集——data-setting"><a href="#构造数据集——data-setting" class="headerlink" title="构造数据集——data setting"></a>构造数据集——data setting</h3><p>如果想跑自己的实验，那么很重要的一件事就是构造自己的数据集，recbole要求个人首先构建可以处理的原子文件，然后就可以传给模型处理了。详细见：<a href="https://recbole.io/cn/data_flow.html">数据流 | 伯乐 (recbole.io)</a></p>
+<p>根据<a href="https://recbole.io/cn/atomic_files.html">原子文件 | 伯乐 (recbole.io)</a>，Sequential模型只需要.inter的原子文件，如下图：</p>
+<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/lenovo/image-20211205143831872.png" alt="image-20211205143831872"></p>
+<p>虽然不知道.inter 是什么文件，但是可以看以下模型本身给的数据集以及处理好的原子文件模仿着构造。数据集保存在RecBole/dataset/ml-100k下（以ml-100k数据集为例），找到ml-100k.inter，用记事本打开格式如下：</p>
+<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/lenovo/image-20211205144208594.png" alt="image-20211205144208594"></p>
+<p>BPR和CF等general model可能会用到rating（用户评分），timestamp。但是Sequential model一般只需要timestamp把点击行为构成对应用户的序列就行，想跑的SASRec论文附的代码里，对数据集的处理是：只保留user_id和item_id两列，按点击顺序存储。我的数据集book长这个样子：</p>
+<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/lenovo/image-20211205144708967.png" alt="image-20211205144708967"></p>
+<p>只有两列特征user_id和item_id，看起来好像很接近，但是踩坑穿越回来的我可以告诉你，这里必须得有timestamp一列，recbole就是这么处理sequential model的数据集的，没有办法。那添加什么样的timestamp呢？book数据集是按点击顺序存储的（user_id已经重新从0开始标号），所以其实只要加个递增的timestamp就行了，这里用pandas简单处理下多加一列就行。</p>
+<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/lenovo/image-20211205145228872.png" alt="image-20211205145228872"></p>
+<p>注意，这里用pandas处理的时候，顺便把列名改了。user_id和item_id后面加上”:token”，timestamp后面加上”:float”。RecBole要求这么做，后面也会说到。这样处理好文件后，pandas输出的一般是csv，重命名的时候要改成.inter后缀。然后在dataset下新建一个文件夹，起名为你的dataset名称xxx（可以自己起，这个很重要），然后.inter文件也要命名为xxx.inter，如图所示：</p>
+<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/lenovo/image-20211205145659369.png" alt="image-20211205145659369"></p>
+<p>然后我们在RecBole主目录下新建一个test.yaml文件，在里面输入：（暂时不明白没事，抄下来就行）</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># dataset config</span></span><br><span class="line">field_separator: <span class="string">&quot;,&quot;</span>  <span class="comment">#指定数据集field的分隔符</span></span><br><span class="line">seq_separator: <span class="string">&quot; &quot;</span>   <span class="comment">#指定数据集中token_seq或者float_seq域里的分隔符</span></span><br><span class="line">USER_ID_FIELD: user_id <span class="comment">#指定用户id域</span></span><br><span class="line">ITEM_ID_FIELD: item_id <span class="comment">#指定物品id域</span></span><br><span class="line">TIME_FIELD: timestamp  <span class="comment">#指定时间域</span></span><br><span class="line">NEG_PREFIX: neg_   <span class="comment">#指定负采样前缀</span></span><br><span class="line"><span class="comment">#指定从什么文件里读什么列，这里就是从book.inter里面读取user_id, item_id,timestamp这四列</span></span><br><span class="line">load_col:</span><br><span class="line">  inter: [user_id, item_id, timestamp]</span><br></pre></td></tr></table></figure>
+
+<p>需要注意前两条separator，csv文件的话默认分隔符是”,”，还有最后一行local:这里按照数据集的列指定就行，到此数据集基本构造好了。</p>
+<h3 id="用Sequential-model类跑模型——model-setting"><a href="#用Sequential-model类跑模型——model-setting" class="headerlink" title="用Sequential model类跑模型——model setting"></a>用Sequential model类跑模型——model setting</h3><p>以SASRec为例，想跑一个模型，如何看这个模型需要的参数？到 RecBole/recbole/properties/model 底下找到对应模型的yaml文件，打开以后大概长这样。</p>
+<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/lenovo/image-20211205150832821.png" alt="image-20211205150832821"></p>
+<p>这里包含了模型需要的参数，每次调用都到这里改很麻烦，所以recbole可以实现用test.yaml的设置覆盖具体模型的设置，所以只要在test.yaml（主目录下的那个配置文件）里改我们添加，并做一点修改：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">n_layers: <span class="number">2</span></span><br><span class="line">n_heads: <span class="number">2</span></span><br><span class="line">hidden_size: <span class="number">100</span></span><br><span class="line">inner_size: <span class="number">256</span></span><br><span class="line">hidden_dropout_prob: <span class="number">0.5</span></span><br><span class="line">attn_dropout_prob: <span class="number">0.5</span></span><br><span class="line">hidden_act: <span class="string">&#x27;gelu&#x27;</span></span><br><span class="line">layer_norm_eps: <span class="number">1e-12</span></span><br><span class="line">initializer_range: <span class="number">0.02</span></span><br><span class="line">loss_type: <span class="string">&#x27;CE&#x27;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="训练设置——train-setting"><a href="#训练设置——train-setting" class="headerlink" title="训练设置——train setting"></a>训练设置——train setting</h3><p>通用的训练设置也要写到test.yaml中：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># training settings</span><br><span class="line">epochs: 500  				#训练的最大轮数</span><br><span class="line">train_batch_size: 20 #2048 	#训练的batch_size</span><br><span class="line">learner: adam 				#使用的pytorch内置优化器</span><br><span class="line">learning_rate: 0.001 		#学习率</span><br><span class="line">training_neg_sample_num: 0 	#负采样数目</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="评估设置——evaluate-setting"><a href="#评估设置——evaluate-setting" class="headerlink" title="评估设置——evaluate setting"></a>评估设置——evaluate setting</h3><p>通用的评估设置也要写道test.yaml中：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># evalution settings</span><br><span class="line">eval_step: 1 				#每次训练后做evalaution的次数</span><br><span class="line">eval_setting: RO_RS,full 	#对数据随机重排，设置按比例划分数据集，且使用全排序</span><br><span class="line">group_by_user: True 		#是否将一个user的记录划到一个组里，当eval_setting使用RO_RS的时候该项必须是True</span><br><span class="line">split_ratio: [0.8,0.1,0.1] 	#切分比例</span><br><span class="line">metrics: [&quot;Recall&quot;, &quot;MRR&quot;,&quot;NDCG&quot;,&quot;Hit&quot;,&quot;Precision&quot;] #评测标准</span><br><span class="line">topk: [10] #评测标准使用topk，设置成10评测标准就是[&quot;Recall@10&quot;, &quot;MRR@10&quot;, &quot;NDCG@10&quot;, &quot;Hit@10&quot;, &quot;Precision@10&quot;]</span><br><span class="line">valid_metric: MRR@10 		#选取哪个评测标准作为作为提前停止训练的标准</span><br><span class="line">stopping_step: 10 			#控制训练收敛的步骤数，在该步骤数内若选取的评测标准没有什么变化，就可以提前停止了</span><br><span class="line">eval_batch_size: 4096 		#评测的batch_size</span><br></pre></td></tr></table></figure>
+
+<p>recbole实现了earlystopping早停策略，可以设置控制收敛的步骤数。</p>
+<p>eval_setting，可以设置不同的数据切分方式，具体可见<a href="https://recbole.io/cn/evaluation.html">评测 | 伯乐 (recbole.io)</a>，大致如下：</p>
+<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/lenovo/image-20211205163312199.png" alt="image-20211205163312199"></p>
+<h2 id="run！跑起来吧，baseline！"><a href="#run！跑起来吧，baseline！" class="headerlink" title="run！跑起来吧，baseline！"></a>run！跑起来吧，baseline！</h2><p>我们cd到RecBole目录下，此时数据集已经准备好，test.yaml文件也已经写好，可以开始跑实验了，用以下指令：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">python run_recbole.py --model=SASRec --dataset=book ----config_files=test.yaml</span><br></pre></td></tr></table></figure>
+
+<p>如果看不懂参数的话，点进run_recbole.py看一下就明白了！</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>RecBole是个集成度很高，也比较方便用于复现一些基本推荐模型。需要用recbole跑自己的baseline时，只需要三步：</p>
+<ol>
+<li>构造满足原子文件的数据集</li>
+<li>写好.yaml格式的配置文件</li>
+<li>run！</li>
+</ol>
+<h1 id="遇到的坑"><a href="#遇到的坑" class="headerlink" title="遇到的坑"></a>遇到的坑</h1><h2 id="1-neg-sampling-不能使用-‘CE’-loss"><a href="#1-neg-sampling-不能使用-‘CE’-loss" class="headerlink" title="1. neg_sampling 不能使用 ‘CE’ loss"></a>1. neg_sampling 不能使用 ‘CE’ loss</h2><p>在配置文件中加上一行：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">neg_sampling: (注意这里冒号后面有个空格)</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="2-使用不上gpu"><a href="#2-使用不上gpu" class="headerlink" title="2.使用不上gpu"></a>2.使用不上gpu</h2><p><strong>问题描述：</strong>程序可以跑起来，但是nvtop看不到它在gpu上运行。并且无论如何修改配置文件都没有用。非常奇怪的问题。检查torch.cuda.is_available()的时候发现，居然输出False，所以原因是用不了CUDA。</p>
+<p><strong>问题原因</strong>：用不了CUDA。</p>
+<p>用conda list检查安装的库时发现，默认安装的torch是cpu的</p>
+<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/lenovo/image-20211205140943532.png" alt="image-20211205140943532"></p>
+<blockquote>
+<p>左边是默认安装的，想了一宿也没想明白为什么默认安装cpu版本</p>
+</blockquote>
+<p>卸载cpu版本再安装cuda版本有点麻烦，所以我直接新建了一个环境，并且自带torch=1.10，然后再根据依赖安装，使用命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pip install -r requirement.txt</span><br></pre></td></tr></table></figure>
+
+<p>这里不用担心torch会被覆盖，因为torch版本大于1.17就会自动跳过了。</p>
+<p>然后总可以跑了吧，运行下面指令（用RecBole需要这样输）</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">python run_recbole.py --model=BERT4Rec --dataset=book ----config_files=bert4rec.yaml</span><br></pre></td></tr></table></figure>
+
+<p>按理说此时torch是建环境时我安装的cuda版本，一定不是cpu版本，然而每次运行仍然是device=cpu。实在让人崩溃！</p>
+<p><strong>解决方案</strong>：</p>
+<p>最后debug多轮，寻找到的解决方案是：</p>
+<ul>
+<li>在run_recbole.py里import torch，并且打印torch.cuda.is_available()</li>
+</ul>
+<p>这样做合理的<strong>可能的原因</strong>：</p>
+<p>可能项目某个地方import torch，import进来的torch是cpu版本的，所以提前import可以解决。</p>
+]]></content>
+      <categories>
+        <category>代码阅读</category>
+      </categories>
+      <tags>
+        <tag>RecBole</tag>
       </tags>
   </entry>
   <entry>
@@ -237,41 +360,6 @@ pip install xxx.whl
         <tag>序列推荐</tag>
         <tag>SASRec</tag>
         <tag>自注意力</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>论文笔记：《Graph-Enhanced Multi-Task Learning of Multi-Level Transition Dynamics for Session-based Recommendation》</title>
-    <url>/2021/10/20/MTD/</url>
-    <content><![CDATA[<hr>
-<p>原paper：<a href="https://ojs.aaai.org/index.php/AAAI/article/view/16534">https://ojs.aaai.org/index.php/AAAI/article/view/16534</a></p>
-<p>开源代码：<a href="https://github.com/sessionRec/MTD">https://github.com/sessionRec/MTD</a></p>
-<hr>
-<h3 id="动机："><a href="#动机：" class="headerlink" title="动机："></a>动机：</h3><p>大多数现有的基于会话的推荐技术并没有很好地设计来捕捉复杂的转换动态(complex transition dynamics)，这些动态表现为时间有序和多层次相互依赖的关系结构。</p>
-<p>complex transition dynamics 的”complex”体现在：multi-level relation(intra- and inter-session item relation) . 会话内：short-term and long-term item transition，会话间：long-range cross-session dependencies。复杂依赖的例子见Figure 1.</p>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/MTD-1.png" alt="MTD-1"></p>
-<span id="more"></span>
-
-<h3 id="主要贡献："><a href="#主要贡献：" class="headerlink" title="主要贡献："></a>主要贡献：</h3><p>1.开发了一种新的会话推荐框架，可以捕获会话内和会话间的物品转换模式（多层次转换动态）</p>
-<p>2.开发了一种位置感知的注意力机，用于学习会话内的序列行为和session-specific knowledge。此外，在图神经网络范例的基础上，建立了全局上下文增强的会话间关系编码器，赋予MTD来捕获会话间项目依赖关系。</p>
-<p>3.在三个数据集上取得了SOTA，Yoochoose、Diginetica、Retailrocket。</p>
-<h3 id="网络图："><a href="#网络图：" class="headerlink" title="网络图："></a>网络图：</h3><p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/MTD-2.png" alt="MTD-2"></p>
-<h3 id="方法论："><a href="#方法论：" class="headerlink" title="方法论："></a>方法论：</h3><h4 id="1-学习会话内的物品关系"><a href="#1-学习会话内的物品关系" class="headerlink" title="1.学习会话内的物品关系"></a>1.学习会话内的物品关系</h4><p>1）Self-attention层：</p>
-<p>QKV self-attention + feed forward network</p>
-<p>2）位置感知的物品级的注意力聚合模块：<br>$$<br>\alpha _ i = \delta(\mathbf{g}^T \cdot \sigma(\mathbf{W} _ 3\cdot\mathbf{x} _ {s,I} + \mathbf{W} _ 4\cdot\mathbf{x} _ {s,i}))<br>$$</p>
-<p>$$<br>\mathbf{x}^* _ s = \sum_{i=1}^I\alpha _ i\cdot\mathbf{x _ \mathit{s,i}}<br>$$</p>
-<p>$$<br>\mathbf{q} _ s = \mathbf{W} _ c[\mathbf{x} _ {s,I},\mathbf{x}^* _ s,\mathbf{p} _ s]<br>$$</p>
-<p>$\mathbf{x}_{s,I}$表示最后一次点击，$\mathbf{x^*_s}$表示聚合后的会话表示，$\mathbf{p}_s$表示加入物品相对位置信息的会话表示，$\mathbf{q}_s $是最后的会话表示。</p>
-<p>3）loss = $\mathit{L_in}$</p>
-<h4 id="2-对全局转换动态建模"><a href="#2-对全局转换动态建模" class="headerlink" title="2.对全局转换动态建模"></a>2.对全局转换动态建模</h4><p>1）用图神经网络结构和GCN对inter-session的依赖建模</p>
-<p>2）用<strong>互信息学习</strong>来增强跨会话的建模物品间关系的encoder</p>
-<p>3）loss = $\mathit{L_cr}$</p>
-<h4 id="3-Model-Inference"><a href="#3-Model-Inference" class="headerlink" title="3.Model Inference"></a>3.Model Inference</h4><p>定义loss：<br>$$<br>\mathit{L}=\mathit{L} _ {cr} + \lambda_1\mathit{L} _ {in}+\lambda_2||\Theta||^2 _ 2<br>$$</p>
-]]></content>
-      <categories>
-        <category>论文笔记</category>
-      </categories>
-      <tags>
-        <tag>GNN</tag>
       </tags>
   </entry>
   <entry>
