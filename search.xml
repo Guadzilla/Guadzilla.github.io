@@ -816,12 +816,12 @@ pip install xxx.whl
 </ul>
 <p>MRR@20、Recall@20</p>
 <h2 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h2><ul>
-<li><h4 id="SSRM模型框架"><a href="#SSRM模型框架" class="headerlink" title="SSRM模型框架"></a>SSRM模型框架</h4></li>
+<li><h3 id="SSRM模型框架"><a href="#SSRM模型框架" class="headerlink" title="SSRM模型框架"></a>SSRM模型框架</h3></li>
 </ul>
 <p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20220307191209899.png" alt="image-20220307191209899"></p>
 <p>SSRM的主要工作是，建立一个基于注意力的会话推荐系统（离线模型），再将其拓展到流会话的设定。</p>
 <ul>
-<li><h4 id="离线模型：基于历史行为的注意力编码器"><a href="#离线模型：基于历史行为的注意力编码器" class="headerlink" title="离线模型：基于历史行为的注意力编码器"></a>离线模型：基于历史行为的注意力编码器</h4></li>
+<li><h3 id="离线模型：基于历史行为的注意力编码器"><a href="#离线模型：基于历史行为的注意力编码器" class="headerlink" title="离线模型：基于历史行为的注意力编码器"></a>离线模型：基于历史行为的注意力编码器</h3></li>
 </ul>
 <p>离线模型 = 建模序列 + 矩阵分解</p>
 <p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20220307193225545.png" alt="image-20220307193225545"></p>
@@ -845,38 +845,43 @@ pip install xxx.whl
 <p>两者使用一个可调参数 $w$ 加权求和  $\hat y_{i,t} = w \hat y_{i,t}^R + (1-w)\hat y_{i,t}^S $ 。</p>
 <p>最后，把物品排序任务当作分类任务，使用CE loss损失函数训练模型。 $r_u$ 是物品的真实标签分布， $\hat y_u$ 是预测的概率分布。<br>$$<br>L(r_u,\hat y_u) = - \sum^n_{i=1} r_{u,i} \cdot log(\hat y_{u,i})<br>$$</p>
 <ul>
-<li><h4 id="在线训练：基于存储的、使用主动采样策略的流模型"><a href="#在线训练：基于存储的、使用主动采样策略的流模型" class="headerlink" title="在线训练：基于存储的、使用主动采样策略的流模型"></a>在线训练：基于存储的、使用主动采样策略的流模型</h4></li>
+<li><h3 id="在线训练：基于存储的、使用主动采样策略的流模型"><a href="#在线训练：基于存储的、使用主动采样策略的流模型" class="headerlink" title="在线训练：基于存储的、使用主动采样策略的流模型"></a>在线训练：基于存储的、使用主动采样策略的流模型</h3></li>
 </ul>
 <p>建立完基于注意力的会话推荐系统（离线模型）后，再将其拓展到流会话的设定。建立存储的目的是准确地概括总结历史行为。</p>
-<p>​     1.传统模型的更新方法</p>
+<p><strong>1.传统模型的更新方法</strong></p>
 <p>随机采样技术。令 $C$ 为保存会话序列的存储库，令 $t$ 为下一个时刻即将到达的数据实例。当 $t&gt;|C|$ 时，存储库会以 $\frac{|C|}{t} $ 的概率存储这个数据实例，同时随机替换掉存储库 $C$ 里的数据实例。这样得到的存储库可以证明相当于当前数据集的随机采样结果，同时也证明可以保留模型的长期记忆[1]。但是 $\frac{|C|}{t} $ 是随时间递减的，这样模型就会倾向于忽略最近的数据，因为越近的数据被选入存储库的概率越低。而实际场景中是存在用户兴趣漂移的现象的，换句话说，使用这种随机采样技术难以实现“捕捉最新产生的数据中的行为模式”。</p>
-<p>​    2.主动采样策略</p>
+<p><strong>2.主动采样策略</strong></p>
 <p>虽然更新时同时使用整个存储库和所有新到达数据能产生更好结果，但是由于高速的流数据和有限的计算资源，这种方式通常会导致可利用的数据非常少（这个问题也被称为系统过载）。所以需要一个明智的样本选择策略。</p>
 <p>本文提出的主动采样策略的思想和一些主动学习（Active learning）类似，即“选择对系统贡献最大的样本的最小集合”，供用户评估。具体来说，为了使模型在有限时间窗口内尽可能地多学习，采样策略每次应该选择 $C^{new}\cup C$ 中<strong>信息量最大</strong>的会话实例。</p>
 <p>计算会话的信息量，使用会话中每个物品得分的均值，其中物品得分 $r_{u,k}$ 表示用户 $u$ 在当前模型下对物品 $k$ 的预测能力，使用用户隐含表示和物品隐含表示做内积得到 $r_{u,k}=p_u q_k$。$r_{u,k}$ 值越小， $r_{s_i}$ 值越小，说明模型越难以预测该会话中的物品，说明该会话信息量越大，越能修正模型，越该对它进行采样。<br>$$<br>r_{s_i}=\frac{\sum^t_{k=1}r_{u,k}}{t}<br>$$<br>以 $r_{s_i}$ 值对这些会话降序排列，再根据排名计算每个会话的权重因子 $w_{s_i}$，最后得到每个会话的采样概率 $p(s_i)$ ：<br>$$<br>w_{s_i}=exp(\frac{rank_{s_i}}{C\cup C^{new}})<br>;\<br>p(s_i)=\frac{w_{s_i}}{\sum_{s_i \in C \cup C^{new}}w_{s_i}}<br>$$<br>其中，信息量越大的会话排名越靠后，权重因子越高，采样概率也越大。</p>
 <h2 id="Experiment-amp-Table"><a href="#Experiment-amp-Table" class="headerlink" title="Experiment &amp; Table"></a>Experiment &amp; Table</h2><ul>
-<li>算法描述</li>
+<li><h3 id="算法描述"><a href="#算法描述" class="headerlink" title="算法描述"></a>算法描述</h3></li>
 </ul>
 <p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20220308193608578.png" alt="image-20220308193608578"></p>
 <ul>
-<li>和SBR的经典方法比，SOTA。LastFM的提升率比Gowalla高的主要原因是，Gowalla更系数，每个用户的点击很少，并且会话数据只有寥寥几个，从而导致训练不充分。</li>
+<li><h3 id="和SBR的经典方法比较"><a href="#和SBR的经典方法比较" class="headerlink" title="和SBR的经典方法比较"></a>和SBR的经典方法比较</h3></li>
 </ul>
+<p>SOTA。LastFM的提升率比Gowalla高的主要原因是，Gowalla更系数，每个用户的点击很少，并且会话数据只有寥寥几个，从而导致训练不充分。</p>
 <p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20220308193302601.png" alt="image-20220308193302601"></p>
 <ul>
-<li>验证矩阵分解注意力机制的有效性（MF-Attention）。Baseline：只有基础会话编码器（Basic session encoder），好像就是GRU4Rec。三个模型采用相同的streaming技术，以消除线上更新方法带来的影响。SSRM效果最好。</li>
+<li><h3 id="验证矩阵分解注意力机制的有效性（MF-Attention）"><a href="#验证矩阵分解注意力机制的有效性（MF-Attention）" class="headerlink" title="验证矩阵分解注意力机制的有效性（MF-Attention）"></a>验证矩阵分解注意力机制的有效性（MF-Attention）</h3></li>
 </ul>
+<p>Baseline：只有基础会话编码器（Basic session encoder），好像就是GRU4Rec。三个模型采用相同的streaming技术，以消除线上更新方法带来的影响。SSRM效果最好。</p>
 <p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20220308193902198.png" alt="image-20220308193902198"></p>
 <ul>
-<li>不同流策略的影响。S1：没有存储库，且仅用新来的数据更新模型。S2：有存储库，采用从 $C$ 中随机采样训练的传统方法。S3：S2的基础上，从 $C\cup C^{new}$ 中采样。S1、S3优于S2，说明相比于历史long-term memory，模型更能从用户最近行为中受益。而SSRM模型优于其它所有，说明本文提出的主动采样策略是有效的。</li>
+<li><h3 id="不同流策略的影响"><a href="#不同流策略的影响" class="headerlink" title="不同流策略的影响"></a>不同流策略的影响</h3></li>
 </ul>
+<p>S1：没有存储库，且仅用新来的数据更新模型。S2：有存储库，采用从 $C$ 中随机采样训练的传统方法。S3：S2的基础上，从 $C\cup C^{new}$ 中采样。S1、S3优于S2，说明相比于历史long-term memory，模型更能从用户最近行为中受益。而SSRM模型优于其它所有，说明本文提出的主动采样策略是有效的。</p>
 <p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20220308215603572.png" alt="image-20220308215603572"></p>
 <ul>
-<li>不同过载设定的影响。$W$ ：固定时间窗口，即一次能从 $C\cup C^{new}$ 中采样的样本数。 $W$ 越小说明工作负载越重，只训练到有限的序列。横轴看，窗口越大，过载越轻，模型表现越好；反之窗口越大，过载越重，模型表现越差。纵向看不同测试集，因为这些测试集是按时间顺序分的，越往后新用户、新物品越多。但是可以发现，从test2到test5，它们之间的gap越来越小。SSRM能够快速减小这种gap，证明其处理新数据的能力。</li>
+<li><h3 id="不同过载设定的影响"><a href="#不同过载设定的影响" class="headerlink" title="不同过载设定的影响"></a>不同过载设定的影响</h3></li>
 </ul>
+<p>$W$ ：固定时间窗口，即一次能从 $C\cup C^{new}$ 中采样的样本数。 $W$ 越小说明工作负载越重，只训练到有限的序列。横轴看，窗口越大，过载越轻，模型表现越好；反之窗口越大，过载越重，模型表现越差。纵向看不同测试集，因为这些测试集是按时间顺序分的，越往后新用户、新物品越多。但是可以发现，从test2到test5，它们之间的gap越来越小。SSRM能够快速减小这种gap，证明其处理新数据的能力。</p>
 <p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20220308215631714.png" alt="image-20220308215631714"></p>
 <ul>
-<li>存储库大小的影响。 $|C|$ 的大小决定了保留多少历史信息，它保留的观测行为越多，就越可能从历史行为中采样，就会有更多的样本距离current behavior越久远，故模型就会用更少的当前会话信息来更新。换句话说，对于过去没有出现的用户和项目，模型会学习得更少，这将导致性能相对较差。Figure 6 里也能得出这个结论，最近的行为更重要。但是因为存在long-memory problem，如果只用当前session来训练模型的话，结果会变低，总的来说，历史行为和当前行为两者得结合起来。</li>
+<li><h3 id="存储库大小的影响"><a href="#存储库大小的影响" class="headerlink" title="存储库大小的影响"></a>存储库大小的影响</h3></li>
 </ul>
+<p> $|C|$ 的大小决定了保留多少历史信息，它保留的观测行为越多，就越可能从历史行为中采样，就会有更多的样本距离current behavior越久远，故模型就会用更少的当前会话信息来更新。换句话说，对于过去没有出现的用户和项目，模型会学习得更少，这将导致性能相对较差。Figure 6 里也能得出这个结论，最近的行为更重要。但是因为存在long-memory problem，如果只用当前session来训练模型的话，结果会变低，总的来说，历史行为和当前行为两者得结合起来。</p>
 <p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20220308194605932.png" alt="image-20220308194605932"></p>
 <h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>[1]Ernesto Diaz-Aviles, Lucas Drumond, Lars Schmidt-Thieme, and Wolfgang Nejdl. 2012. Real-time top-n recommendation in social streams. RecSys (2012)</p>
 ]]></content>
