@@ -144,94 +144,6 @@ pip install xxx.whl
       </tags>
   </entry>
   <entry>
-    <title>Recbole避坑手册</title>
-    <url>/2021/12/05/Recbole%E9%81%BF%E5%9D%91%E6%89%8B%E5%86%8C/</url>
-    <content><![CDATA[<p>RecBole是个非常好的开源库，这几天做评测的时候用上了，奈何本人能力有限，遇到了非常多bug（可能是自己行为造成的），简单记录一下。可以参考这个：<a href="https://blog.csdn.net/turinger_2000/category_10624007.html">RecBole小白入门系列_Turinger_2000的博客-CSDN博客</a></p>
-<p><strong>使用方法</strong>就是：<a href="https://github.com/RUCAIBox/RecBole">RUCAIBox/RecBole (github.com)</a>，下载下来unzip或者clone到设备上。然后再RecBole主目录下编写一个test.yaml文件记录一些配置，再运行run_recbole.py就可以。test.yaml大概要设置4类东西：dateset setting, model setting, train setting, evaluate setting.</p>
-<p>整个项目文件如下，几个比较重要的文件夹和文件标出来了，后面会说到。</p>
-<span id="more"></span>
-
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/lenovo/image-20211205143321872.png" alt="image-20211205143321872"></p>
-<p>接下来以一个<strong>用自己数据集跑SASRec模型</strong>的例子说明如何使用RecBole。</p>
-<h2 id="配置test-yaml文件"><a href="#配置test-yaml文件" class="headerlink" title="配置test.yaml文件"></a>配置test.yaml文件</h2><h3 id="构造数据集——data-setting"><a href="#构造数据集——data-setting" class="headerlink" title="构造数据集——data setting"></a>构造数据集——data setting</h3><p>如果想跑自己的实验，那么很重要的一件事就是构造自己的数据集，recbole要求个人首先构建可以处理的原子文件，然后就可以传给模型处理了。详细见：<a href="https://recbole.io/cn/data_flow.html">数据流 | 伯乐 (recbole.io)</a></p>
-<p>根据<a href="https://recbole.io/cn/atomic_files.html">原子文件 | 伯乐 (recbole.io)</a>，Sequential模型只需要.inter的原子文件，如下图：</p>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/lenovo/image-20211205143831872.png" alt="image-20211205143831872"></p>
-<p>虽然不知道.inter 是什么文件，但是可以看以下模型本身给的数据集以及处理好的原子文件模仿着构造。数据集保存在RecBole/dataset/ml-100k下（以ml-100k数据集为例），找到ml-100k.inter，用记事本打开格式如下：</p>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/lenovo/image-20211205144208594.png" alt="image-20211205144208594"></p>
-<p>BPR和CF等general model可能会用到rating（用户评分），timestamp。但是Sequential model一般只需要timestamp把点击行为构成对应用户的序列就行，想跑的SASRec论文附的代码里，对数据集的处理是：只保留user_id和item_id两列，按点击顺序存储。我的数据集book长这个样子：</p>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/lenovo/image-20211205144708967.png" alt="image-20211205144708967"></p>
-<p>只有两列特征user_id和item_id，看起来好像很接近，但是踩坑穿越回来的我可以告诉你，这里必须得有timestamp一列，recbole就是这么处理sequential model的数据集的，没有办法。那添加什么样的timestamp呢？book数据集是按点击顺序存储的（user_id已经重新从0开始标号），所以其实只要加个递增的timestamp就行了，这里用pandas简单处理下多加一列就行。</p>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/lenovo/image-20211205145228872.png" alt="image-20211205145228872"></p>
-<p>注意，这里用pandas处理的时候，顺便把列名改了。user_id和item_id后面加上”:token”，timestamp后面加上”:float”。RecBole要求这么做，后面也会说到。这样处理好文件后，pandas输出的一般是csv，重命名的时候要改成.inter后缀。然后在dataset下新建一个文件夹，起名为你的dataset名称xxx（可以自己起，这个很重要），然后.inter文件也要命名为xxx.inter，如图所示：</p>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/lenovo/image-20211205145659369.png" alt="image-20211205145659369"></p>
-<p>然后我们在RecBole主目录下新建一个test.yaml文件，在里面输入：（暂时不明白没事，抄下来就行）</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># dataset config</span></span><br><span class="line">field_separator: <span class="string">&quot;,&quot;</span>  <span class="comment">#指定数据集field的分隔符</span></span><br><span class="line">seq_separator: <span class="string">&quot; &quot;</span>   <span class="comment">#指定数据集中token_seq或者float_seq域里的分隔符</span></span><br><span class="line">USER_ID_FIELD: user_id <span class="comment">#指定用户id域</span></span><br><span class="line">ITEM_ID_FIELD: item_id <span class="comment">#指定物品id域</span></span><br><span class="line">TIME_FIELD: timestamp  <span class="comment">#指定时间域</span></span><br><span class="line">NEG_PREFIX: neg_   <span class="comment">#指定负采样前缀</span></span><br><span class="line"><span class="comment">#指定从什么文件里读什么列，这里就是从book.inter里面读取user_id, item_id,timestamp这四列</span></span><br><span class="line">load_col:</span><br><span class="line">  inter: [user_id, item_id, timestamp]</span><br></pre></td></tr></table></figure>
-
-<p>需要注意前两条separator，csv文件的话默认分隔符是”,”，还有最后一行local:这里按照数据集的列指定就行，到此数据集基本构造好了。</p>
-<h3 id="用Sequential-model类跑模型——model-setting"><a href="#用Sequential-model类跑模型——model-setting" class="headerlink" title="用Sequential model类跑模型——model setting"></a>用Sequential model类跑模型——model setting</h3><p>以SASRec为例，想跑一个模型，如何看这个模型需要的参数？到 RecBole/recbole/properties/model 底下找到对应模型的yaml文件，打开以后大概长这样。</p>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/lenovo/image-20211205150832821.png" alt="image-20211205150832821"></p>
-<p>这里包含了模型需要的参数，每次调用都到这里改很麻烦，所以recbole可以实现用test.yaml的设置覆盖具体模型的设置，所以只要在test.yaml（主目录下的那个配置文件）里改我们添加，并做一点修改：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">n_layers: <span class="number">2</span></span><br><span class="line">n_heads: <span class="number">2</span></span><br><span class="line">hidden_size: <span class="number">100</span></span><br><span class="line">inner_size: <span class="number">256</span></span><br><span class="line">hidden_dropout_prob: <span class="number">0.5</span></span><br><span class="line">attn_dropout_prob: <span class="number">0.5</span></span><br><span class="line">hidden_act: <span class="string">&#x27;gelu&#x27;</span></span><br><span class="line">layer_norm_eps: <span class="number">1e-12</span></span><br><span class="line">initializer_range: <span class="number">0.02</span></span><br><span class="line">loss_type: <span class="string">&#x27;CE&#x27;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="训练设置——train-setting"><a href="#训练设置——train-setting" class="headerlink" title="训练设置——train setting"></a>训练设置——train setting</h3><p>通用的训练设置也要写到test.yaml中：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># training settings</span><br><span class="line">epochs: 500  				#训练的最大轮数</span><br><span class="line">train_batch_size: 20 #2048 	#训练的batch_size</span><br><span class="line">learner: adam 				#使用的pytorch内置优化器</span><br><span class="line">learning_rate: 0.001 		#学习率</span><br><span class="line">training_neg_sample_num: 0 	#负采样数目</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="评估设置——evaluate-setting"><a href="#评估设置——evaluate-setting" class="headerlink" title="评估设置——evaluate setting"></a>评估设置——evaluate setting</h3><p>通用的评估设置也要写道test.yaml中：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># evalution settings</span><br><span class="line">eval_step: 1 				#每次训练后做evalaution的次数</span><br><span class="line">eval_setting: RO_RS,full 	#对数据随机重排，设置按比例划分数据集，且使用全排序</span><br><span class="line">group_by_user: True 		#是否将一个user的记录划到一个组里，当eval_setting使用RO_RS的时候该项必须是True</span><br><span class="line">split_ratio: [0.8,0.1,0.1] 	#切分比例</span><br><span class="line">metrics: [&quot;Recall&quot;, &quot;MRR&quot;,&quot;NDCG&quot;,&quot;Hit&quot;,&quot;Precision&quot;] #评测标准</span><br><span class="line">topk: [10] #评测标准使用topk，设置成10评测标准就是[&quot;Recall@10&quot;, &quot;MRR@10&quot;, &quot;NDCG@10&quot;, &quot;Hit@10&quot;, &quot;Precision@10&quot;]</span><br><span class="line">valid_metric: MRR@10 		#选取哪个评测标准作为作为提前停止训练的标准</span><br><span class="line">stopping_step: 10 			#控制训练收敛的步骤数，在该步骤数内若选取的评测标准没有什么变化，就可以提前停止了</span><br><span class="line">eval_batch_size: 4096 		#评测的batch_size</span><br></pre></td></tr></table></figure>
-
-<p>recbole实现了earlystopping早停策略，可以设置控制收敛的步骤数。</p>
-<p>eval_setting，可以设置不同的数据切分方式，具体可见<a href="https://recbole.io/cn/evaluation.html">评测 | 伯乐 (recbole.io)</a>，大致如下：</p>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/lenovo/image-20211205163312199.png" alt="image-20211205163312199"></p>
-<h2 id="run！跑起来吧，baseline！"><a href="#run！跑起来吧，baseline！" class="headerlink" title="run！跑起来吧，baseline！"></a>run！跑起来吧，baseline！</h2><p>我们cd到RecBole目录下，此时数据集已经准备好，test.yaml文件也已经写好，可以开始跑实验了，用以下指令：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">python run_recbole.py --model=SASRec --dataset=book ----config_files=test.yaml</span><br></pre></td></tr></table></figure>
-
-<p>如果看不懂参数的话，点进run_recbole.py看一下就明白了！</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>RecBole是个集成度很高，也比较方便用于复现一些基本推荐模型的开源库（在此致敬中国人民大学AI BOX小组！），需要用recbole跑自己的baseline时，只需要三步：</p>
-<ol>
-<li>构造满足原子文件的数据集</li>
-<li>写好.yaml格式的配置文件</li>
-<li>run！</li>
-</ol>
-<h2 id="记录一些遇到的坑"><a href="#记录一些遇到的坑" class="headerlink" title="记录一些遇到的坑"></a>记录一些遇到的坑</h2><h3 id="1-neg-sampling-不能使用-‘CE’-loss"><a href="#1-neg-sampling-不能使用-‘CE’-loss" class="headerlink" title="1. neg_sampling 不能使用 ‘CE’ loss"></a>1. neg_sampling 不能使用 ‘CE’ loss</h3><p>在配置文件中加上一行：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">neg_sampling: (注意这里冒号后面有个空格)</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="2-使用不上gpu"><a href="#2-使用不上gpu" class="headerlink" title="2.使用不上gpu"></a>2.使用不上gpu</h3><p><strong>问题描述：</strong>程序可以跑起来，但是nvtop看不到它在gpu上运行。并且无论如何修改配置文件都没有用。非常奇怪的问题。检查torch.cuda.is_available()的时候发现，居然输出False，所以原因是用不了CUDA。</p>
-<p><strong>问题原因</strong>：用不了CUDA。</p>
-<p>用conda list检查安装的库时发现，默认安装的torch是cpu的</p>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/lenovo/image-20211205140943532.png" alt="image-20211205140943532"></p>
-<blockquote>
-<p>左边是默认安装的，想了一宿也没想明白为什么默认安装cpu版本</p>
-</blockquote>
-<p>卸载cpu版本再安装cuda版本有点麻烦，所以我直接新建了一个环境，并且自带torch=1.10，然后再根据依赖安装，使用命令：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pip install -r requirement.txt</span><br></pre></td></tr></table></figure>
-
-<p>这里不用担心torch会被覆盖，因为torch版本大于1.17就会自动跳过了。</p>
-<p>然后总可以跑了吧，运行下面指令（用RecBole需要这样输）</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">python run_recbole.py --model=BERT4Rec --dataset=book ----config_files=bert4rec.yaml</span><br></pre></td></tr></table></figure>
-
-<p>按理说此时torch是建环境时我安装的cuda版本，一定不是cpu版本，然而每次运行仍然是device=cpu。实在让人崩溃！</p>
-<p><strong>解决方案</strong>：</p>
-<p>最后debug多轮，寻找到的解决方案是：</p>
-<ul>
-<li>在run_recbole.py里import torch，并且打印torch.cuda.is_available()</li>
-</ul>
-<p>这样做合理的<strong>可能的原因</strong>：</p>
-<p>可能项目某个地方import torch，import进来的torch是cpu版本的，所以提前import可以解决。</p>
-]]></content>
-      <categories>
-        <category>代码阅读</category>
-      </categories>
-      <tags>
-        <tag>RecBole</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>论文笔记：《Self-Attentive Sequential Recommendation》</title>
     <url>/2021/11/03/SASRec/</url>
     <content><![CDATA[<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117230533153.png" alt="image-20211117230533153"></p>
@@ -360,6 +272,225 @@ pip install xxx.whl
         <tag>序列推荐</tag>
         <tag>SASRec</tag>
         <tag>自注意力</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Recbole避坑手册</title>
+    <url>/2021/12/05/Recbole%E9%81%BF%E5%9D%91%E6%89%8B%E5%86%8C/</url>
+    <content><![CDATA[<p>RecBole是个非常好的开源库，这几天做评测的时候用上了，奈何本人能力有限，遇到了非常多bug（可能是自己行为造成的），简单记录一下。可以参考这个：<a href="https://blog.csdn.net/turinger_2000/category_10624007.html">RecBole小白入门系列_Turinger_2000的博客-CSDN博客</a></p>
+<p><strong>使用方法</strong>就是：<a href="https://github.com/RUCAIBox/RecBole">RUCAIBox/RecBole (github.com)</a>，下载下来unzip或者clone到设备上。然后再RecBole主目录下编写一个test.yaml文件记录一些配置，再运行run_recbole.py就可以。test.yaml大概要设置4类东西：dateset setting, model setting, train setting, evaluate setting.</p>
+<p>整个项目文件如下，几个比较重要的文件夹和文件标出来了，后面会说到。</p>
+<span id="more"></span>
+
+<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/lenovo/image-20211205143321872.png" alt="image-20211205143321872"></p>
+<p>接下来以一个<strong>用自己数据集跑SASRec模型</strong>的例子说明如何使用RecBole。</p>
+<h2 id="配置test-yaml文件"><a href="#配置test-yaml文件" class="headerlink" title="配置test.yaml文件"></a>配置test.yaml文件</h2><h3 id="构造数据集——data-setting"><a href="#构造数据集——data-setting" class="headerlink" title="构造数据集——data setting"></a>构造数据集——data setting</h3><p>如果想跑自己的实验，那么很重要的一件事就是构造自己的数据集，recbole要求个人首先构建可以处理的原子文件，然后就可以传给模型处理了。详细见：<a href="https://recbole.io/cn/data_flow.html">数据流 | 伯乐 (recbole.io)</a></p>
+<p>根据<a href="https://recbole.io/cn/atomic_files.html">原子文件 | 伯乐 (recbole.io)</a>，Sequential模型只需要.inter的原子文件，如下图：</p>
+<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/lenovo/image-20211205143831872.png" alt="image-20211205143831872"></p>
+<p>虽然不知道.inter 是什么文件，但是可以看以下模型本身给的数据集以及处理好的原子文件模仿着构造。数据集保存在RecBole/dataset/ml-100k下（以ml-100k数据集为例），找到ml-100k.inter，用记事本打开格式如下：</p>
+<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/lenovo/image-20211205144208594.png" alt="image-20211205144208594"></p>
+<p>BPR和CF等general model可能会用到rating（用户评分），timestamp。但是Sequential model一般只需要timestamp把点击行为构成对应用户的序列就行，想跑的SASRec论文附的代码里，对数据集的处理是：只保留user_id和item_id两列，按点击顺序存储。我的数据集book长这个样子：</p>
+<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/lenovo/image-20211205144708967.png" alt="image-20211205144708967"></p>
+<p>只有两列特征user_id和item_id，看起来好像很接近，但是踩坑穿越回来的我可以告诉你，这里必须得有timestamp一列，recbole就是这么处理sequential model的数据集的，没有办法。那添加什么样的timestamp呢？book数据集是按点击顺序存储的（user_id已经重新从0开始标号），所以其实只要加个递增的timestamp就行了，这里用pandas简单处理下多加一列就行。</p>
+<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/lenovo/image-20211205145228872.png" alt="image-20211205145228872"></p>
+<p>注意，这里用pandas处理的时候，顺便把列名改了。user_id和item_id后面加上”:token”，timestamp后面加上”:float”。RecBole要求这么做，后面也会说到。这样处理好文件后，pandas输出的一般是csv，重命名的时候要改成.inter后缀。然后在dataset下新建一个文件夹，起名为你的dataset名称xxx（可以自己起，这个很重要），然后.inter文件也要命名为xxx.inter，如图所示：</p>
+<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/lenovo/image-20211205145659369.png" alt="image-20211205145659369"></p>
+<p>然后我们在RecBole主目录下新建一个test.yaml文件，在里面输入：（暂时不明白没事，抄下来就行）</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># dataset config</span></span><br><span class="line">field_separator: <span class="string">&quot;,&quot;</span>  <span class="comment">#指定数据集field的分隔符</span></span><br><span class="line">seq_separator: <span class="string">&quot; &quot;</span>   <span class="comment">#指定数据集中token_seq或者float_seq域里的分隔符</span></span><br><span class="line">USER_ID_FIELD: user_id <span class="comment">#指定用户id域</span></span><br><span class="line">ITEM_ID_FIELD: item_id <span class="comment">#指定物品id域</span></span><br><span class="line">TIME_FIELD: timestamp  <span class="comment">#指定时间域</span></span><br><span class="line">NEG_PREFIX: neg_   <span class="comment">#指定负采样前缀</span></span><br><span class="line"><span class="comment">#指定从什么文件里读什么列，这里就是从book.inter里面读取user_id, item_id,timestamp这四列</span></span><br><span class="line">load_col:</span><br><span class="line">  inter: [user_id, item_id, timestamp]</span><br></pre></td></tr></table></figure>
+
+<p>需要注意前两条separator，csv文件的话默认分隔符是”,”，还有最后一行local:这里按照数据集的列指定就行，到此数据集基本构造好了。</p>
+<h3 id="用Sequential-model类跑模型——model-setting"><a href="#用Sequential-model类跑模型——model-setting" class="headerlink" title="用Sequential model类跑模型——model setting"></a>用Sequential model类跑模型——model setting</h3><p>以SASRec为例，想跑一个模型，如何看这个模型需要的参数？到 RecBole/recbole/properties/model 底下找到对应模型的yaml文件，打开以后大概长这样。</p>
+<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/lenovo/image-20211205150832821.png" alt="image-20211205150832821"></p>
+<p>这里包含了模型需要的参数，每次调用都到这里改很麻烦，所以recbole可以实现用test.yaml的设置覆盖具体模型的设置，所以只要在test.yaml（主目录下的那个配置文件）里改我们添加，并做一点修改：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">n_layers: <span class="number">2</span></span><br><span class="line">n_heads: <span class="number">2</span></span><br><span class="line">hidden_size: <span class="number">100</span></span><br><span class="line">inner_size: <span class="number">256</span></span><br><span class="line">hidden_dropout_prob: <span class="number">0.5</span></span><br><span class="line">attn_dropout_prob: <span class="number">0.5</span></span><br><span class="line">hidden_act: <span class="string">&#x27;gelu&#x27;</span></span><br><span class="line">layer_norm_eps: <span class="number">1e-12</span></span><br><span class="line">initializer_range: <span class="number">0.02</span></span><br><span class="line">loss_type: <span class="string">&#x27;CE&#x27;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="训练设置——train-setting"><a href="#训练设置——train-setting" class="headerlink" title="训练设置——train setting"></a>训练设置——train setting</h3><p>通用的训练设置也要写到test.yaml中：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># training settings</span><br><span class="line">epochs: 500  				#训练的最大轮数</span><br><span class="line">train_batch_size: 20 #2048 	#训练的batch_size</span><br><span class="line">learner: adam 				#使用的pytorch内置优化器</span><br><span class="line">learning_rate: 0.001 		#学习率</span><br><span class="line">training_neg_sample_num: 0 	#负采样数目</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="评估设置——evaluate-setting"><a href="#评估设置——evaluate-setting" class="headerlink" title="评估设置——evaluate setting"></a>评估设置——evaluate setting</h3><p>通用的评估设置也要写道test.yaml中：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># evalution settings</span><br><span class="line">eval_step: 1 				#每次训练后做evalaution的次数</span><br><span class="line">eval_setting: RO_RS,full 	#对数据随机重排，设置按比例划分数据集，且使用全排序</span><br><span class="line">group_by_user: True 		#是否将一个user的记录划到一个组里，当eval_setting使用RO_RS的时候该项必须是True</span><br><span class="line">split_ratio: [0.8,0.1,0.1] 	#切分比例</span><br><span class="line">metrics: [&quot;Recall&quot;, &quot;MRR&quot;,&quot;NDCG&quot;,&quot;Hit&quot;,&quot;Precision&quot;] #评测标准</span><br><span class="line">topk: [10] #评测标准使用topk，设置成10评测标准就是[&quot;Recall@10&quot;, &quot;MRR@10&quot;, &quot;NDCG@10&quot;, &quot;Hit@10&quot;, &quot;Precision@10&quot;]</span><br><span class="line">valid_metric: MRR@10 		#选取哪个评测标准作为作为提前停止训练的标准</span><br><span class="line">stopping_step: 10 			#控制训练收敛的步骤数，在该步骤数内若选取的评测标准没有什么变化，就可以提前停止了</span><br><span class="line">eval_batch_size: 4096 		#评测的batch_size</span><br></pre></td></tr></table></figure>
+
+<p>recbole实现了earlystopping早停策略，可以设置控制收敛的步骤数。</p>
+<p>eval_setting，可以设置不同的数据切分方式，具体可见<a href="https://recbole.io/cn/evaluation.html">评测 | 伯乐 (recbole.io)</a>，大致如下：</p>
+<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/lenovo/image-20211205163312199.png" alt="image-20211205163312199"></p>
+<h2 id="run！跑起来吧，baseline！"><a href="#run！跑起来吧，baseline！" class="headerlink" title="run！跑起来吧，baseline！"></a>run！跑起来吧，baseline！</h2><p>我们cd到RecBole目录下，此时数据集已经准备好，test.yaml文件也已经写好，可以开始跑实验了，用以下指令：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">python run_recbole.py --model=SASRec --dataset=book ----config_files=test.yaml</span><br></pre></td></tr></table></figure>
+
+<p>如果看不懂参数的话，点进run_recbole.py看一下就明白了！</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>RecBole是个集成度很高，也比较方便用于复现一些基本推荐模型的开源库（在此致敬中国人民大学AI BOX小组！），需要用recbole跑自己的baseline时，只需要三步：</p>
+<ol>
+<li>构造满足原子文件的数据集</li>
+<li>写好.yaml格式的配置文件</li>
+<li>run！</li>
+</ol>
+<h2 id="记录一些遇到的坑"><a href="#记录一些遇到的坑" class="headerlink" title="记录一些遇到的坑"></a>记录一些遇到的坑</h2><h3 id="1-neg-sampling-不能使用-‘CE’-loss"><a href="#1-neg-sampling-不能使用-‘CE’-loss" class="headerlink" title="1. neg_sampling 不能使用 ‘CE’ loss"></a>1. neg_sampling 不能使用 ‘CE’ loss</h3><p>在配置文件中加上一行：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">neg_sampling: (注意这里冒号后面有个空格)</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-使用不上gpu"><a href="#2-使用不上gpu" class="headerlink" title="2.使用不上gpu"></a>2.使用不上gpu</h3><p><strong>问题描述：</strong>程序可以跑起来，但是nvtop看不到它在gpu上运行。并且无论如何修改配置文件都没有用。非常奇怪的问题。检查torch.cuda.is_available()的时候发现，居然输出False，所以原因是用不了CUDA。</p>
+<p><strong>问题原因</strong>：用不了CUDA。</p>
+<p>用conda list检查安装的库时发现，默认安装的torch是cpu的</p>
+<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/lenovo/image-20211205140943532.png" alt="image-20211205140943532"></p>
+<blockquote>
+<p>左边是默认安装的，想了一宿也没想明白为什么默认安装cpu版本</p>
+</blockquote>
+<p>卸载cpu版本再安装cuda版本有点麻烦，所以我直接新建了一个环境，并且自带torch=1.10，然后再根据依赖安装，使用命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pip install -r requirement.txt</span><br></pre></td></tr></table></figure>
+
+<p>这里不用担心torch会被覆盖，因为torch版本大于1.17就会自动跳过了。</p>
+<p>然后总可以跑了吧，运行下面指令（用RecBole需要这样输）</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">python run_recbole.py --model=BERT4Rec --dataset=book ----config_files=bert4rec.yaml</span><br></pre></td></tr></table></figure>
+
+<p>按理说此时torch是建环境时我安装的cuda版本，一定不是cpu版本，然而每次运行仍然是device=cpu。实在让人崩溃！</p>
+<p><strong>解决方案</strong>：</p>
+<p>最后debug多轮，寻找到的解决方案是：</p>
+<ul>
+<li>在run_recbole.py里import torch，并且打印torch.cuda.is_available()</li>
+</ul>
+<p>这样做合理的<strong>可能的原因</strong>：</p>
+<p>可能项目某个地方import torch，import进来的torch是cpu版本的，所以提前import可以解决。</p>
+]]></content>
+      <categories>
+        <category>代码阅读</category>
+      </categories>
+      <tags>
+        <tag>RecBole</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>论文笔记《Streaming Session-based Recommendation》</title>
+    <url>/2022/03/07/SSRM/</url>
+    <content><![CDATA[<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20220307185213298.png" alt="image-20220307185213298"></p>
+<hr>
+<p>原paper：<a href="https://dl.acm.org/doi/10.1145/3292500.3330839">Streaming Session-based Recommendation | Proceedings of the 25th ACM SIGKDD International Conference on Knowledge Discovery &amp; Data Mining</a></p>
+<p>源码解读：未开源</p>
+<hr>
+<p>中译：流会话推荐</p>
+<p>总结：第一篇结合了流推荐和会话推荐的论文（准备开坑）。主要解决两个问题，MF attention + GRU  解决用户行为的不确定性；存储技术+主动采样策略 解决了更贴近实时场景的“高速、海量、连续的流数据”的需求。个人认为可以进一步做的地方：session encoder部分，用新模型；储存技术；采样技术。</p>
+<hr>
+<span id="more"></span>
+
+<h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><ul>
+<li><p>question作者想解决什么问题？ </p>
+<p>1）用户行为的不确定性。</p>
+<p>2）会话推荐在实际场景中会以会话流的形式出现，即连续不断的、海量的、高速的会话数据，但现有会话推荐模型都是离线模型，没有模型可以解决这个问题。</p>
+</li>
+<li><p>method作者通过什么理论/模型来解决这个问题？</p>
+<p>作者提出SSRM(Streaming Session-based Recommendation Machine)模型，其中</p>
+<p>1）为了解决用户行为的不确定性，作者利用历史交互，提出基于矩阵分解的注意力模型。</p>
+<p>2）为了解决流会话数据“海量”、“高速”的挑战，作者基于存储提出使用主动采样策略的流模型。</p>
+</li>
+<li><p>answer作者给出的答案是什么？</p>
+<p>在LastFM和Gowalla数据集上证明了SOTA。</p>
+</li>
+</ul>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>第一篇提出流会话推荐模型的论文。</p>
+<ul>
+<li><p>why作者为什么研究这个课题？    </p>
+<p>“流会话”(Streaming session)的设定更贴近实际。</p>
+</li>
+<li><p>how当前研究到了哪一阶段？</p>
+<p>第一篇提出流会话推荐模型的论文。</p>
+</li>
+<li><p>what作者基于什么样的假设（看不懂最后去查）？</p>
+<p>1）用户的历史交互信息是可获得的</p>
+<p>2）背景是流会话的设定，即会话数据海量、连续不断、迅速地迭代。</p>
+</li>
+</ul>
+<h2 id="Dataset-amp-Metric"><a href="#Dataset-amp-Metric" class="headerlink" title="Dataset &amp; Metric"></a>Dataset &amp; Metric</h2><ul>
+<li>数据来源 </li>
+</ul>
+<p>LastFM：<a href="http://mtg.upf.edu/static/datasets/last.fm/lastfm-dataset-1K.tar.gz">http://mtg.upf.edu/static/datasets/last.fm/lastfm-dataset-1K.tar.gz</a></p>
+<p>Gowalla：<a href="https://snap.stanford.edu/data/loc-gowalla.html">https://snap.stanford.edu/data/loc-gowalla.html</a></p>
+<ul>
+<li>数据划分</li>
+</ul>
+<p>给数据集 $D$ 中的会话按时间排序，分成前60%作为训练集，和后40%作为候选集。为了模拟线上的流数据输入，将候选集再划分成5个等长切片作为测试机。第一个测试机和10%的训练集作为验证集。实验中，若要预测第 $i$ 个测试集的序列行为，那么 $i$ 之前的测试集切片都用作在线训练。</p>
+<ul>
+<li>重要指标 </li>
+</ul>
+<p>MRR@20、Recall@20</p>
+<h2 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h2><ul>
+<li><h3 id="SSRM模型框架"><a href="#SSRM模型框架" class="headerlink" title="SSRM模型框架"></a>SSRM模型框架</h3></li>
+</ul>
+<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20220307191209899.png" alt="image-20220307191209899"></p>
+<p>SSRM的主要工作是，建立一个基于注意力的会话推荐系统（离线模型），再将其拓展到流会话的设定。</p>
+<ul>
+<li><h3 id="离线模型：基于历史行为的注意力编码器"><a href="#离线模型：基于历史行为的注意力编码器" class="headerlink" title="离线模型：基于历史行为的注意力编码器"></a>离线模型：基于历史行为的注意力编码器</h3></li>
+</ul>
+<p>离线模型 = 建模序列 + 矩阵分解</p>
+<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20220307193225545.png" alt="image-20220307193225545"></p>
+<p>其中，建模“序列” = 基础会话编码器 + 基于矩阵分解的注意力会话编码器。这两部分如下1.2.：</p>
+<ol>
+<li><strong>基础会话编码器(Basic Session Encoder)</strong></li>
+</ol>
+<p>主要为了建模当前会话的表示。采用基本的GRU模型（重置门、更新门、候选状态），将最后一个隐藏状态作为当前会话 $i$ 的基本表示： $c_i = h_t$ 。</p>
+<ol start="2">
+<li><strong>基于矩阵分解的注意力会话编码器(MF-based Attentive Session Encoder)</strong></li>
+</ol>
+<p>MF分解得到每个用户的隐含表示 $p_u \in \R ^ {1 \times D} $ 和每个物品的隐含表示 $q_t \in \R ^ {1 \times D} $ 。MF既用来单独作为一个模块，还通过引入MF（利用了历史交互信息）来加强上面的基础模型。</p>
+<p>$p_u $ 和 $q_t$ 的内积  $\hat y_{u,t}^R = &lt;p_u,q_t&gt;=p_u \cdot q_t$ 用来表示用户 $u$ 有多“喜欢”物品 $i$ 。这里的 $q_t$ 和上面的 $h_t$ 是物品 $t$ 的两种表示，作用、含义不同： $h_t$ ，即GRU在物品 $t$ 处的隐含表示，是总结了序列行为(1,2,…,t)的物品表示；而 $q_t$ 作为实际的物品表示，可用于和用户隐含表示做内积，表明用户是否喜欢这个物品。</p>
+<p>为了降低随机性、捕捉用户 $u$ 的主要意图，这里使用了注意力机制编码会话表示 $c_i$：<br>$$<br>c_i = [\ \sum^t_{j=1}\alpha_{u,j}\cdot h_j \ ; h_t \ ]<br>$$<br>其中权重 $\alpha_u = softmax(\hat y_u^R)$ ，即对用户 $u$ 对序列中物品的“喜欢”程度的打分进行softmax，得到和为1的权重。求到加权的表示后，再与GRU得到的会话表示 $h_t$ 拼接，作为最终的会话表示（这里 $h_t$ 用到了两次，一次作为最后一个物品表示，一次作为会话表示）。</p>
+<ol start="3">
+<li><strong>混合注意力推荐系统</strong></li>
+</ol>
+<p>SSRM再进一步将注意力编码器的输出和MF的输出结合，使得模型不仅考虑当前会话的序列行为，还考虑了用户的长期兴趣和共现行为。</p>
+<p>会话编码器最后输出，每个会话对每个物品的打分： $\hat y_{i,t}^S = q_t B c_i^T $  ，表示第 $i$ 个会话对物品 $t$ 的i打分，其中 $q_t \in \R ^ {1 \times D} $ ， $c_i \in \R ^ {1 \times H} $ ，变换矩阵 $B \in \R ^ {D \times H} $ 。</p>
+<p>由MF得到的 $p_u$ 和 $q_t$  的内积  $\hat y_{u,t}^R =p_u \cdot q_t$ 。</p>
+<p>两者使用一个可调参数 $w$ 加权求和  $\hat y_{i,t} = w \hat y_{i,t}^R + (1-w)\hat y_{i,t}^S $ 。</p>
+<p>最后，把物品排序任务当作分类任务，使用CE loss损失函数训练模型。 $r_u$ 是物品的真实标签分布， $\hat y_u$ 是预测的概率分布。<br>$$<br>L(r_u,\hat y_u) = - \sum^n_{i=1} r_{u,i} \cdot log(\hat y_{u,i})<br>$$</p>
+<ul>
+<li><h3 id="在线训练：基于存储的、使用主动采样策略的流模型"><a href="#在线训练：基于存储的、使用主动采样策略的流模型" class="headerlink" title="在线训练：基于存储的、使用主动采样策略的流模型"></a>在线训练：基于存储的、使用主动采样策略的流模型</h3></li>
+</ul>
+<p>建立完基于注意力的会话推荐系统（离线模型）后，再将其拓展到流会话的设定。建立存储的目的是准确地概括总结历史行为。</p>
+<p><strong>1.传统模型的更新方法</strong></p>
+<p>随机采样技术。令 $C$ 为保存会话序列的存储库，令 $t$ 为下一个时刻即将到达的数据实例。当 $t&gt;|C|$ 时，存储库会以 $\frac{|C|}{t} $ 的概率存储这个数据实例，同时随机替换掉存储库 $C$ 里的数据实例。这样得到的存储库可以证明相当于当前数据集的随机采样结果，同时也证明可以保留模型的长期记忆[1]。但是 $\frac{|C|}{t} $ 是随时间递减的，这样模型就会倾向于忽略最近的数据，因为越近的数据被选入存储库的概率越低。而实际场景中是存在用户兴趣漂移的现象的，换句话说，使用这种随机采样技术难以实现“捕捉最新产生的数据中的行为模式”。</p>
+<p><strong>2.主动采样策略</strong></p>
+<p>虽然更新时同时使用整个存储库和所有新到达数据能产生更好结果，但是由于高速的流数据和有限的计算资源，这种方式通常会导致可利用的数据非常少（这个问题也被称为系统过载）。所以需要一个明智的样本选择策略。</p>
+<p>本文提出的主动采样策略的思想和一些主动学习（Active learning）类似，即“选择对系统贡献最大的样本的最小集合”，供用户评估。具体来说，为了使模型在有限时间窗口内尽可能地多学习，采样策略每次应该选择 $C^{new}\cup C$ 中<strong>信息量最大</strong>的会话实例。</p>
+<p>计算会话的信息量，使用会话中每个物品得分的均值，其中物品得分 $r_{u,k}$ 表示用户 $u$ 在当前模型下对物品 $k$ 的预测能力，使用用户隐含表示和物品隐含表示做内积得到 $r_{u,k}=p_u q_k$。$r_{u,k}$ 值越小， $r_{s_i}$ 值越小，说明模型越难以预测该会话中的物品，说明该会话信息量越大，越能修正模型，越该对它进行采样。<br>$$<br>r_{s_i}=\frac{\sum^t_{k=1}r_{u,k}}{t}<br>$$<br>以 $r_{s_i}$ 值对这些会话降序排列，再根据排名计算每个会话的权重因子 $w_{s_i}$，最后得到每个会话的采样概率 $p(s_i)$ ：<br>$$<br>w_{s_i}=exp(\frac{rank_{s_i}}{C\cup C^{new}})<br>;\<br>p(s_i)=\frac{w_{s_i}}{\sum_{s_i \in C \cup C^{new}}w_{s_i}}<br>$$<br>其中，信息量越大的会话排名越靠后，权重因子越高，采样概率也越大。</p>
+<h2 id="Experiment-amp-Table"><a href="#Experiment-amp-Table" class="headerlink" title="Experiment &amp; Table"></a>Experiment &amp; Table</h2><ul>
+<li><h3 id="算法描述"><a href="#算法描述" class="headerlink" title="算法描述"></a>算法描述</h3></li>
+</ul>
+<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20220308193608578.png" alt="image-20220308193608578"></p>
+<ul>
+<li><h3 id="和SBR的经典方法比较"><a href="#和SBR的经典方法比较" class="headerlink" title="和SBR的经典方法比较"></a>和SBR的经典方法比较</h3></li>
+</ul>
+<p>SOTA。LastFM的提升率比Gowalla高的主要原因是，Gowalla更系数，每个用户的点击很少，并且会话数据只有寥寥几个，从而导致训练不充分。</p>
+<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20220308193302601.png" alt="image-20220308193302601"></p>
+<ul>
+<li><h3 id="验证矩阵分解注意力机制的有效性（MF-Attention）"><a href="#验证矩阵分解注意力机制的有效性（MF-Attention）" class="headerlink" title="验证矩阵分解注意力机制的有效性（MF-Attention）"></a>验证矩阵分解注意力机制的有效性（MF-Attention）</h3></li>
+</ul>
+<p>Baseline：只有基础会话编码器（Basic session encoder），好像就是GRU4Rec。三个模型采用相同的streaming技术，以消除线上更新方法带来的影响。SSRM效果最好。</p>
+<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20220308193902198.png" alt="image-20220308193902198"></p>
+<ul>
+<li><h3 id="不同流策略的影响"><a href="#不同流策略的影响" class="headerlink" title="不同流策略的影响"></a>不同流策略的影响</h3></li>
+</ul>
+<p>S1：没有存储库，且仅用新来的数据更新模型。S2：有存储库，采用从 $C$ 中随机采样训练的传统方法。S3：S2的基础上，从 $C\cup C^{new}$ 中采样。S1、S3优于S2，说明相比于历史long-term memory，模型更能从用户最近行为中受益。而SSRM模型优于其它所有，说明本文提出的主动采样策略是有效的。</p>
+<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20220308215603572.png" alt="image-20220308215603572"></p>
+<ul>
+<li><h3 id="不同过载设定的影响"><a href="#不同过载设定的影响" class="headerlink" title="不同过载设定的影响"></a>不同过载设定的影响</h3></li>
+</ul>
+<p>$W$ ：固定时间窗口，即一次能从 $C\cup C^{new}$ 中采样的样本数。 $W$ 越小说明工作负载越重，只训练到有限的序列。横轴看，窗口越大，过载越轻，模型表现越好；反之窗口越大，过载越重，模型表现越差。纵向看不同测试集，因为这些测试集是按时间顺序分的，越往后新用户、新物品越多。但是可以发现，从test2到test5，它们之间的gap越来越小。SSRM能够快速减小这种gap，证明其处理新数据的能力。</p>
+<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20220308215631714.png" alt="image-20220308215631714"></p>
+<ul>
+<li><h3 id="存储库大小的影响"><a href="#存储库大小的影响" class="headerlink" title="存储库大小的影响"></a>存储库大小的影响</h3></li>
+</ul>
+<p> $|C|$ 的大小决定了保留多少历史信息，它保留的观测行为越多，就越可能从历史行为中采样，就会有更多的样本距离current behavior越久远，故模型就会用更少的当前会话信息来更新。换句话说，对于过去没有出现的用户和项目，模型会学习得更少，这将导致性能相对较差。Figure 6 里也能得出这个结论，最近的行为更重要。但是因为存在long-memory problem，如果只用当前session来训练模型的话，结果会变低，总的来说，历史行为和当前行为两者得结合起来。</p>
+<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20220308194605932.png" alt="image-20220308194605932"></p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>[1]Ernesto Diaz-Aviles, Lucas Drumond, Lars Schmidt-Thieme, and Wolfgang Nejdl. 2012. Real-time top-n recommendation in social streams. RecSys (2012)</p>
+]]></content>
+      <categories>
+        <category>论文笔记</category>
+      </categories>
+      <tags>
+        <tag>流会话推荐</tag>
+        <tag>SSRM</tag>
       </tags>
   </entry>
   <entry>
@@ -761,136 +892,5 @@ pip install xxx.whl
 <p>2.</p>
 <p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211118185724771.png" alt="image-20211118185724771"></p>
 ]]></content>
-  </entry>
-  <entry>
-    <title>论文笔记《Streaming Session-based Recommendation》</title>
-    <url>/2022/03/07/SSRM/</url>
-    <content><![CDATA[<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20220307185213298.png" alt="image-20220307185213298"></p>
-<hr>
-<p>原paper：<a href="https://dl.acm.org/doi/10.1145/3292500.3330839">Streaming Session-based Recommendation | Proceedings of the 25th ACM SIGKDD International Conference on Knowledge Discovery &amp; Data Mining</a></p>
-<p>源码解读：未开源</p>
-<hr>
-<p>中译：流会话推荐</p>
-<p>总结：第一篇结合了流推荐和会话推荐的论文（准备开坑）。主要解决两个问题，MF attention + GRU  解决用户行为的不确定性；存储技术+主动采样策略 解决了更贴近实时场景的“高速、海量、连续的流数据”的需求。个人认为可以进一步做的地方：session encoder部分，用新模型；储存技术；采样技术。</p>
-<hr>
-<span id="more"></span>
-
-<h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><ul>
-<li><p>question作者想解决什么问题？ </p>
-<p>1）用户行为的不确定性。</p>
-<p>2）会话推荐在实际场景中会以会话流的形式出现，即连续不断的、海量的、高速的会话数据，但现有会话推荐模型都是离线模型，没有模型可以解决这个问题。</p>
-</li>
-<li><p>method作者通过什么理论/模型来解决这个问题？</p>
-<p>作者提出SSRM(Streaming Session-based Recommendation Machine)模型，其中</p>
-<p>1）为了解决用户行为的不确定性，作者利用历史交互，提出基于矩阵分解的注意力模型。</p>
-<p>2）为了解决流会话数据“海量”、“高速”的挑战，作者基于存储提出使用主动采样策略的流模型。</p>
-</li>
-<li><p>answer作者给出的答案是什么？</p>
-<p>在LastFM和Gowalla数据集上证明了SOTA。</p>
-</li>
-</ul>
-<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>第一篇提出流会话推荐模型的论文。</p>
-<ul>
-<li><p>why作者为什么研究这个课题？    </p>
-<p>“流会话”(Streaming session)的设定更贴近实际。</p>
-</li>
-<li><p>how当前研究到了哪一阶段？</p>
-<p>第一篇提出流会话推荐模型的论文。</p>
-</li>
-<li><p>what作者基于什么样的假设（看不懂最后去查）？</p>
-<p>1）用户的历史交互信息是可获得的</p>
-<p>2）背景是流会话的设定，即会话数据海量、连续不断、迅速地迭代。</p>
-</li>
-</ul>
-<h2 id="Dataset-amp-Metric"><a href="#Dataset-amp-Metric" class="headerlink" title="Dataset &amp; Metric"></a>Dataset &amp; Metric</h2><ul>
-<li>数据来源 </li>
-</ul>
-<p>LastFM：<a href="http://mtg.upf.edu/static/datasets/last.fm/lastfm-dataset-1K.tar.gz">http://mtg.upf.edu/static/datasets/last.fm/lastfm-dataset-1K.tar.gz</a></p>
-<p>Gowalla：<a href="https://snap.stanford.edu/data/loc-gowalla.html">https://snap.stanford.edu/data/loc-gowalla.html</a></p>
-<ul>
-<li>数据划分</li>
-</ul>
-<p>给数据集 $D$ 中的会话按时间排序，分成前60%作为训练集，和后40%作为候选集。为了模拟线上的流数据输入，将候选集再划分成5个等长切片作为测试机。第一个测试机和10%的训练集作为验证集。实验中，若要预测第 $i$ 个测试集的序列行为，那么 $i$ 之前的测试集切片都用作在线训练。</p>
-<ul>
-<li>重要指标 </li>
-</ul>
-<p>MRR@20、Recall@20</p>
-<h2 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h2><ul>
-<li><h3 id="SSRM模型框架"><a href="#SSRM模型框架" class="headerlink" title="SSRM模型框架"></a>SSRM模型框架</h3></li>
-</ul>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20220307191209899.png" alt="image-20220307191209899"></p>
-<p>SSRM的主要工作是，建立一个基于注意力的会话推荐系统（离线模型），再将其拓展到流会话的设定。</p>
-<ul>
-<li><h3 id="离线模型：基于历史行为的注意力编码器"><a href="#离线模型：基于历史行为的注意力编码器" class="headerlink" title="离线模型：基于历史行为的注意力编码器"></a>离线模型：基于历史行为的注意力编码器</h3></li>
-</ul>
-<p>离线模型 = 建模序列 + 矩阵分解</p>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20220307193225545.png" alt="image-20220307193225545"></p>
-<p>其中，建模“序列” = 基础会话编码器 + 基于矩阵分解的注意力会话编码器。这两部分如下1.2.：</p>
-<ol>
-<li><strong>基础会话编码器(Basic Session Encoder)</strong></li>
-</ol>
-<p>主要为了建模当前会话的表示。采用基本的GRU模型（重置门、更新门、候选状态），将最后一个隐藏状态作为当前会话 $i$ 的基本表示： $c_i = h_t$ 。</p>
-<ol start="2">
-<li><strong>基于矩阵分解的注意力会话编码器(MF-based Attentive Session Encoder)</strong></li>
-</ol>
-<p>MF分解得到每个用户的隐含表示 $p_u \in \R ^ {1 \times D} $ 和每个物品的隐含表示 $q_t \in \R ^ {1 \times D} $ 。MF既用来单独作为一个模块，还通过引入MF（利用了历史交互信息）来加强上面的基础模型。</p>
-<p>$p_u $ 和 $q_t$ 的内积  $\hat y_{u,t}^R = &lt;p_u,q_t&gt;=p_u \cdot q_t$ 用来表示用户 $u$ 有多“喜欢”物品 $i$ 。这里的 $q_t$ 和上面的 $h_t$ 是物品 $t$ 的两种表示，作用、含义不同： $h_t$ ，即GRU在物品 $t$ 处的隐含表示，是总结了序列行为(1,2,…,t)的物品表示；而 $q_t$ 作为实际的物品表示，可用于和用户隐含表示做内积，表明用户是否喜欢这个物品。</p>
-<p>为了降低随机性、捕捉用户 $u$ 的主要意图，这里使用了注意力机制编码会话表示 $c_i$：<br>$$<br>c_i = [\ \sum^t_{j=1}\alpha_{u,j}\cdot h_j \ ; h_t \ ]<br>$$<br>其中权重 $\alpha_u = softmax(\hat y_u^R)$ ，即对用户 $u$ 对序列中物品的“喜欢”程度的打分进行softmax，得到和为1的权重。求到加权的表示后，再与GRU得到的会话表示 $h_t$ 拼接，作为最终的会话表示（这里 $h_t$ 用到了两次，一次作为最后一个物品表示，一次作为会话表示）。</p>
-<ol start="3">
-<li><strong>混合注意力推荐系统</strong></li>
-</ol>
-<p>SSRM再进一步将注意力编码器的输出和MF的输出结合，使得模型不仅考虑当前会话的序列行为，还考虑了用户的长期兴趣和共现行为。</p>
-<p>会话编码器最后输出，每个会话对每个物品的打分： $\hat y_{i,t}^S = q_t B c_i^T $  ，表示第 $i$ 个会话对物品 $t$ 的i打分，其中 $q_t \in \R ^ {1 \times D} $ ， $c_i \in \R ^ {1 \times H} $ ，变换矩阵 $B \in \R ^ {D \times H} $ 。</p>
-<p>由MF得到的 $p_u$ 和 $q_t$  的内积  $\hat y_{u,t}^R =p_u \cdot q_t$ 。</p>
-<p>两者使用一个可调参数 $w$ 加权求和  $\hat y_{i,t} = w \hat y_{i,t}^R + (1-w)\hat y_{i,t}^S $ 。</p>
-<p>最后，把物品排序任务当作分类任务，使用CE loss损失函数训练模型。 $r_u$ 是物品的真实标签分布， $\hat y_u$ 是预测的概率分布。<br>$$<br>L(r_u,\hat y_u) = - \sum^n_{i=1} r_{u,i} \cdot log(\hat y_{u,i})<br>$$</p>
-<ul>
-<li><h3 id="在线训练：基于存储的、使用主动采样策略的流模型"><a href="#在线训练：基于存储的、使用主动采样策略的流模型" class="headerlink" title="在线训练：基于存储的、使用主动采样策略的流模型"></a>在线训练：基于存储的、使用主动采样策略的流模型</h3></li>
-</ul>
-<p>建立完基于注意力的会话推荐系统（离线模型）后，再将其拓展到流会话的设定。建立存储的目的是准确地概括总结历史行为。</p>
-<p><strong>1.传统模型的更新方法</strong></p>
-<p>随机采样技术。令 $C$ 为保存会话序列的存储库，令 $t$ 为下一个时刻即将到达的数据实例。当 $t&gt;|C|$ 时，存储库会以 $\frac{|C|}{t} $ 的概率存储这个数据实例，同时随机替换掉存储库 $C$ 里的数据实例。这样得到的存储库可以证明相当于当前数据集的随机采样结果，同时也证明可以保留模型的长期记忆[1]。但是 $\frac{|C|}{t} $ 是随时间递减的，这样模型就会倾向于忽略最近的数据，因为越近的数据被选入存储库的概率越低。而实际场景中是存在用户兴趣漂移的现象的，换句话说，使用这种随机采样技术难以实现“捕捉最新产生的数据中的行为模式”。</p>
-<p><strong>2.主动采样策略</strong></p>
-<p>虽然更新时同时使用整个存储库和所有新到达数据能产生更好结果，但是由于高速的流数据和有限的计算资源，这种方式通常会导致可利用的数据非常少（这个问题也被称为系统过载）。所以需要一个明智的样本选择策略。</p>
-<p>本文提出的主动采样策略的思想和一些主动学习（Active learning）类似，即“选择对系统贡献最大的样本的最小集合”，供用户评估。具体来说，为了使模型在有限时间窗口内尽可能地多学习，采样策略每次应该选择 $C^{new}\cup C$ 中<strong>信息量最大</strong>的会话实例。</p>
-<p>计算会话的信息量，使用会话中每个物品得分的均值，其中物品得分 $r_{u,k}$ 表示用户 $u$ 在当前模型下对物品 $k$ 的预测能力，使用用户隐含表示和物品隐含表示做内积得到 $r_{u,k}=p_u q_k$。$r_{u,k}$ 值越小， $r_{s_i}$ 值越小，说明模型越难以预测该会话中的物品，说明该会话信息量越大，越能修正模型，越该对它进行采样。<br>$$<br>r_{s_i}=\frac{\sum^t_{k=1}r_{u,k}}{t}<br>$$<br>以 $r_{s_i}$ 值对这些会话降序排列，再根据排名计算每个会话的权重因子 $w_{s_i}$，最后得到每个会话的采样概率 $p(s_i)$ ：<br>$$<br>w_{s_i}=exp(\frac{rank_{s_i}}{C\cup C^{new}})<br>;\<br>p(s_i)=\frac{w_{s_i}}{\sum_{s_i \in C \cup C^{new}}w_{s_i}}<br>$$<br>其中，信息量越大的会话排名越靠后，权重因子越高，采样概率也越大。</p>
-<h2 id="Experiment-amp-Table"><a href="#Experiment-amp-Table" class="headerlink" title="Experiment &amp; Table"></a>Experiment &amp; Table</h2><ul>
-<li><h3 id="算法描述"><a href="#算法描述" class="headerlink" title="算法描述"></a>算法描述</h3></li>
-</ul>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20220308193608578.png" alt="image-20220308193608578"></p>
-<ul>
-<li><h3 id="和SBR的经典方法比较"><a href="#和SBR的经典方法比较" class="headerlink" title="和SBR的经典方法比较"></a>和SBR的经典方法比较</h3></li>
-</ul>
-<p>SOTA。LastFM的提升率比Gowalla高的主要原因是，Gowalla更系数，每个用户的点击很少，并且会话数据只有寥寥几个，从而导致训练不充分。</p>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20220308193302601.png" alt="image-20220308193302601"></p>
-<ul>
-<li><h3 id="验证矩阵分解注意力机制的有效性（MF-Attention）"><a href="#验证矩阵分解注意力机制的有效性（MF-Attention）" class="headerlink" title="验证矩阵分解注意力机制的有效性（MF-Attention）"></a>验证矩阵分解注意力机制的有效性（MF-Attention）</h3></li>
-</ul>
-<p>Baseline：只有基础会话编码器（Basic session encoder），好像就是GRU4Rec。三个模型采用相同的streaming技术，以消除线上更新方法带来的影响。SSRM效果最好。</p>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20220308193902198.png" alt="image-20220308193902198"></p>
-<ul>
-<li><h3 id="不同流策略的影响"><a href="#不同流策略的影响" class="headerlink" title="不同流策略的影响"></a>不同流策略的影响</h3></li>
-</ul>
-<p>S1：没有存储库，且仅用新来的数据更新模型。S2：有存储库，采用从 $C$ 中随机采样训练的传统方法。S3：S2的基础上，从 $C\cup C^{new}$ 中采样。S1、S3优于S2，说明相比于历史long-term memory，模型更能从用户最近行为中受益。而SSRM模型优于其它所有，说明本文提出的主动采样策略是有效的。</p>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20220308215603572.png" alt="image-20220308215603572"></p>
-<ul>
-<li><h3 id="不同过载设定的影响"><a href="#不同过载设定的影响" class="headerlink" title="不同过载设定的影响"></a>不同过载设定的影响</h3></li>
-</ul>
-<p>$W$ ：固定时间窗口，即一次能从 $C\cup C^{new}$ 中采样的样本数。 $W$ 越小说明工作负载越重，只训练到有限的序列。横轴看，窗口越大，过载越轻，模型表现越好；反之窗口越大，过载越重，模型表现越差。纵向看不同测试集，因为这些测试集是按时间顺序分的，越往后新用户、新物品越多。但是可以发现，从test2到test5，它们之间的gap越来越小。SSRM能够快速减小这种gap，证明其处理新数据的能力。</p>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20220308215631714.png" alt="image-20220308215631714"></p>
-<ul>
-<li><h3 id="存储库大小的影响"><a href="#存储库大小的影响" class="headerlink" title="存储库大小的影响"></a>存储库大小的影响</h3></li>
-</ul>
-<p> $|C|$ 的大小决定了保留多少历史信息，它保留的观测行为越多，就越可能从历史行为中采样，就会有更多的样本距离current behavior越久远，故模型就会用更少的当前会话信息来更新。换句话说，对于过去没有出现的用户和项目，模型会学习得更少，这将导致性能相对较差。Figure 6 里也能得出这个结论，最近的行为更重要。但是因为存在long-memory problem，如果只用当前session来训练模型的话，结果会变低，总的来说，历史行为和当前行为两者得结合起来。</p>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20220308194605932.png" alt="image-20220308194605932"></p>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>[1]Ernesto Diaz-Aviles, Lucas Drumond, Lars Schmidt-Thieme, and Wolfgang Nejdl. 2012. Real-time top-n recommendation in social streams. RecSys (2012)</p>
-]]></content>
-      <categories>
-        <category>论文笔记</category>
-      </categories>
-      <tags>
-        <tag>流会话推荐</tag>
-        <tag>SSRM</tag>
-      </tags>
   </entry>
 </search>
