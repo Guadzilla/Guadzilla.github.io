@@ -27,40 +27,40 @@
 <meta property="og:site_name" content="瓜斯拉的逆袭">
 <meta property="og:description" content="原paper：https:&#x2F;&#x2F;dl.acm.org&#x2F;doi&#x2F;10.1145&#x2F;3336191.3371786 源码解读：https:&#x2F;&#x2F;github.com&#x2F;Guadzilla&#x2F;Paper_notebook&#x2F;tree&#x2F;main&#x2F;TiSASRec  中译：时间间隔感知的自注意力序列推荐 总结：是SASRec工作的延续，在self-attention的基础上加了绝对位置信息和相对时间间隔信息（加在Q">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117164643993.png">
-<meta property="og:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211116223143274.png">
-<meta property="og:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211116223530787.png">
-<meta property="og:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211116225152019.png">
-<meta property="og:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117222616679.png">
-<meta property="og:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117081419839.png">
-<meta property="og:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117081413089.png">
-<meta property="og:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117222727853.png">
-<meta property="og:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117090739720.png">
-<meta property="og:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117093429227.png">
-<meta property="og:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117093655881.png">
-<meta property="og:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117093809122.png">
-<meta property="og:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117094112160.png">
-<meta property="og:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117095415283.png">
-<meta property="og:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117100703091.png">
-<meta property="og:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117101056812.png">
-<meta property="og:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117103132511.png">
-<meta property="og:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117103534252.png">
-<meta property="og:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117103553274.png">
-<meta property="og:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117114708312.png">
-<meta property="og:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117114729528.png">
-<meta property="og:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117104027269.png">
-<meta property="og:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117104705615.png">
-<meta property="og:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117105425551.png">
-<meta property="og:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117110513024.png">
-<meta property="og:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117111955529.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117164643993.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211116223143274.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211116223530787.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211116225152019.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117222616679.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117081419839.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117081413089.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117222727853.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117090739720.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117093429227.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117093655881.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117093809122.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117094112160.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117095415283.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117100703091.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117101056812.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117103132511.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117103534252.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117103553274.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117114708312.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117114729528.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117104027269.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117104705615.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117105425551.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117110513024.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117111955529.png">
 <meta property="article:published_time" content="2021-11-18T12:39:02.000Z">
-<meta property="article:modified_time" content="2021-11-22T14:31:50.094Z">
+<meta property="article:modified_time" content="2022-03-28T02:46:47.207Z">
 <meta property="article:author" content="Guadzilla">
 <meta property="article:tag" content="序列推荐">
 <meta property="article:tag" content="自注意力">
 <meta property="article:tag" content="TiSASRec">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117164643993.png">
+<meta name="twitter:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117164643993.png">
 
 <link rel="canonical" href="http://guadzilla.github.io/2021/11/18/TiSASRec/">
 
@@ -257,7 +257,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-11-22 22:31:50" itemprop="dateModified" datetime="2021-11-22T22:31:50+08:00">2021-11-22</time>
+                <time title="修改时间：2022-03-28 10:46:47" itemprop="dateModified" datetime="2022-03-28T10:46:47+08:00">2022-03-28</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -301,7 +301,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117164643993.png"></p>
+        <p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117164643993.png"></p>
 <hr>
 <p>原paper：<a target="_blank" rel="noopener" href="https://dl.acm.org/doi/10.1145/3336191.3371786">https://dl.acm.org/doi/10.1145/3336191.3371786</a></p>
 <p>源码解读：<a target="_blank" rel="noopener" href="https://github.com/Guadzilla/Paper_notebook/tree/main/TiSASRec">https://github.com/Guadzilla/Paper_notebook/tree/main/TiSASRec</a></p>
@@ -363,29 +363,29 @@
 <h2 id="Method-amp-Table"><a href="#Method-amp-Table" class="headerlink" title="Method &amp; Table"></a>Method &amp; Table</h2><ul>
 <li>模型架构</li>
 </ul>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211116223143274.png"></p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211116223143274.png"></p>
 <ul>
 <li>参数说明</li>
 </ul>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211116223530787.png" alt="image-20211116223530787"></p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211116223530787.png" alt="image-20211116223530787"></p>
 <p><strong>1.个性化的时间间隔（time interval）</strong></p>
 <p>规定了序列$S$的maxlen（n），长度小于n的序列用一个特殊标记的padding item来padding。时间序列$T$用第一个item的timestamps来padding（到这里还只是时间戳）。</p>
 <p>对每个用户制定个性化的时间间隔，个性化指的其实就是下面介绍的缩放操作。对用户$u$来说，时间戳序列$t=(t_1,t_2,…,t_n)$，用任意两个物品的时间戳之差表示物品之间的时间间隔，作为任意两个物品之间的关系（relation）$r_{ij}$，于是得到时间间隔集合$R^u$。规定一个缩放系数$r^u_{min}=min(R^u)$，即序列里的最小时间间隔，再对所有时间间隔缩放$r^u_{ij}=\lfloor\frac{|r_i-r_j|}{r^u_{min}}\rfloor$，得到时间间隔矩阵$M^u\in N^{n\times n}$。</p>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211116225152019.png" alt="image-20211116225152019"></p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211116225152019.png" alt="image-20211116225152019"></p>
 <p>另外，论文还规定了每个$r^u_{ij}$的阈值，对大于阈值的做了一个clip操作得到$M^u_{clipped}$。</p>
 <p><strong>2.Embedding层</strong></p>
 <ul>
 <li>item的表示：padding item用$\vec0$表示，其它每个item用d维向量表示，构成$M^I\in R^{|I|\times d}$的item embedding矩阵，则前n个item的表示为$E^I\in R^{n\times d}$。</li>
 </ul>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117222616679.png" alt="image-20211117222616679"></p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117222616679.png" alt="image-20211117222616679"></p>
 <ul>
 <li>position 的表示：即位置编码，用两个K、V矩阵$M^P_K\in R^{n\times d}$和$M^P_V\in R^{n\times d}$，表示每个位置（序列最大长度为n）的Key和Value向量，分别为$E^P_K\in R^{n\times d}$和$E^P_V\in R^{n\times d}$。</li>
 </ul>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117081419839.png" alt="image-20211117081419839"></p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117081419839.png" alt="image-20211117081419839"></p>
 <ul>
 <li>relative time interval的表示：和positional embedding相似，用两个K、V矩阵$E^P_K\in R^{k\times d}$和$E^P_V\in R^{k\times d}$，表示每个位置（序列最大长度为n）的Key和Value向量，其中k表示一共有k种相对时间间隔。于是clipped后的$M^u_{clipped}$，把对应的$r_{ij}$替换成对应的K、V向量，就得到了$E^R_K\in R^{n\times n\times d}$和$E^R_V\in R^{n\times n\times d}$。</li>
 </ul>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117081413089.png" alt="image-20211117081413089"></p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117081413089.png" alt="image-20211117081413089"></p>
 <p><strong>3.时间间隔感知的自注意力机制</strong></p>
 <p>仅有item和对应的时间戳也不能把序列确定下来，还要加入item在序列中的位置。</p>
 <ul>
@@ -394,11 +394,11 @@
 <p>传统的自注意力层为QKV模式，可以定义成$Attention(Q,K,V)=softmax(\frac{QK^T}{\sqrt{d_k}})V$。用item embedding乘以$W^Q、W^K、W^V$投影到其对应的$Querry、Key、Value$空间上。</p>
 <p>这里本质上也是这么做的，但对K和V做了一点改变。</p>
 <p>作者首先将$E^I=(m_{s_1},m_{s_2},…,m_{s_n})$表示的item序列变换新序列$Z=(z_1,z_2,…,z_n)$，$z_i\in R^d$。</p>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117222727853.png" alt="image-20211117222727853"></p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117222727853.png" alt="image-20211117222727853"></p>
 <p>其中$(m_{s_j}W^V+r_{ij}^v+p_j^v)$**对应QKV模式里的$Value$**，其中$m_{s_j}W^Q$是将item embedding投影到$Value$空间，不过在此基础上还加上了realation embedding（相对时间间隔）和position embedding（位置编码）的value表示。</p>
 <p>找到$Value$以后，公式就可以写成：$z_i=\sum^n_{j=1}\alpha_{ij}\ Value_j$。</p>
 <p>系数$\alpha_{ij}$是其实就是$softmax(\frac{QK^T}{\sqrt{d_k}})$部分。$softmax()$在论文中体现在$\alpha_{ij}=\frac{exp\ e_{ij}}{\sum^n_{k=1}exp\ e_{ik}}$，那么可以猜测$\frac{QK^T}{\sqrt{d_k}}$就对应论文中的$e_{ij}$了。事实正如此，$e_{ij}$被定义为：</p>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117090739720.png" alt="image-20211117090739720"></p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117090739720.png" alt="image-20211117090739720"></p>
 <p>其中$m_{s_j}W^Q$是将item embedding投影到$Querry$空间，**对应QKV模式里的$Querry$**。</p>
 <p>$(m_{s_j}W^K+r^k_{ij}+p^k_j)$，**对应QKV模式里的$Key$**，其中$m_{s_j}W^K$是将item embedding投影到$Key$空间，不过在此基础上还加上了realation embedding（相对时间间隔）和position embedding（位置编码）的key表示，另外除以的$\sqrt{d}$是缩放系数。</p>
 <ul>
@@ -409,44 +409,44 @@
 <li><strong>前馈层Point-wise Feef-Forward Network</strong></li>
 </ul>
 <p>FFN为模型加入非线性性。</p>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117093429227.png" alt="image-20211117093429227"></p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117093429227.png" alt="image-20211117093429227"></p>
 <p>Residual connection和dropout正则化。</p>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117093655881.png" alt="image-20211117093655881"></p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117093655881.png" alt="image-20211117093655881"></p>
 <p>Layer Norm正则化。</p>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117093809122.png" alt="image-20211117093809122"></p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117093809122.png" alt="image-20211117093809122"></p>
 <p><strong>4.预测层</strong></p>
 <p>常规的点积计算每个物品的得分。</p>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117094112160.png" alt="image-20211117094112160"></p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117094112160.png" alt="image-20211117094112160"></p>
 <p><strong>5.模型训练</strong></p>
 <p>取物品序列$\widetilde{S_{|S^u|}}=(S^u_1,S^u_2,…,S^u_{|S^u|})$和对应的时间序列$\widetilde{T_{|T^u|}}=(T^u_1,T^u_2,…,T^u_{|T^u|})$的前$|S^u|-1$项，即$\widetilde{S_{|S^u|-1}}=(S^=u_1,S^u_2,…,S^u_{|S^u|-1})$和$\widetilde{T_{|T^u|-1}}=(T^u_1,T^u_2,…,T^u_{|T^u-1|})$。通过裁剪和补长各自化成成相同长度n的两个序列$s=(s_1,s_2,…,s_n)$，和$t=(t_1,t_2,…,t_n)$。给定这两个序列，再规定对应的输出序列$o=(o_1,o_2,…,o_n)$，其中$o_i$定义为：</p>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117095415283.png" alt="image-20211117095415283"></p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117095415283.png" alt="image-20211117095415283"></p>
 <p>简而言之，padding项的输出为&lt;pad&gt;；$s$最后一项之前的输出（预测）为下一项；$s$最后一项的输出（预测）为$S^u_{|S^u|}$，注意$S^u_{|S^u|}$不在$s$里，因为一开始就把最后一项拿出来了。</p>
 <p>loss采用进行负采样的binary cross entropy，加入了F正则项：</p>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117100703091.png" alt="image-20211117100703091"></p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117100703091.png" alt="image-20211117100703091"></p>
 <p>padding项也计算了loss，但是没有意义，所以实际计算时把padding项的loss mask掉。</p>
 <h2 id="Experiment-amp-Table"><a href="#Experiment-amp-Table" class="headerlink" title="Experiment &amp; Table"></a>Experiment &amp; Table</h2><p><strong>1.模型表现</strong></p>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117101056812.png" alt="image-20211117101056812"></p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117101056812.png" alt="image-20211117101056812"></p>
 <ul>
 <li>TiSASRec在6个数据集上达到了SOTA</li>
 </ul>
 <p><strong>2.Ablation Study</strong></p>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117103132511.png" alt="image-20211117103132511"></p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117103132511.png" alt="image-20211117103132511"></p>
 <ul>
 <li>TiSASRec-R去掉了在K和V里去掉了position embedding（绝对位置）</li>
 </ul>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117103534252.png" alt="image-20211117103534252"></p>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117103553274.png" alt="image-20211117103553274"></p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117103534252.png" alt="image-20211117103534252"></p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117103553274.png" alt="image-20211117103553274"></p>
 <ul>
 <li>SASRec去掉了relative time interval（relation，相对时间间隔）</li>
 </ul>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117114708312.png" alt="image-20211117114708312"></p>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117114729528.png" alt="image-20211117114729528"></p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117114708312.png" alt="image-20211117114708312"></p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117114729528.png" alt="image-20211117114729528"></p>
 <ul>
 <li>结果表明保留绝对位置和相对时间间隔时model performance最好</li>
 </ul>
 <p><strong>3.超参数实验</strong></p>
 <p><strong>A.隐向量维度d</strong></p>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117104027269.png" alt="image-20211117104027269"></p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117104027269.png" alt="image-20211117104027269"></p>
 <ul>
 <li>不同模型在不同数据集（<em>除了Games和Steam，why？</em>）上选择d={10，20，30，40，50}</li>
 <li>基本上所给模型在所给数据集上都是d越大越好</li>
@@ -454,28 +454,28 @@
 <li>所以最后选d=50</li>
 </ul>
 <p><strong>B. 序列最大长度n</strong></p>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117104705615.png" alt="image-20211117104705615"></p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117104705615.png" alt="image-20211117104705615"></p>
 <ul>
 <li>n越大效果越好，并且在这两个数据集上SASRec表现比TiSASRec差且更快收敛。</li>
 <li>所以最后选n=50</li>
 <li><em>疑问：只选了MovieLens和Amazon CD&amp;Vinyl做实验，why？SASRec论文里选MovieLens-1m做实验的时候maxlen选的可是200，且performance比TiSASRec选50时好….这篇论文maxlen选的最大才50，why？</em></li>
 </ul>
 <p><strong>C.最大时间间隔k</strong></p>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117105425551.png" alt="image-20211117105425551"></p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117105425551.png" alt="image-20211117105425551"></p>
 <ul>
 <li>k越大意味着要训练的参数越多</li>
 <li>TiSASRec整体上更稳定，TiSASRec-R当k取合适时表现最好，但当k更大时表现变差。</li>
 <li><em>疑问：ml-1m上比较稳定且permformance在提升，到最大值2048。但CD&amp;Vinyl上最好表现是k=256，但论文最后选的k=512</em></li>
 </ul>
 <p><strong>4.个性化时间间隔实验</strong></p>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117110513024.png" alt="image-20211117110513024"></p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117110513024.png" alt="image-20211117110513024"></p>
 <ul>
 <li>Method（1）直接用时间戳作为特征，Method（2）使用没缩放的时间间隔，Method（3）使用个性化（根据每个用户最小时间间隔缩放后的）的时间间隔，即论文方法。</li>
 <li>注意前两个方法没有使用时间戳裁剪 timestamps clip</li>
 <li>Method（3）的performence最好</li>
 </ul>
 <p><strong>5.可视化</strong></p>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211117111955529.png" alt="image-20211117111955529"></p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117111955529.png" alt="image-20211117111955529"></p>
 <ul>
 <li>Figure 7 表明预测时使用时间间隔产生的推荐不一样，而且好像更准确</li>
 <li>Figure 8 是不同时间间隔的权重可视化<ul>

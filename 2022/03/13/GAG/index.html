@@ -27,27 +27,27 @@
 <meta property="og:site_name" content="瓜斯拉的逆袭">
 <meta property="og:description" content="原paper：GAG: Global Attributed Graph Neural Network for Streaming Session-Based Recommendation 源码解读：（近期发布）  中译：基于流会话推荐的全局属性图神经网络 总结：将SSRM的encoder部分换成了图神经网络模型，并且沿用了NARM、SRGNN等采用的注意力机制，将用户信息作为全局信息融入GNN">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20220309191028621.png">
-<meta property="og:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20220309205703438.png">
-<meta property="og:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/lenovo/image-20220312132405693.png">
-<meta property="og:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20220313210103872.png">
-<meta property="og:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20220314084551972.png">
-<meta property="og:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20220314085304068.png">
-<meta property="og:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20220314091613738.png">
-<meta property="og:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20220314092750543.png">
-<meta property="og:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/lenovo/image-20220314100934020.png">
-<meta property="og:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/lenovo/image-20220314100603124.png">
-<meta property="og:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/lenovo/image-20220314103059323.png">
-<meta property="og:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/lenovo/image-20220314104151741.png">
-<meta property="og:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/lenovo/image-20220314104403575.png">
-<meta property="og:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/lenovo/image-20220314104558903.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220309191028621.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220309205703438.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/lenovo/image-20220312132405693.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220313210103872.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220314084551972.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220314085304068.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220314091613738.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220314092750543.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/lenovo/image-20220314100934020.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/lenovo/image-20220314100603124.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/lenovo/image-20220314103059323.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/lenovo/image-20220314104151741.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/lenovo/image-20220314104403575.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/lenovo/image-20220314104558903.png">
 <meta property="article:published_time" content="2022-03-12T16:00:00.000Z">
-<meta property="article:modified_time" content="2022-03-14T08:12:09.290Z">
+<meta property="article:modified_time" content="2022-03-28T02:43:34.334Z">
 <meta property="article:author" content="Guadzilla">
 <meta property="article:tag" content="流会话推荐">
 <meta property="article:tag" content="GAG">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20220309191028621.png">
+<meta name="twitter:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220309191028621.png">
 
 <link rel="canonical" href="http://guadzilla.github.io/2022/03/13/GAG/">
 
@@ -244,7 +244,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-03-14 16:12:09" itemprop="dateModified" datetime="2022-03-14T16:12:09+08:00">2022-03-14</time>
+                <time title="修改时间：2022-03-28 10:43:34" itemprop="dateModified" datetime="2022-03-28T10:43:34+08:00">2022-03-28</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -288,7 +288,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20220309191028621.png" alt="image-20220309191028621"></p>
+        <p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220309191028621.png" alt="image-20220309191028621"></p>
 <hr>
 <p>原paper：<a target="_blank" rel="noopener" href="https://doi.org/10.1145/3397271.3401109"><em>GAG: Global Attributed Graph Neural Network for Streaming Session-Based Recommendation</em></a></p>
 <p>源码解读：（近期发布）</p>
@@ -350,10 +350,10 @@
 <p>User u 在时间步 t 的会话序列：$ S_{u,t}=[v_1,v_2,…,v_l]$ </p>
 <p>任务目标，根据用户 $u$ 的历史会话 ${S_{u,0},S_{u,1},…,S_{u,t}}$ 预测下一个可能交互的物品 $ v_{t+1}$ </p>
 <p>与会话推荐不同的是，这里假设所有会话 $S$ 都以很快的速度达到，所以受限于算力，必须选取高效的方式处理历史会话信息和当前会话信息。而会话推荐，没有流数据这一设定，可以同时处理用户所有序列，不必考虑效率。</p>
-<h3 id="GAG模型框架"><a href="#GAG模型框架" class="headerlink" title="GAG模型框架"></a>GAG模型框架</h3><p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20220309205703438.png" alt="image-20220309205703438"></p>
+<h3 id="GAG模型框架"><a href="#GAG模型框架" class="headerlink" title="GAG模型框架"></a>GAG模型框架</h3><p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220309205703438.png" alt="image-20220309205703438"></p>
 <p>GAG的主要工作由两部分构成，1）GAG model：将用户信息转化为全局属性并将其融入到会话图中；2）Wasserstein reservoir存储库策略用来学习流数据。</p>
 <h3 id="Global-Attributed-Graph-GAG"><a href="#Global-Attributed-Graph-GAG" class="headerlink" title="Global Attributed Graph (GAG)"></a>Global Attributed Graph (GAG)</h3><h4 id="全局属性的会话图"><a href="#全局属性的会话图" class="headerlink" title="全局属性的会话图"></a>全局属性的会话图</h4><p>建图方式和SRGNN一样，建成有向图，不同的是加入了 <strong>全局属性（用户属性）</strong> $u$  变成三元组 $G_s = (u,V_s,E_s)$ ，图的边定义为：$E_s=(w_{s,(n-1)n},v_{n-1},v_n)$ ，也是三元组， $w$ 是权重，和SRGNN计算方式一样，基于该边出现的频率。</p>
-<h4 id="全局属性的图神经网络"><a href="#全局属性的图神经网络" class="headerlink" title="全局属性的图神经网络"></a>全局属性的图神经网络</h4><p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/lenovo/image-20220312132405693.png" alt="image-20220312132405693"></p>
+<h4 id="全局属性的图神经网络"><a href="#全局属性的图神经网络" class="headerlink" title="全局属性的图神经网络"></a>全局属性的图神经网络</h4><p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/lenovo/image-20220312132405693.png" alt="image-20220312132405693"></p>
 <p>会话图作为输入进到GAG模型，模型的计算从边、节点到全局属性。</p>
 <ol>
 <li>逐边更新 per-edge update</li>
@@ -398,16 +398,16 @@
 <p>在推荐任务中，真实分布是one-hot向量，只有真实标签处为1。</p>
 <p>KL散度，也称交叉熵、相对熵。不选择KL散度的原因是：在推荐任务中，公式简化为：$d_{K L}(\mathbf{y} | \hat{\mathbf{y}})=-\log P_{g}\left(v_{i}\right)$ ，实际上只衡量了真实标签处的差异，没有考虑整个分布之间的差异。而且KL散度本身就是非对称性函数：$D(p | q) \neq D(q | p)$ ，用它作为一个真正的距离度量可能不是很合适。</p>
 <p>不选择全变分距离的原因是：在推荐任务中，公式简化为： $d_{T V}(\mathbf{y}, \hat{\mathbf{y}})=\max <em>{j \neq i}\left(1-P</em>{g}\left(v_{i}\right), P_{g}\left(v_{j}\right)\right)$  ，这个结果要么只衡量了真实标签以外的差异，要么只衡量了真实标签。</p>
-<h4 id="在线训练算法描述"><a href="#在线训练算法描述" class="headerlink" title="在线训练算法描述"></a>在线训练算法描述</h4><p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20220313210103872.png" alt="image-20220313210103872"></p>
+<h4 id="在线训练算法描述"><a href="#在线训练算法描述" class="headerlink" title="在线训练算法描述"></a>在线训练算法描述</h4><p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220313210103872.png" alt="image-20220313210103872"></p>
 <p>$S$ 是用来更新模型的，与 $C$ 无关。</p>
 <p>因为流数据中会有新用户和新物品出现，为了防止模型忽略这些新的会话，它们会被直接加入 $S$ 当作训练数据。</p>
 <p>$C \cup C^{n e w} - S$ 即其余的会话数据，分别计算它们的Wasserstein距离，再根据以下公式计算各自的采样概率：<br>$$<br>p_{\text {sample }}\left(s_{i}\right)=\frac{d_{i}}{\sum_{s_{j} \in C \cup C^{n e w}-S} d_{j}},<br>$$<br>采样完以后就得到训练数据 $S$ ，这个 $S$ 是对当前模型来说信息量最大的数据集，用它来更新模型最有效。</p>
 <p>最后还要更新 reservoir $C$ ，用随机采样算法来更新，以保持模型的 long-term 记忆。</p>
 <h3 id="模型训练"><a href="#模型训练" class="headerlink" title="模型训练"></a>模型训练</h3><p>$ Cross \ Entropy \ Loss=-\sum_{i=1}^{l} \mathrm{y}<em>{i} \log \left(\hat{\mathrm{y}}</em>{i}\right) $</p>
 <h2 id="Experiment-amp-Table"><a href="#Experiment-amp-Table" class="headerlink" title="Experiment &amp; Table"></a>Experiment &amp; Table</h2><h3 id="对比实验结果"><a href="#对比实验结果" class="headerlink" title="对比实验结果"></a>对比实验结果</h3><p>S-POP居然比GRU4Rec结果好，可能因为S-POP能抽取出会话间的信息。</p>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20220314084551972.png" alt="image-20220314084551972"></p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220314084551972.png" alt="image-20220314084551972"></p>
 <h3 id="细化评价指标的top-k"><a href="#细化评价指标的top-k" class="headerlink" title="细化评价指标的top k"></a>细化评价指标的top k</h3><p>SSRM方法相比于另外三个基于图的方法，效果下降得幅度更大，说明图结构更适合做会话表示任务，也说明图结构有一定的泛化能力。</p>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20220314085304068.png" alt="image-20220314085304068"></p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220314085304068.png" alt="image-20220314085304068"></p>
 <h3 id="全局属性的影响"><a href="#全局属性的影响" class="headerlink" title="全局属性的影响"></a>全局属性的影响</h3><p>三个消融实验的对比模型如下：</p>
 <ul>
 <li><p>FGNN：节点更新层和输出层都不加入用户信息。</p>
@@ -417,9 +417,9 @@
 <li><p>GAG-NoGA：节点更新层不变，但是去掉全局属性更新函数 $u’ = u_{s,g} + u$ 。</p>
 </li>
 </ul>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20220314091613738.png" alt="image-20220314091613738"></p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220314091613738.png" alt="image-20220314091613738"></p>
 <p>结果如下。GAG-FGNN和GAG-NoGA都在模型中融入了全局信息，前者在用户信息更新部分，后者在GNN的节点更新部分。相比于没有全局信息的FGNN，两者都有提升，说明融入全局信息对推荐是有用的。GAG-NoGA比GAG-FGNN提升更大，说明在节点更新阶段融入全局信息更有效。</p>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20220314092750543.png" alt="image-20220314092750543"></p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220314092750543.png" alt="image-20220314092750543"></p>
 <h3 id="Wasserstein-Reservoir的影响"><a href="#Wasserstein-Reservoir的影响" class="headerlink" title="Wasserstein Reservoir的影响"></a>Wasserstein Reservoir的影响</h3><p>消融实验的对比模型如下：</p>
 <ul>
 <li>GAG-Static：直接去掉在线训练部分</li>
@@ -427,21 +427,21 @@
 <li>GAG-FixNew：直接保留新数据，剩下的数据随机采样。</li>
 <li>GAG-WassUni：对所有原reservoir和新数据计算Wasserstein距离，然后根据这个距离采样。（原模型是先全部保存所有带有新用户和新物品的会话，再根据Wass距离采样）</li>
 </ul>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/lenovo/image-20220314100934020.png" alt="image-20220314100934020"></p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/lenovo/image-20220314100934020.png" alt="image-20220314100934020"></p>
 <p>结果如下：</p>
 <p>Static结果最差，因为：1）兴趣漂移；2）新用户、新物品出现。</p>
 <p>纯随机采样的GAG-RanUni，在在线模型中结果最差，不如有策略地选择。</p>
 <p>GAG-WassUni优于大部分策略，说明采用Wass距离的有效性。</p>
 <p>GAG和GAG-WassUni相比，GAG结果更好，说明保留新用户和新物品的重要性。</p>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/lenovo/image-20220314100603124.png" alt="image-20220314100603124"></p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/lenovo/image-20220314100603124.png" alt="image-20220314100603124"></p>
 <h3 id="Reservoir-效率分析"><a href="#Reservoir-效率分析" class="headerlink" title="Reservoir 效率分析"></a>Reservoir 效率分析</h3><p>有两个参数reservoir的设计影响很大：reservoir大小（ $C$ ）和窗口大小（ $S$ ）。一方面，reservoir的大小表示reservoir的容量，这决定了推荐系统在线更新的存储要求。另一方面，窗口大小限制了多少数据实例将被抽样用于在线训练，这代表了推荐系统在线更新的工作负荷。</p>
 <h4 id="Reservoir-size-的影响"><a href="#Reservoir-size-的影响" class="headerlink" title="Reservoir size 的影响"></a>Reservoir size 的影响</h4><p>Reservoir容量越大，新数据保存的概率就越低，模型就更注重历史数据。但是在流设定下，新数据更能代表用户最近的兴趣。SOTA模型SSRM在$\frac{|D|}{20}$ 时表现最好，而GAG是 $\frac{|D|}{100}$ ，所以GAG效率更高。</p>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/lenovo/image-20220314103059323.png" alt="image-20220314103059323"></p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/lenovo/image-20220314103059323.png" alt="image-20220314103059323"></p>
 <h4 id="Window-size-的影响"><a href="#Window-size-的影响" class="headerlink" title="Window size 的影响"></a>Window size 的影响</h4><p>很明显，窗口大小越大，模型表现越好。</p>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/lenovo/image-20220314104151741.png" alt="image-20220314104151741"></p>
-<h3 id="超参数的影响"><a href="#超参数的影响" class="headerlink" title="超参数的影响"></a>超参数的影响</h3><h4 id="Embedding-size影响"><a href="#Embedding-size影响" class="headerlink" title="Embedding size影响"></a>Embedding size影响</h4><p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/lenovo/image-20220314104403575.png" alt="image-20220314104403575"></p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/lenovo/image-20220314104151741.png" alt="image-20220314104151741"></p>
+<h3 id="超参数的影响"><a href="#超参数的影响" class="headerlink" title="超参数的影响"></a>超参数的影响</h3><h4 id="Embedding-size影响"><a href="#Embedding-size影响" class="headerlink" title="Embedding size影响"></a>Embedding size影响</h4><p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/lenovo/image-20220314104403575.png" alt="image-20220314104403575"></p>
 <h4 id="GNN-layer层数影响"><a href="#GNN-layer层数影响" class="headerlink" title="GNN layer层数影响"></a>GNN layer层数影响</h4><p>一般来说，由于梯度爆炸，GNN模型总是受到模型深度增加的影响。在我们的实验中，GAG模型的性能随着GNN 层数增加而下降，这与常见的观察是一致的。此外，会话的连通性比传统的图数据要小，这也限制了更深的GNN模型的能力。</p>
-<p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/lenovo/image-20220314104558903.png" alt="image-20220314104558903"></p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/lenovo/image-20220314104558903.png" alt="image-20220314104558903"></p>
 
     </div>
 
