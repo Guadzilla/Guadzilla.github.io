@@ -20,19 +20,26 @@
     var CONFIG = {"hostname":"guadzilla.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="数据集经典Movielens数据集  12345678910All ratings are contained in the file &quot;ratings.dat&quot; and are in thefollowing format:UserID::MovieID::Rating::Timestamp- UserIDs range between 1 and 6040 - MovieI">
+  <meta name="description" content="镜像镜像：一种轻量级、可执行的独立软件包，用来打包软件运行环境和基于运行环境开发的软件，包含运行某个软件所需的所有内容，包括代码、库、环境变量和配置文件。 每个文件叠加过后就是我们的应用，虽然是叠加而来，但是对外却是一个整体的系统文件 镜像加载原理 UFS文件系统  下载时看到一层层的就是这个。 联合文件系统（UnionFS）是一种分层、轻量级并且高性能的文件系统，它支持对文件系统的修改作为一">
 <meta property="og:type" content="article">
-<meta property="og:title" content="（待更新）推荐系统：经典算法——协同过滤（Collebrative Filtering）">
-<meta property="og:url" content="http://guadzilla.github.io/2021/11/23/%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4/index.html">
+<meta property="og:title" content="Docker镜像原理">
+<meta property="og:url" content="http://guadzilla.github.io/2022/04/05/Docker%E9%95%9C%E5%83%8F%E5%8E%9F%E7%90%86/index.html">
 <meta property="og:site_name" content="瓜斯拉的逆袭">
-<meta property="og:description" content="数据集经典Movielens数据集  12345678910All ratings are contained in the file &quot;ratings.dat&quot; and are in thefollowing format:UserID::MovieID::Rating::Timestamp- UserIDs range between 1 and 6040 - MovieI">
+<meta property="og:description" content="镜像镜像：一种轻量级、可执行的独立软件包，用来打包软件运行环境和基于运行环境开发的软件，包含运行某个软件所需的所有内容，包括代码、库、环境变量和配置文件。 每个文件叠加过后就是我们的应用，虽然是叠加而来，但是对外却是一个整体的系统文件 镜像加载原理 UFS文件系统  下载时看到一层层的就是这个。 联合文件系统（UnionFS）是一种分层、轻量级并且高性能的文件系统，它支持对文件系统的修改作为一">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-11-23T15:15:03.693Z">
-<meta property="article:modified_time" content="2021-11-24T01:41:38.662Z">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220404192342184.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220404192342184.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220404194829940.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220404194637448.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220405183351927.png">
+<meta property="article:published_time" content="2022-04-05T10:41:31.997Z">
+<meta property="article:modified_time" content="2022-04-05T10:50:14.037Z">
 <meta property="article:author" content="Guadzilla">
+<meta property="article:tag" content="Docker">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220404192342184.png">
 
-<link rel="canonical" href="http://guadzilla.github.io/2021/11/23/%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4/">
+<link rel="canonical" href="http://guadzilla.github.io/2022/04/05/Docker%E9%95%9C%E5%83%8F%E5%8E%9F%E7%90%86/">
 
 
 <script id="page-configurations">
@@ -45,7 +52,7 @@
   };
 </script>
 
-  <title>（待更新）推荐系统：经典算法——协同过滤（Collebrative Filtering） | 瓜斯拉的逆袭</title>
+  <title>Docker镜像原理 | 瓜斯拉的逆袭</title>
   
 
 
@@ -197,7 +204,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://guadzilla.github.io/2021/11/23/%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4/">
+    <link itemprop="mainEntityOfPage" href="http://guadzilla.github.io/2022/04/05/Docker%E9%95%9C%E5%83%8F%E5%8E%9F%E7%90%86/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/touxiang.jpg">
@@ -210,7 +217,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          （待更新）推荐系统：经典算法——协同过滤（Collebrative Filtering）
+          Docker镜像原理
         </h1>
 
         <div class="post-meta">
@@ -219,23 +226,17 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2021-11-23 23:15:03" itemprop="dateCreated datePublished" datetime="2021-11-23T23:15:03+08:00">2021-11-23</time>
+              <time title="创建时间：2022-04-05 18:41:31 / 修改时间：18:50:14" itemprop="dateCreated datePublished" datetime="2022-04-05T18:41:31+08:00">2022-04-05</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-11-24 09:41:38" itemprop="dateModified" datetime="2021-11-24T09:41:38+08:00">2021-11-24</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E5%AE%9E%E6%88%98/" itemprop="url" rel="index"><span itemprop="name">推荐系统实战</span></a>
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
                 </span>
             </span>
 
@@ -252,14 +253,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>2.4k</span>
+              <span>1.5k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>6 分钟</span>
+              <span>4 分钟</span>
             </span>
 
         </div>
@@ -271,19 +272,54 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h2><p>经典Movielens数据集</p>
-<blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">All ratings are contained in the file &quot;ratings.dat&quot; and are in the</span><br><span class="line">following format:</span><br><span class="line"></span><br><span class="line">UserID::MovieID::Rating::Timestamp</span><br><span class="line"></span><br><span class="line">- UserIDs range between 1 and 6040 </span><br><span class="line">- MovieIDs range between 1 and 3952</span><br><span class="line">- Ratings are made on a 5-star scale (whole-star ratings only)</span><br><span class="line">- Timestamp is represented in seconds since the epoch as returned by time(2)</span><br><span class="line">- Each user has at least 20 ratings</span><br></pre></td></tr></table></figure>
-</blockquote>
-<h2 id="实验设计"><a href="#实验设计" class="headerlink" title="实验设计"></a>实验设计</h2><p>采用K-fold交叉验证，将用户行为数据均匀分成K份，其中一份作为测试集，K-1份作为训练集。协同过滤算法只考虑物品/用户的共现关系，所以用户序列都用集合表示。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 划分数据集</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">SplitData</span>(<span class="params">data, M, k, seed</span>):</span></span><br><span class="line">    test = []</span><br><span class="line">    train = []</span><br><span class="line">    random.seed(seed)</span><br><span class="line">    <span class="keyword">for</span> user, item <span class="keyword">in</span> data:</span><br><span class="line">        <span class="keyword">if</span> random.randint(<span class="number">0</span>, M) == k:</span><br><span class="line">            test.append([user, item])</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            train.append([user, item])</span><br><span class="line">    train_ = defaultdict(<span class="built_in">set</span>)</span><br><span class="line">    test_ = defaultdict(<span class="built_in">set</span>)</span><br><span class="line">    <span class="keyword">for</span> user, item <span class="keyword">in</span> train:</span><br><span class="line">        train_[user].add(item)</span><br><span class="line">    <span class="keyword">for</span> user, item <span class="keyword">in</span> test:</span><br><span class="line">        test_[user].add(item)</span><br><span class="line">    <span class="keyword">return</span> train_, test_</span><br></pre></td></tr></table></figure>
+        <img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220404192342184.png" alt="image-20220404192342184" style="zoom:67%;" />
 
-<h2 id="评价指标"><a href="#评价指标" class="headerlink" title="评价指标"></a>评价指标</h2><p>召回率Recall，准确率Precision，覆盖率Coverage，新颖度Popularity。</p>
+<h2 id="镜像"><a href="#镜像" class="headerlink" title="镜像"></a>镜像</h2><p>镜像：一种轻量级、可执行的独立软件包，用来打包软件运行环境和基于运行环境开发的软件，包含运行某个软件所需的所有内容，包括代码、库、环境变量和配置文件。</p>
+<p>每个文件叠加过后就是我们的应用，虽然是叠加而来，但是对外却是一个整体的系统文件</p>
+<h2 id="镜像加载原理"><a href="#镜像加载原理" class="headerlink" title="镜像加载原理"></a>镜像加载原理</h2><blockquote>
+<p>UFS文件系统</p>
+</blockquote>
+<p>下载时看到一层层的就是这个。</p>
+<p><strong>联合文件系统（UnionFS）</strong>是一种分层、轻量级并且高性能的文件系统，它支持对文件系统的修改作为一次提交来一层层的叠加，同时可以将不同目录挂载到同一个虚拟文件系统下。联合文件系统是 Docker 镜像的基础。镜像可以通过分层来进行继承，基于基础镜像（没有父镜像），可以制作各种具体的应用镜像。另外，不同 Docker 容器就可以共享一些基础的文件系统层，同时再加上自己独有的改动层，大大提高了存储的效率。</p>
+<p><strong>特性</strong>：一次性同时加载多个文件系统，但从外面看起来，只能看到一个文件系统，联合加载会把各层文件系统叠加起来，这样最终的文件系统会包含所有底层的文件和目录。</p>
+<blockquote>
+<p>Docker镜像加载原理</p>
+</blockquote>
 <span id="more"></span>
 
-<p>召回率Recall：正确推荐的商品占所有应该推荐的商品的比例，即应该推荐的推荐了多少。公式描述：对用户u推荐N个物品（$R(u)$），令用户在测试集上喜欢的物品集合为$T(u)$，则<br>$$<br>Recall=\frac{\sum_u|R(u) \cap T(u)|}{\sum_u |T(u)|}<br>$$<br>准确率Precision：正确推荐的商品占推荐的商品列表的比例，即有多少推荐对了。公式描述：<br>$$<br>Precision=\frac{\sum_u|R(u) \cap T(u)|}{\sum_u |R(u)|}<br>$$<br>覆盖率Coverage：推荐的商品占所有商品的比例，即推荐的商品覆盖了多少所有商品。反映发掘长尾的能力。<br>$$<br>Coverage = \frac{\bigcup_u R(u)}{|I|} \ \  , \ \bigcup:并集<br>$$<br>新颖度Popularity：刻画推荐物品的平均流行度，平均流行度（Popularity）越高，新颖度越低。$Popularity(x)$定义为$x$在所有用户序列中出现的次数，出现次数越多，流行度越高。<br>$$<br>Popularity= \sum _u \sum _ { i \in R(u) } \log (Popularity(i)+1)<br>$$</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 评价指标:召回率、准确率</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Metric</span>(<span class="params">train, test, N, all_recommend_list</span>):</span>  <span class="comment"># N:推荐N个物品</span></span><br><span class="line">    hit = <span class="number">0</span></span><br><span class="line">    recall_all = <span class="number">0</span>      <span class="comment"># recall 的分母</span></span><br><span class="line">    precision_all = <span class="number">0</span>   <span class="comment"># precision 的分母</span></span><br><span class="line">    <span class="keyword">for</span> user <span class="keyword">in</span> train.keys():</span><br><span class="line">        tu = test[user]</span><br><span class="line">        rank = all_recommend_list[user][<span class="number">0</span>:N]</span><br><span class="line">        <span class="keyword">for</span> item, pui <span class="keyword">in</span> rank:</span><br><span class="line">            <span class="keyword">if</span> item <span class="keyword">in</span> tu:</span><br><span class="line">                hit += <span class="number">1</span></span><br><span class="line">        recall_all += <span class="built_in">len</span>(tu)</span><br><span class="line">        precision_all += N</span><br><span class="line">    recall = hit / (recall_all * <span class="number">1.0</span>)</span><br><span class="line">    precision = hit / (precision_all * <span class="number">1.0</span>)</span><br><span class="line">    <span class="keyword">return</span> recall, precision</span><br><span class="line"></span><br><span class="line"><span class="comment"># 评价指标：覆盖率</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Coverage</span>(<span class="params">train, test, N, all_recommend_list</span>):</span>  <span class="comment"># N:推荐N个物品</span></span><br><span class="line">    recommend_items = <span class="built_in">set</span>()</span><br><span class="line">    all_items = <span class="built_in">set</span>()</span><br><span class="line">    <span class="keyword">for</span> user <span class="keyword">in</span> train.keys():</span><br><span class="line">        <span class="keyword">for</span> item <span class="keyword">in</span> train[user]:</span><br><span class="line">            all_items.add(item)</span><br><span class="line">        <span class="keyword">for</span> item, pui <span class="keyword">in</span> rank:</span><br><span class="line">            recommend_items.add(item)</span><br><span class="line">    coverage = <span class="built_in">len</span>(recommend_items) / (<span class="built_in">len</span>(all_items) * <span class="number">1.0</span>)</span><br><span class="line">    <span class="keyword">return</span> coverage</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 评价指标：新颖度</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Popularity</span>(<span class="params">train, test, N, recommend_res</span>):</span>	<span class="comment"># N:推荐N个物品</span></span><br><span class="line">    item_popularity = <span class="built_in">dict</span>()</span><br><span class="line">    <span class="keyword">for</span> user, items <span class="keyword">in</span> train.items():</span><br><span class="line">        <span class="keyword">for</span> item <span class="keyword">in</span> items:</span><br><span class="line">            <span class="keyword">if</span> item <span class="keyword">not</span> <span class="keyword">in</span> item_popularity:</span><br><span class="line">                item_popularity[item] = <span class="number">0</span></span><br><span class="line">            item_popularity[item] += <span class="number">1</span></span><br><span class="line">    popularity = <span class="number">0</span></span><br><span class="line">    n = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> user <span class="keyword">in</span> train.keys():</span><br><span class="line">        rank = recommend_res[user][<span class="number">0</span>:N]</span><br><span class="line">        <span class="keyword">for</span> item, pui <span class="keyword">in</span> rank:</span><br><span class="line">            popularity += math.log(<span class="number">1</span> + item_popularity[item])</span><br><span class="line">            n += <span class="number">1</span></span><br><span class="line">    popularity /= n * <span class="number">1.0</span></span><br><span class="line">    <span class="keyword">return</span> popularity</span><br></pre></td></tr></table></figure>
+<ul>
+<li>bootfs(boot file system) 主要包含bootloader和kernel, bootloader 主要是 **引导加载 **kernel,当我们加载镜像的时候，会通过bootloader加载kernal，Docker镜像最底层是bootfs，当boot加载完成后整个kernal内核都在内存中了，bootfs也就可以卸载，值得注意的是，bootfs是被所有镜像共用的，许多镜像images都是在base image(rootfs)基础上叠加的 .</li>
+</ul>
+<ul>
+<li>rootfs (root file system)，在bootfs之 上.包含的就是典型Linux系统中的/dev, /proc, /bin, /etc等标准目录和文件。rootfs就是<strong>各种不同的操作系统发行版</strong>，比如Ubuntu, Centos等等 。所以说每个 docker 就是一个小的虚拟机环境。</li>
+</ul>
+<img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220404192342184.png" alt="image-20220404192342184" style="zoom:67%;" />
 
+<p>Linux 不同发行版之间，bootfs 都是一样的，只有 rootfs 不一样 。 所以当 Docker 镜像加载时， bootfs 直接使用宿主机的内核，只需要提供 rootfs ，这部分十分精简，所以 centos 镜像可以很小（才不到300M），并且加载速度很快（虚拟机启动分钟级，容器启动秒级）。</p>
+<h2 id="分层理解"><a href="#分层理解" class="headerlink" title="分层理解"></a>分层理解</h2><blockquote>
+<p> 镜像分层</p>
+</blockquote>
+<p>用 <code>docker inspect</code> 观察下载下来的镜像：</p>
+<img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220404194829940.png" alt="image-20220404194829940" style="zoom: 50%;" />
+
+<p>这里的 Layers 就是每一层的文件，UFS叠加以后成为整个镜像。</p>
+<blockquote>
+<p>特性</p>
+</blockquote>
+<p>以 tomcat 镜像为例，它是一个有6个层级的镜像，pull到本地，再创建一个新的容器，此时整个 tomcat 会作为一整个镜像层，而你做的所有操作都会记录在容器层。如果想保存新的镜像，镜像层和容器层会再次打包，形成一个新的镜像。</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220404194637448.png" alt="image-20220404194637448"></p>
+<h2 id="commit镜像"><a href="#commit镜像" class="headerlink" title="commit镜像"></a>commit镜像</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker commit 提交热熔器成为一个新的副本</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 命令和git类似</span></span><br><span class="line">docker commit -m=&quot;提交的描述信息&quot; -a=&quot;作者&quot; 容器id 目标镜像名：[TAG]</span><br></pre></td></tr></table></figure>
+
+<p>测试</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 1.启动一个默认的tomcat</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 2.发现这个默认的tomcat 是没有webapps应用，这是镜像的原因，官方的镜像默认 webapps下面是没有文件的</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 3.自己拷贝了一些基本文件</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 4.将修改过的容器通过commit提交为一个镜像！我们以后就是用修改过的镜像就可以，这就是我们自己的一个修改过的镜像</span></span><br></pre></td></tr></table></figure>
+
+
+
+<img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220405183351927.png" alt="image-20220405183351927" style="zoom:80%;" />
+
+<p>入门Docker！接下来，容器数据卷！DokcerFile！Docker网络！</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>以上是看 b 站教学视频记的笔记。</p>
+<p>教程地址：<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1og4y1q7M4?p=9">【狂神说Java】Docker最新超详细版教程通俗易懂_哔哩哔哩_bilibili</a></p>
 
     </div>
 
@@ -292,6 +328,9 @@
     
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Docker/" rel="tag"># Docker</a>
+          </div>
 
         
 
@@ -299,12 +338,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/11/22/TiSASRec%E4%BB%A3%E7%A0%81/" rel="prev" title="TiSASRec代码笔记">
-      <i class="fa fa-chevron-left"></i> TiSASRec代码笔记
+    <a href="/2022/04/05/Docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" rel="prev" title="Docker常用命令">
+      <i class="fa fa-chevron-left"></i> Docker常用命令
     </a></div>
       <div class="post-nav-item">
-    <a href="/2021/12/05/Recbole%E9%81%BF%E5%9D%91%E6%89%8B%E5%86%8C/" rel="next" title="Recbole避坑手册">
-      Recbole避坑手册 <i class="fa fa-chevron-right"></i>
+    <a href="/2022/04/05/Docker%E5%AE%B9%E5%99%A8%E6%95%B0%E6%8D%AE%E5%8D%B7/" rel="next" title="Docker容器数据卷">
+      Docker容器数据卷 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -369,7 +408,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="nav-number">1.</span> <span class="nav-text">数据集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E8%AE%BE%E8%AE%A1"><span class="nav-number">2.</span> <span class="nav-text">实验设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87"><span class="nav-number">3.</span> <span class="nav-text">评价指标</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%95%9C%E5%83%8F"><span class="nav-number">1.</span> <span class="nav-text">镜像</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%95%9C%E5%83%8F%E5%8A%A0%E8%BD%BD%E5%8E%9F%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">镜像加载原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B1%82%E7%90%86%E8%A7%A3"><span class="nav-number">3.</span> <span class="nav-text">分层理解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#commit%E9%95%9C%E5%83%8F"><span class="nav-number">4.</span> <span class="nav-text">commit镜像</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
