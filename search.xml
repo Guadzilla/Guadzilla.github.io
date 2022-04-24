@@ -1475,16 +1475,15 @@ pip install xxx.whl
   </entry>
   <entry>
     <title>推荐系统基础3</title>
-    <url>/2022/04/22/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%803/</url>
+    <url>/2022/04/23/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%803/</url>
     <content><![CDATA[<hr>
 <h1 id="任务3：协同过滤基础"><a href="#任务3：协同过滤基础" class="headerlink" title="任务3：协同过滤基础"></a>任务3：协同过滤基础</h1><ul>
-<li>[阅读协同过滤教程](<a href="https://github.com/datawhalechina/fun-rec/blob/master/docs/%E7%AC%AC%E4%B8%80%E7%AB%A0">https://github.com/datawhalechina/fun-rec/blob/master/docs/第一章</a> 推荐系统基础/1.1 基础推荐算法/1.1.2 协同过滤.md)</li>
+<li><a href="https://github.com/datawhalechina/fun-rec/blob/master/docs/第一章 推荐系统基础/1.1 基础推荐算法/1.1.2 协同过滤.md">阅读协同过滤教程</a></li>
 <li>编写代码计算两个用户的相似度</li>
 <li>编写代码计算两个物品的相似度</li>
 </ul>
 <p>代码地址： <a href="https://github.com/Guadzilla/recpre">https://github.com/Guadzilla/recpre</a></p>
 <span id="more"></span>
-
 <h2 id="协同过滤算法"><a href="#协同过滤算法" class="headerlink" title="协同过滤算法"></a>协同过滤算法</h2><p>协同过滤（Collaborative Filtering）推荐算法是最经典、最常用的推荐算法。</p>
 <p>所谓协同过滤， 基本思想是<strong>根据用户之前的喜好</strong>以及<strong>其他兴趣相近的用户的选择</strong>来给用户推荐物品(基于对用户历史行为数据的挖掘发现用户的喜好偏向， 并预测用户可能喜好的产品进行推荐)，<strong>一般是仅仅基于用户的行为数据（评价、购买、下载等）, 而不依赖于项的任何附加信息（物品自身特征）或者用户的任何附加信息（年龄， 性别等）</strong>。目前应用比较广泛的协同过滤算法是基于邻域的方法， 而这种方法主要有下面两种算法：</p>
 <ul>
@@ -1492,15 +1491,21 @@ pip install xxx.whl
 <li><strong>基于物品的协同过滤算法(ItemCF)</strong>: 给用户推荐和他之前喜欢的物品相似的物品</li>
 </ul>
 <p>不管是UserCF还是ItemCF算法， 非常重要的步骤之一就是计算用户和用户或者物品和物品之间的<strong>相似度</strong>， 所以下面先整理常用的相似性度量方法， 然后再对每个算法的具体细节进行展开。</p>
-<h2 id="相似性度量方法"><a href="#相似性度量方法" class="headerlink" title="相似性度量方法"></a>相似性度量方法</h2><h4 id="杰卡德相似系数"><a href="#杰卡德相似系数" class="headerlink" title="杰卡德相似系数"></a><strong>杰卡德相似系数</strong></h4><p>杰卡德(Jaccard)相似系数是衡量两个<strong>集合的相似度</strong>一种指标。两个用户$u$和$v$交互商品交集的数量占这两个用户交互商品并集的数量的比例，称为两个集合的杰卡德相似系数，用符号$sim_{uv}$表示，其中$N(u),N(v)$分别表示用户$u$和用户$v$交互商品的集合。 $$ sim_{uv}=\frac{|N(u) \cap N(v)|}{\sqrt{|N(u)| \cup|N(v)|}} $$ 由于杰卡德相似系数一般无法反映具体用户的评分喜好信息， 所以常用来评估用户<strong>是否</strong>会对某商品进行打分， 而不是预估用户会对某商品打多少分。</p>
-<h4 id="余弦相似度"><a href="#余弦相似度" class="headerlink" title="余弦相似度"></a><strong>余弦相似度</strong></h4><p>余弦相似度(cosine similarity) 衡量了两个向量的夹角，夹角越小越相似。首先从集合的角度描述余弦相似度，相比于Jaccard公式来说就是分母有差异，不是两个用户交互商品的并集的数量，而是两个用户分别交互的商品数量的乘积，公式如下：<br>$$<br>sim_{uv}=\frac{|N(u) \cap N(v)|}{\sqrt{|N(u)|\cdot|N(v)|}}<br>$$<br>从向量的角度进行描述，令矩阵$A$为用户-商品交互矩阵(因为是TopN推荐并不需要用户对物品的评分，只需要知道用户对商品是否有交互就行)，即矩阵的每一行表示一个用户对所有商品的交互情况，有交互的商品值为1没有交互的商品值为0，矩阵的列表示所有商品。若用户和商品数量分别为$m,n$的话，交互矩阵$A$就是一个$m$行$n$列的矩阵。此时用户的相似度可以表示为(其中$u\cdot v$指的是向量点积)：<br>$$<br>sim_{uv} = cos(u,v) =\frac{u\cdot v}{|u|\cdot |v|}<br>$$<br>上述用户-商品交互矩阵在现实情况下是非常的稀疏了，为了避免存储这么大的稀疏矩阵，在计算用户相似度的时候一般会采用集合的方式进行计算。理论上向量之间的相似度计算公式都可以用来计算用户之间的相似度，但是会根据实际的情况选择不同的用户相似度度量方法。</p>
+<h2 id="相似性度量方法"><a href="#相似性度量方法" class="headerlink" title="相似性度量方法"></a>相似性度量方法</h2><h4 id="杰卡德相似系数"><a href="#杰卡德相似系数" class="headerlink" title="杰卡德相似系数"></a><strong>杰卡德相似系数</strong></h4><p>杰卡德(Jaccard)相似系数是衡量两个<strong>集合的相似度</strong>一种指标。两个用户$u$和$v$交互商品交集的数量占这两个用户交互商品并集的数量的比例，称为两个集合的杰卡德相似系数，用符号$sim_{uv}$表示，其中$N(u),N(v)$分别表示用户$u$和用户$v$交互商品的集合。 <script type="math/tex">sim_{uv}=\frac{|N(u) \cap N(v)|}{\sqrt{|N(u)| \cup|N(v)|}}</script> 由于杰卡德相似系数一般无法反映具体用户的评分喜好信息， 所以常用来评估用户<strong>是否</strong>会对某商品进行打分， 而不是预估用户会对某商品打多少分。</p>
+<h4 id="余弦相似度"><a href="#余弦相似度" class="headerlink" title="余弦相似度"></a><strong>余弦相似度</strong></h4><p>余弦相似度(cosine similarity) 衡量了两个向量的夹角，夹角越小越相似。首先从集合的角度描述余弦相似度，相比于Jaccard公式来说就是分母有差异，不是两个用户交互商品的并集的数量，而是两个用户分别交互的商品数量的乘积，公式如下：</p>
+<script type="math/tex; mode=display">
+sim_{uv}=\frac{|N(u) \cap N(v)|}{\sqrt{|N(u)|\cdot|N(v)|}}</script><p>从向量的角度进行描述，令矩阵$A$为用户-商品交互矩阵(因为是TopN推荐并不需要用户对物品的评分，只需要知道用户对商品是否有交互就行)，即矩阵的每一行表示一个用户对所有商品的交互情况，有交互的商品值为1没有交互的商品值为0，矩阵的列表示所有商品。若用户和商品数量分别为$m,n$的话，交互矩阵$A$就是一个$m$行$n$列的矩阵。此时用户的相似度可以表示为(其中$u\cdot v$指的是向量点积)： </p>
+<script type="math/tex; mode=display">
+sim_{uv} = cos(u,v) =\frac{u\cdot v}{|u|\cdot |v|}</script><p>上述用户-商品交互矩阵在现实情况下是非常的稀疏了，为了避免存储这么大的稀疏矩阵，在计算用户相似度的时候一般会采用集合的方式进行计算。理论上向量之间的相似度计算公式都可以用来计算用户之间的相似度，但是会根据实际的情况选择不同的用户相似度度量方法。</p>
 <p>这个在具体实现的时候， 可以使用<code>cosine_similarity</code>进行实现：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.metrics.pairwise <span class="keyword">import</span> cosine_similarity</span><br><span class="line">i = [<span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]</span><br><span class="line">j = [<span class="number">1</span>, <span class="number">0.5</span>, <span class="number">0.5</span>, <span class="number">0</span>]</span><br><span class="line">cosine_similarity([i, j])</span><br></pre></td></tr></table></figure>
-
-<h4 id="皮尔逊相关系数"><a href="#皮尔逊相关系数" class="headerlink" title="皮尔逊相关系数"></a>皮尔逊相关系数</h4><p>皮尔逊相关系数的公式与余弦相似度的计算公式非常的类似，首先对于上述的余弦相似度的计算公式写成求和的形式 ：<br>$$<br>sim_{uv} = \frac{\sum_i r_{ui}·r_{vi}}{\sqrt{\sum_i r_{ui}^2}\sqrt{\sum_i r_{vi}^2}}<br>$$<br>其中$r_{ui},r_{vi}$分别表示用户$u$和用户$v$对商品$i$是否有交互(或者具体的评分值)。</p>
-<p>如下是皮尔逊相关系数计算公式：<br>$$<br>sim(u,v)=\frac{\sum_{i\in I}(r_{ui}-\bar r_u)(r_{vi}-\bar r_v)}{\sqrt{\sum_{i\in I }(r_{ui}-\bar r_u)^2}\sqrt{\sum_{i\in I }(r_{vi}-\bar r_v)^2}}<br>$$<br>其中$r_{ui},r_{vi}$分别表示用户$u$和用户$v$对商品$i$是否有交互(或者具体的评分值)，$\bar r_u, \bar r_v$分别表示用户$u$和用户$v$交互的所有商品交互数量或者具体评分的平均值。所以相比余弦相似度，皮尔逊相关系数通过使用用户的<strong>平均分对各独立评分进行修正</strong>，减小了用户评分偏置的影响。具体实现， 我们也是可以调包， 这个计算方式很多， 下面是其中的一种：</p>
+<h4 id="皮尔逊相关系数"><a href="#皮尔逊相关系数" class="headerlink" title="皮尔逊相关系数"></a>皮尔逊相关系数</h4><p>皮尔逊相关系数的公式与余弦相似度的计算公式非常的类似，首先对于上述的余弦相似度的计算公式写成求和的形式 ：</p>
+<script type="math/tex; mode=display">
+sim_{uv} = \frac{\sum_i r_{ui}·r_{vi}}{\sqrt{\sum_i r_{ui}^2}\sqrt{\sum_i r_{vi}^2}}</script><p>其中$r_{ui},r_{vi}$分别表示用户$u$和用户$v$对商品$i$是否有交互(或者具体的评分值)。</p>
+<p>如下是皮尔逊相关系数计算公式：</p>
+<script type="math/tex; mode=display">
+sim(u,v)=\frac{\sum_{i\in I}(r_{ui}-\bar r_u)(r_{vi}-\bar r_v)}{\sqrt{\sum_{i\in I }(r_{ui}-\bar r_u)^2}\sqrt{\sum_{i\in I }(r_{vi}-\bar r_v)^2}}</script><p>其中$r_{ui},r_{vi}$分别表示用户$u$和用户$v$对商品$i$是否有交互(或者具体的评分值)，$\bar r_u, \bar r_v$分别表示用户$u$和用户$v$交互的所有商品交互数量或者具体评分的平均值。所以相比余弦相似度，皮尔逊相关系数通过使用用户的<strong>平均分对各独立评分进行修正</strong>，减小了用户评分偏置的影响。具体实现， 我们也是可以调包， 这个计算方式很多， 下面是其中的一种：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> scipy.stats <span class="keyword">import</span> pearsonr</span><br><span class="line"></span><br><span class="line">i = [<span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]</span><br><span class="line">j = [<span class="number">1</span>, <span class="number">0.5</span>, <span class="number">0.5</span>, <span class="number">0</span>]</span><br><span class="line">pearsonr(i, j)</span><br></pre></td></tr></table></figure>
-
 <p><a href="https://scipy.github.io/devdocs/reference/generated/scipy.stats.pearsonr.html?highlight=pearson#scipy.stats.pearsonr">皮尔逊相关系数 scipy官方文档</a></p>
 <h2 id="编写代码计算两个用户、物品的相似度"><a href="#编写代码计算两个用户、物品的相似度" class="headerlink" title="编写代码计算两个用户、物品的相似度"></a>编写代码计算两个用户、物品的相似度</h2><p>详见notebook</p>
 ]]></content>
