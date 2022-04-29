@@ -1373,7 +1373,7 @@ pip install xxx.whl
   </entry>
   <entry>
     <title>推荐系统基础1</title>
-    <url>/2022/04/21/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%801/</url>
+    <url>/2022/04/22/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%801/</url>
     <content><![CDATA[<hr>
 <h1 id="任务1：推荐系统基础"><a href="#任务1：推荐系统基础" class="headerlink" title="任务1：推荐系统基础"></a>任务1：推荐系统基础</h1><ul>
 <li>阅读推荐系统在工业落地的链接：<ul>
@@ -1389,26 +1389,30 @@ pip install xxx.whl
 </ul>
 </li>
 </ul>
-<p>代码地址： <a href="https://github.com/Guadzilla/recpre">https://github.com/Guadzilla/recpre</a></p>
+<p>代码地址： <a href="https://github.com/Guadzilla/Basics-of-Recsys">https://github.com/Guadzilla/Basics-of-Recsys</a></p>
 <span id="more"></span>
-
 <h2 id="推荐系统与常见的结构化问题的区别是什么？"><a href="#推荐系统与常见的结构化问题的区别是什么？" class="headerlink" title="推荐系统与常见的结构化问题的区别是什么？"></a>推荐系统与常见的结构化问题的区别是什么？</h2><p>结构化数据即表格数据（tabular data），绝大多数数据都是表格数据。</p>
 <p>推荐系统有user信息，item信息，这些数据虽然都是结构化的，但是推荐系统涉及到user和item的交互，所以不仅仅是一条结构化数据预测一个分类or一个数值那么简单，还需要从交互中抽象出用户兴趣，例如将用户交互建模为序列，这就不是结构化问题了。</p>
 <h2 id="如何评价推荐系统「推荐」的准不准？"><a href="#如何评价推荐系统「推荐」的准不准？" class="headerlink" title="如何评价推荐系统「推荐」的准不准？"></a>如何评价推荐系统「推荐」的准不准？</h2><p>常用的评价指标有：召回率Recall，准确率Precision，覆盖率Coverage，新颖度Popularity。</p>
-<p>召回率Recall：正确推荐的商品占所有应该推荐的商品的比例，即应该推荐的推荐了多少。公式描述：对用户u推荐N个物品（$R(u)$），令用户在测试集上喜欢的物品集合为$T(u)$，则<br>$$<br>Recall=\frac{\sum_u|R(u) \cap T(u)|}{\sum_u |T(u)|}<br>$$<br>准确率Precision：正确推荐的商品占推荐的商品列表的比例，即有多少推荐对了。公式描述：<br>$$<br>Precision=\frac{\sum_u|R(u) \cap T(u)|}{\sum_u |R(u)|}<br>$$<br>覆盖率Coverage：推荐的商品占所有商品的比例，即推荐的商品覆盖了多少所有商品。反映发掘长尾的能力。<br>$$<br>Coverage = \frac{\bigcup_u R(u)}{|I|} \ \  , \ \bigcup:并集<br>$$<br>新颖度Popularity：刻画推荐物品的平均流行度，平均流行度（Popularity）越高，新颖度越低。$Popularity(x)$定义为$x$在所有用户序列中出现的次数，出现次数越多，流行度越高。<br>$$<br>Popularity= \sum _u \sum _ { i \in R(u) } \log (Popularity(i)+1)<br>$$</p>
-<p>AUC曲线：AUC（Area Under Curve），ROC曲线下与坐标轴围成的面积。在讲AUC前需要理解混淆矩阵，召回率，精确率，ROC曲线等概念。</p>
+<p>召回率Recall：正确推荐的商品占所有应该推荐的商品的比例，即应该推荐的推荐了多少。公式描述：对用户u推荐N个物品（$R(u)$），令用户在测试集上喜欢的物品集合为$T(u)$，则</p>
+<script type="math/tex; mode=display">
+Recall=\frac{\sum_u|R(u) \cap T(u)|}{\sum_u |T(u)|}</script><p>准确率Precision：正确推荐的商品占推荐的商品列表的比例，即有多少推荐对了。公式描述：</p>
+<script type="math/tex; mode=display">
+Precision=\frac{\sum_u|R(u) \cap T(u)|}{\sum_u |R(u)|}</script><p>覆盖率Coverage：推荐的商品占所有商品的比例，即推荐的商品覆盖了多少所有商品。反映发掘长尾的能力。</p>
+<script type="math/tex; mode=display">
+Coverage = \frac{\bigcup_u R(u)}{|I|} \ \  , \ \bigcup:并集</script><p>新颖度Popularity：刻画推荐物品的平均流行度，平均流行度（Popularity）越高，新颖度越低。$Popularity(x)$定义为$x$在所有用户序列中出现的次数，出现次数越多，流行度越高。</p>
+<script type="math/tex; mode=display">
+Popularity= \sum _u \sum _ { i \in R(u) } \log (Popularity(i)+1)</script><p>AUC曲线：AUC（Area Under Curve），ROC曲线下与坐标轴围成的面积。在讲AUC前需要理解混淆矩阵，召回率，精确率，ROC曲线等概念。</p>
 <p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/v2-a253b01cf7f141b9ad11eefdf3cf58d3_1440w.jpg" alt="img"></p>
-<p>根据混淆矩阵的定义，以另一种形式定义召回率和精确率：<br>$$<br>Recall = \frac{TP}{TP+FN} \<br>Precision = \frac{TP}{TP+FP}<br>$$<br>ROC曲线的横坐标为假阳性率（False Positive Rate, FPR），$FPR=\frac{FP}{FP+TN}$，N是真实负样本的个数， FP是N个负样本中被分类器预测为正样本的个数。<strong>FPRate的意义是所有真实类别为0的样本中，预测类别为1的比例。</strong></p>
+<p>根据混淆矩阵的定义，以另一种形式定义召回率和精确率：</p>
+<script type="math/tex; mode=display">
+Recall = \frac{TP}{TP+FN} \\
+Precision = \frac{TP}{TP+FP}</script><p>ROC曲线的横坐标为假阳性率（False Positive Rate, FPR），$FPR=\frac{FP}{FP+TN}$，N是真实负样本的个数， FP是N个负样本中被分类器预测为正样本的个数。<strong>FPRate的意义是所有真实类别为0的样本中，预测类别为1的比例。</strong></p>
 <p>纵坐标为真阳性率（True Positive Rate, TPR），$TPR=\frac{TP}{TP+FN}$，P是真实正样本的个数，TP是P个正样本中被分类器预测为正样本的个数。<strong>TPRate的意义是所有真实类别为1的样本中，预测类别为1的比例。</strong></p>
 <p><img src="https://camo.githubusercontent.com/07a924ef2229334f903f1ba3e5cd17115a16159dcb1756cda93232b3cf998c0d/687474703a2f2f72796c756f2e6f73732d636e2d6368656e6764752e616c6979756e63732e636f6d2f4a6176616175632e706e67" alt="img"></p>
 <p>AUC的计算方法同时考虑了分类器对于正例和负例的分类能力，在样本不平衡的情况下，依然能够对分类器作出合理的评价。对ROC更细致的解释：<a href="https://www.zhihu.com/question/39840928/answer/241440370">如何理解机器学习和统计中的AUC？ - 知乎 (zhihu.com)</a></p>
 <p>下面是部分评价指标的代码实现。</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 评价指标:召回率、准确率</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Metric</span>(<span class="params">train, test, N, all_recommend_list</span>):</span>  <span class="comment"># N:推荐N个物品</span></span><br><span class="line">    hit = <span class="number">0</span></span><br><span class="line">    recall_all = <span class="number">0</span>      <span class="comment"># recall 的分母</span></span><br><span class="line">    precision_all = <span class="number">0</span>   <span class="comment"># precision 的分母</span></span><br><span class="line">    <span class="keyword">for</span> user <span class="keyword">in</span> train.keys():</span><br><span class="line">        tu = test[user]</span><br><span class="line">        rank = all_recommend_list[user][<span class="number">0</span>:N]</span><br><span class="line">        <span class="keyword">for</span> item, pui <span class="keyword">in</span> rank:</span><br><span class="line">            <span class="keyword">if</span> item <span class="keyword">in</span> tu:</span><br><span class="line">                hit += <span class="number">1</span></span><br><span class="line">        recall_all += <span class="built_in">len</span>(tu)</span><br><span class="line">        precision_all += N</span><br><span class="line">    recall = hit / (recall_all * <span class="number">1.0</span>)</span><br><span class="line">    precision = hit / (precision_all * <span class="number">1.0</span>)</span><br><span class="line">    <span class="keyword">return</span> recall, precision</span><br><span class="line"></span><br><span class="line"><span class="comment"># 评价指标：覆盖率</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Coverage</span>(<span class="params">train, test, N, all_recommend_list</span>):</span>  <span class="comment"># N:推荐N个物品</span></span><br><span class="line">    recommend_items = <span class="built_in">set</span>()</span><br><span class="line">    all_items = <span class="built_in">set</span>()</span><br><span class="line">    <span class="keyword">for</span> user <span class="keyword">in</span> train.keys():</span><br><span class="line">        <span class="keyword">for</span> item <span class="keyword">in</span> train[user]:</span><br><span class="line">            all_items.add(item)</span><br><span class="line">        <span class="keyword">for</span> item, pui <span class="keyword">in</span> rank:</span><br><span class="line">            recommend_items.add(item)</span><br><span class="line">    coverage = <span class="built_in">len</span>(recommend_items) / (<span class="built_in">len</span>(all_items) * <span class="number">1.0</span>)</span><br><span class="line">    <span class="keyword">return</span> coverage</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 评价指标：新颖度</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Popularity</span>(<span class="params">train, test, N, recommend_res</span>):</span>	<span class="comment"># N:推荐N个物品</span></span><br><span class="line">    item_popularity = <span class="built_in">dict</span>()</span><br><span class="line">    <span class="keyword">for</span> user, items <span class="keyword">in</span> train.items():</span><br><span class="line">        <span class="keyword">for</span> item <span class="keyword">in</span> items:</span><br><span class="line">            <span class="keyword">if</span> item <span class="keyword">not</span> <span class="keyword">in</span> item_popularity:</span><br><span class="line">                item_popularity[item] = <span class="number">0</span></span><br><span class="line">            item_popularity[item] += <span class="number">1</span></span><br><span class="line">    popularity = <span class="number">0</span></span><br><span class="line">    n = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> user <span class="keyword">in</span> train.keys():</span><br><span class="line">        rank = recommend_res[user][<span class="number">0</span>:N]</span><br><span class="line">        <span class="keyword">for</span> item, pui <span class="keyword">in</span> rank:</span><br><span class="line">            popularity += math.log(<span class="number">1</span> + item_popularity[item])</span><br><span class="line">            n += <span class="number">1</span></span><br><span class="line">    popularity /= n * <span class="number">1.0</span></span><br><span class="line">    <span class="keyword">return</span> popularity</span><br></pre></td></tr></table></figure>
-
-
-
-
-
 <h2 id="推荐系统一般分为召回-amp-精排，为什么这样划分？"><a href="#推荐系统一般分为召回-amp-精排，为什么这样划分？" class="headerlink" title="推荐系统一般分为召回 &amp; 精排，为什么这样划分？"></a>推荐系统一般分为召回 &amp; 精排，为什么这样划分？</h2><blockquote>
 <p>物品集量级非常大，召回先选出一部分候选物品，再对这一部分候选物品做精排，计算开销相比于对所有物品做精排大大降低了。</p>
 </blockquote>
@@ -1424,12 +1428,10 @@ pip install xxx.whl
 <li>时间召回：将一段时间内最新的内容召回，在新闻视频等有时效性的领域常用。是常见的几种召回方法。</li>
 </ol>
 <h4 id="多路召回"><a href="#多路召回" class="headerlink" title="多路召回"></a>多路召回</h4><p>一开始我们可能有成千上万的物品，首先要由召回（也叫触发，recall）来挖掘出原则上任何用户有可能感兴趣的东西。这个环节是入口。有时候，单独的召回可能难以做到照顾所有方面，这个时候就需要多路召回。所谓的“多路召回”策略，就是指采用不同的策略、特征或简单模型，分别召回一部分候选集，然后把候选集混合在一起供后续排序模型使用。下图只是一个多路召回的例子，也就是说可以使用多种不同的策略来获取用户排序的候选商品集合，<strong>而具体使用哪些召回策略其实是与业务强相关的</strong>，针对不同的任务就会有对于该业务真实场景下需要考虑的召回规则。例如视频推荐，召回规则可以是“热门视频”、“导演召回”、“演员召回”、“最近上映“、”流行趋势“、”类型召回“等等。</p>
-<img src="https://camo.githubusercontent.com/5194f61aac70bfec14ede3fa6b27aed0670f2cd59b5e9ad688f1f526a4c5f658/68747470733a2f2f696d672d626c6f672e6373646e696d672e636e2f32303230303731373230313431313336372e706e67237069635f63656e746572" alt="img" style="zoom:67%;" />
-
+<p><img src="https://camo.githubusercontent.com/5194f61aac70bfec14ede3fa6b27aed0670f2cd59b5e9ad688f1f526a4c5f658/68747470733a2f2f696d672d626c6f672e6373646e696d672e636e2f32303230303731373230313431313336372e706e67237069635f63656e746572" alt="img" style="zoom:67%;" /></p>
 <h4 id="Embedding召回"><a href="#Embedding召回" class="headerlink" title="Embedding召回"></a>Embedding召回</h4><h3 id="精排"><a href="#精排" class="headerlink" title="精排"></a>精排</h3><p>排序负责将多个召回策略的结果进行个性化排序。</p>
 <h4 id="精排的重要性"><a href="#精排的重要性" class="headerlink" title="精排的重要性"></a>精排的重要性</h4><p>精排是最纯粹的排序，也是最纯粹的机器学习模块。它的目标只有一个，就是<strong>根据手头所有的信息输出最准</strong>的预测。精排一直是优化的重点。召回的物品中，筛选出用户最感兴趣的物品，进一步做出个性化排序，才最终达到推荐的目的。</p>
-<h4 id="精排模型"><a href="#精排模型" class="headerlink" title="精排模型"></a>精排模型</h4><img src="https://mmbiz.qpic.cn/mmbiz_jpg/icTMNdGHpfJYqcAFSwiaWKjeqTweM9aJrNKqZVvMn2GZvoDTnPHjYMVywvGicII8P9d4nMjib5Jia8kGlDbicibTGSPlQ/640?wx_fmt=jpeg&wxfrom=5&wx_lazy=1&wx_co=1" alt="图片" style="zoom:67%;" />
-
+<h4 id="精排模型"><a href="#精排模型" class="headerlink" title="精排模型"></a>精排模型</h4><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/icTMNdGHpfJYqcAFSwiaWKjeqTweM9aJrNKqZVvMn2GZvoDTnPHjYMVywvGicII8P9d4nMjib5Jia8kGlDbicibTGSPlQ/640?wx_fmt=jpeg&wxfrom=5&wx_lazy=1&wx_co=1" alt="图片" style="zoom:67%;" /></p>
 ]]></content>
       <categories>
         <category>推荐系统</category>
@@ -1453,9 +1455,8 @@ pip install xxx.whl
 </li>
 <li>如果你来进行划分数据集为训练和验证，你会如何划分？</li>
 </ul>
-<p>代码地址： <a href="https://github.com/Guadzilla/recpre">https://github.com/Guadzilla/recpre</a></p>
+<p>代码地址： <a href="https://github.com/Guadzilla/Basics-of-Recsys">https://github.com/Guadzilla/Basics-of-Recsys</a></p>
 <span id="more"></span>
-
 <h2 id="统计指标"><a href="#统计指标" class="headerlink" title="统计指标"></a>统计指标</h2><ul>
 <li>总共包含 6040 个用户</li>
 <li>总共包含 3883 部电影</li>
@@ -1464,7 +1465,6 @@ pip install xxx.whl
 <p>其余细节见 notebook 。</p>
 <h2 id="划分数据集"><a href="#划分数据集" class="headerlink" title="划分数据集"></a>划分数据集</h2><p>参考项亮《推荐系统实践》，将用户行为数据集按照均匀分布随机分成 K 份，挑选一份作为测试集，剩下的 K-1 份作为训练集，进行 K 次实验，然后将 K 次评测指标的平均值作为最终评测指标 （即 K-fold 交叉验证）。</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">SplitData</span>(<span class="params">data, K, i, seed</span>):</span></span><br><span class="line">    test = []</span><br><span class="line">    train = []</span><br><span class="line">    random.seed(seed)</span><br><span class="line">    <span class="keyword">for</span> user, item <span class="keyword">in</span> data:</span><br><span class="line">        <span class="keyword">if</span> random.randint(<span class="number">0</span>,K)==i:</span><br><span class="line">            test.append([user,item])</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            train.append([user,item])</span><br><span class="line">    <span class="keyword">return</span> train,test</span><br></pre></td></tr></table></figure>
-
 ]]></content>
       <categories>
         <category>推荐系统</category>
@@ -1475,14 +1475,14 @@ pip install xxx.whl
   </entry>
   <entry>
     <title>推荐系统基础3</title>
-    <url>/2022/04/23/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%803/</url>
+    <url>/2022/04/22/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%803/</url>
     <content><![CDATA[<hr>
 <h1 id="任务3：协同过滤基础"><a href="#任务3：协同过滤基础" class="headerlink" title="任务3：协同过滤基础"></a>任务3：协同过滤基础</h1><ul>
 <li><a href="https://github.com/datawhalechina/fun-rec/blob/master/docs/第一章 推荐系统基础/1.1 基础推荐算法/1.1.2 协同过滤.md">阅读协同过滤教程</a></li>
 <li>编写代码计算两个用户的相似度</li>
 <li>编写代码计算两个物品的相似度</li>
 </ul>
-<p>代码地址： <a href="https://github.com/Guadzilla/recpre">https://github.com/Guadzilla/recpre</a></p>
+<p>代码地址： <a href="https://github.com/Guadzilla/Basics-of-Recsys">https://github.com/Guadzilla/Basics-of-Recsys</a></p>
 <span id="more"></span>
 <h2 id="协同过滤算法"><a href="#协同过滤算法" class="headerlink" title="协同过滤算法"></a>协同过滤算法</h2><p>协同过滤（Collaborative Filtering）推荐算法是最经典、最常用的推荐算法。</p>
 <p>所谓协同过滤， 基本思想是<strong>根据用户之前的喜好</strong>以及<strong>其他兴趣相近的用户的选择</strong>来给用户推荐物品(基于对用户历史行为数据的挖掘发现用户的喜好偏向， 并预测用户可能喜好的产品进行推荐)，<strong>一般是仅仅基于用户的行为数据（评价、购买、下载等）, 而不依赖于项的任何附加信息（物品自身特征）或者用户的任何附加信息（年龄， 性别等）</strong>。目前应用比较广泛的协同过滤算法是基于邻域的方法， 而这种方法主要有下面两种算法：</p>
@@ -1525,7 +1525,7 @@ sim(u,v)=\frac{\sum_{i\in I}(r_{ui}-\bar r_u)(r_{vi}-\bar r_v)}{\sqrt{\sum_{i\in
 <li>编写Item-CF代码，通过物品相似度得到电影推荐</li>
 <li>进阶：如果不使用矩阵乘法，你能使用倒排索引实现上述计算吗？</li>
 </ul>
-<p>代码地址： <a href="https://github.com/Guadzilla/recpre">https://github.com/Guadzilla/recpre</a></p>
+<p>代码地址： <a href="https://github.com/Guadzilla/Basics-of-Recsys">https://github.com/Guadzilla/Basics-of-Recsys</a></p>
 <span id="more"></span>
 <h2 id="基于用户的协同过滤"><a href="#基于用户的协同过滤" class="headerlink" title="基于用户的协同过滤"></a>基于用户的协同过滤</h2><h3 id="UserCF原理介绍"><a href="#UserCF原理介绍" class="headerlink" title="UserCF原理介绍"></a>UserCF原理介绍</h3><p>基于用户的协同过滤算法(UserCF)的假设是：<strong>相似用户的兴趣也相似</strong>。所以，当一个用户A需要个性化推荐的时候， 我们可以先找到和他有相似兴趣的其他用户， 然后把那些用户喜欢的， 而用户A没有听说过的物品推荐给A。</p>
 <p><img src="https://camo.githubusercontent.com/4cf6c62c1f1e533dffdd89db9bc045b560c95444a4a6e61b7b2d49cf28703f06/687474703a2f2f72796c756f2e6f73732d636e2d6368656e6764752e616c6979756e63732e636f6d2fe59bbee78987696d6167652d32303231303632393233323534303238392e706e67" alt="image-20210629232540289"  /></p>
@@ -1687,7 +1687,7 @@ P_{i, j}=\bar{R}_{i}+\frac{\sum_{k=1}^{n}\left(S_{i, k}\left(R_{k, j}-\bar{R}_{k
 <li>编写Slope One用于电影推荐的流程</li>
 <li>比较Slope One、SVD、协同过滤的精度，哪一个模型的RMSE评分更低？</li>
 </ul>
-<p>代码地址： <a href="https://github.com/Guadzilla/recpre">https://github.com/Guadzilla/recpre</a></p>
+<p>代码地址： <a href="https://github.com/Guadzilla/Basics-of-Recsys">https://github.com/Guadzilla/Basics-of-Recsys</a></p>
 <span id="more"></span>
 <h2 id="slope-one-算法"><a href="#slope-one-算法" class="headerlink" title="slope one 算法"></a>slope one 算法</h2><p>1.示例引入</p>
 <p>我们可以这么认为，商品间受欢迎的差异从某种程度上是固定的，比如所有人都喜欢海底捞火锅，但对赛百味的喜爱程度一般。此时小明对海底捞火锅的评分为4，对赛百味的评分为2；而小吴对海底捞火锅的评分为5，对赛百味的评分为3。尽管两个人评分的习惯上不同，小明平均打的分都高，但是对两个物品来说，他们之间的评分差值是不变的，即 $5-3=4-2$ 。</p>
@@ -1758,7 +1758,7 @@ P_{i, j}=\bar{R}_{i}+\frac{\sum_{k=1}^{n}\left(S_{i, k}\left(R_{k, j}-\bar{R}_{k
 <li>编写SVD用于电影推荐的流程</li>
 <li>比较SVD与协同过滤的精度，哪一个模型的RMSE评分更低？</li>
 </ul>
-<p>代码地址： <a href="https://github.com/Guadzilla/recpre">https://github.com/Guadzilla/recpre</a></p>
+<p>代码地址： <a href="https://github.com/Guadzilla/Basics-of-Recsys">https://github.com/Guadzilla/Basics-of-Recsys</a></p>
 <span id="more"></span>
 <h2 id="1-隐语义模型与矩阵分解"><a href="#1-隐语义模型与矩阵分解" class="headerlink" title="1. 隐语义模型与矩阵分解"></a>1. 隐语义模型与矩阵分解</h2><p>隐语义模型（Latent factor model，简称LFM），是基于矩阵分解（Matrix Factorization，简称MF）的推荐算法。</p>
 <p>协同过滤算法的特点就是完全没有利用到物品本身或者是用户自身的属性， 仅仅利用了用户与物品的交互信息就可以实现推荐，是一个可解释性很强， 非常直观的模型， 但是也存在一些问题， 第一个就是处理稀疏矩阵的能力比较弱， 所以<strong>为了使得协同过滤更好处理稀疏矩阵问题， 增强泛化能力</strong>， 从协同过滤中衍生出矩阵分解模型或者叫隐语义模型，两者差不多说的一个意思， 就是在协同过滤共现矩阵的基础上， 使用更稠密的隐向量表示用户和物品， 挖掘用户和物品的隐含兴趣和隐含特征， 在一定程度上弥补协同过滤模型处理稀疏矩阵能力不足的问题。下图直观展现了协同过滤算法和隐语义模型（矩阵分解算法）的区别。</p>
@@ -1903,7 +1903,7 @@ p_u = p_u + \gamma (e_{ui}-\ \lambda q_i)</script><p>而对于 $p_{u}$ 和$q_{i}
 <li>将用户历史观看电影转为列表数据（一个用户一个列表）</li>
 <li>使用gensim训练word2vec，然后对用户完成聚类</li>
 </ul>
-<p>代码地址： <a href="https://github.com/Guadzilla/recpre">https://github.com/Guadzilla/recpre</a></p>
+<p>代码地址： <a href="https://github.com/Guadzilla/Basics-of-Recsys">https://github.com/Guadzilla/Basics-of-Recsys</a></p>
 <span id="more"></span>
 <h1 id="学习资料"><a href="#学习资料" class="headerlink" title="学习资料"></a>学习资料</h1><p>来源 | Analytics Vidhya 【磐创AI导读】：这篇文章主要介绍了如何使用word2vec构建推荐系统。想要获取更多的机器学习、深度学习资源，欢迎大家点击上方蓝字关注我们的公众号：磐创AI。</p>
 <h2 id="概览"><a href="#概览" class="headerlink" title="概览"></a><strong>概览</strong></h2><ul>
@@ -2056,7 +2056,7 @@ p_u = p_u + \gamma (e_{ui}-\ \lambda q_i)</script><p>而对于 $p_{u}$ 和$q_{i}
 <li>基于任务7的基础上，使用编码后的用户向量，计算用户相似度。</li>
 <li>参考User-CF的过程，通过用户相似度得到电影推荐</li>
 </ul>
-<p>代码地址： <a href="https://github.com/Guadzilla/recpre">https://github.com/Guadzilla/recpre</a></p>
+<p>代码地址： <a href="https://github.com/Guadzilla/Basics-of-Recsys">https://github.com/Guadzilla/Basics-of-Recsys</a></p>
 <span id="more"></span>
 <p>任务 7 中，我们在 Movielens-1m 数据集上用 word2vec 训练得到了 电影的”词向量”（物品向量、item embedding，都是一个意思，下面都用 item embedding），再对用户所有看过的电影的 embedding 取均值作为”句向量“（用户向量，user embedding）。</p>
 <p>在任务 7 的 word2vec_rec.py 里，实现了在 Movielens 数据集上用 Word2Vec 对用户进行推荐，主要步骤为：<strong>划分数据集、训练word2vec模型、计算用户向量</strong>、TopN推荐（计算相似物品）。</p>
@@ -2095,7 +2095,7 @@ p_u = p_u + \gamma (e_{ui}-\ \lambda q_i)</script><p>而对于 $p_{u}$ 和$q_{i}
 <li>可以考虑对每个召回模型的物品打分进行相加，也可以加权求和。</li>
 <li>分别计算每个模型 &amp; 多路召回模型的Top10、Top20、Top50的命中率。</li>
 </ul>
-<p>代码地址： <a href="https://github.com/Guadzilla/recpre">https://github.com/Guadzilla/recpre</a></p>
+<p>代码地址： <a href="https://github.com/Guadzilla/Basics-of-Recsys">https://github.com/Guadzilla/Basics-of-Recsys</a></p>
 <span id="more"></span>
 <p>根据前面完成的任务，5个召回模型分别是 ItemCF、UserCF、SVD、SlopeOne、Word2Vec。</p>
 <p><strong>任务目标</strong>：对用户是否评分做出预测，即评分只有0和1（数据集中用户评分过的电影评分都取1，未评分过的电影评分都取0），进行推荐 TopN 推荐。</p>
@@ -2114,7 +2114,7 @@ p_u = p_u + \gamma (e_{ui}-\ \lambda q_i)</script><p>而对于 $p_{u}$ 和$q_{i}
 <p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220428195502828.png" alt="image-20220428195502828"></p>
 <p>保存各模型的预测结果，注意保存的是没有截断 TopN 的推荐列表：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">save_rec_dict</span>(<span class="params">save_path,rec_dict</span>):</span></span><br><span class="line">    pickle.dump(rec_dict, <span class="built_in">open</span>(os.path.join(save_path,<span class="string">&#x27;word2vec_rec_dict.txt&#x27;</span>), <span class="string">&#x27;wb&#x27;</span>))</span><br></pre></td></tr></table></figure>
-<p>保存的格式为字典：<code>rec_dict=&#123;uid1:&#123;iid1:score,iid3:score,...&#125;, uid2:&#123;iid2:score,iid3:score,...&#125;,...&#125;</code></p>
+<p>保存的格式为字典：<code>Top50_rec_dict=&#123;uid1:&#123;iid1:score,iid3:score,...&#125;, uid2:&#123;iid2:score,iid3:score,...&#125;,...&#125;</code></p>
 <h2 id="模型融合"><a href="#模型融合" class="headerlink" title="模型融合"></a>模型融合</h2><p>观察各模型保存的预测得分结果，发现 MF 和另外几个算法得到的数据的值域不在同一区间，如果直接取均值的话， MF 的影响就很小了，所以先对每个用户的物品得分列表做 softmax 再取均值</p>
 <p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220428202209856.png" alt="image-20220428202209856"></p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">load_rec_dict</span>(<span class="params">file_path, model_name</span>):</span></span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(os.path.join(file_path,<span class="string">f&#x27;<span class="subst">&#123;model_name&#125;</span>_rec_dict.txt&#x27;</span>),<span class="string">&#x27;rb&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        Rec_dict = pickle.load(f)</span><br><span class="line">    <span class="comment"># Rec_dict:&#123;uid1:[(iid1,score),(iid2,score),...],uid2:[(...),(...),...],...&#125;</span></span><br><span class="line">    new_rec_dict = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> uid, iid_score_list <span class="keyword">in</span> Rec_dict.items():</span><br><span class="line">        new_rec_dict[uid] = <span class="built_in">dict</span>()</span><br><span class="line">        score_list = []</span><br><span class="line">        iid_list = []</span><br><span class="line">        <span class="keyword">for</span> iid, score <span class="keyword">in</span> iid_score_list.items():</span><br><span class="line">            score_list.append(score)</span><br><span class="line">            iid_list.append(iid)</span><br><span class="line">        prob = softmax(score_list)      <span class="comment"># 把物品评分转化成概率</span></span><br><span class="line">        <span class="keyword">for</span> iid, p <span class="keyword">in</span> <span class="built_in">zip</span>(iid_list, prob):</span><br><span class="line">            new_rec_dict[uid][iid] = p</span><br><span class="line">    <span class="keyword">return</span> new_rec_dict</span><br></pre></td></tr></table></figure>
