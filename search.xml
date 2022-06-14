@@ -2194,10 +2194,12 @@ p_u = p_u + \gamma (e_{ui}-\ \lambda q_i)</script><p>而对于 $p_{u}$ 和$q_{i}
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>&emsp;&emsp;这次任务有赖神直播讲解，讲解后再摸盘整个项目就比较顺利了。于是通过 debug 一个 toy example 大致了解了 Torch-RecHub 项目的架构、工程设计，以及大致的 pipeline。因为我是做会话推荐的，对 GRU4Rec 这个模型比较熟悉，所以上来就用它来当作 example 学习，原以为会很顺利，结果发现在 Model 里使用了我不太熟悉的”双塔结构“，有点懵逼。因为会话推荐任务里，其实没有 user 侧信息，所以根本不需要 model.inference_embedding()，只需要调用 model.predict() 做模型推断，所以刚开始一直没转过弯，也没有理解这两个的区别。后来想起曾经听过赖神的双塔分享，才恍然大悟。。</p>
 <p>&emsp;&emsp;第一次打卡任务顺利完成！希望可以坚持！</p>
 ]]></content>
+      <categories>
+        <category>推荐系统</category>
+      </categories>
       <tags>
         <tag>Datawhale组队学习</tag>
         <tag>RecHub</tag>
-        <tag>推荐系统</tag>
       </tags>
   </entry>
 </search>
