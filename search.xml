@@ -2138,108 +2138,61 @@ p_u = p_u + \gamma (e_{ui}-\ \lambda q_i)</script><p>而对于 $p_{u}$ 和$q_{i}
     <url>/2022/06/14/RecHub%E6%8E%A8%E8%8D%90%E9%A1%B9%E7%9B%AE%E5%AD%A6%E4%B9%A01/</url>
     <content><![CDATA[<h1 id="Task01"><a href="#Task01" class="headerlink" title="Task01"></a>Task01</h1><p>Task01：熟悉Torch-RecHub框架设计与使用方法</p>
 <p>参考资料：0613晚直播讲解，直播ppt，<a href="https://github.com/datawhalechina/torch-rechub">RecHub源码</a></p>
-<h2 id="Torch-RecHub-简介"><a href="#Torch-RecHub-简介" class="headerlink" title="Torch-RecHub 简介"></a>Torch-RecHub 简介</h2><p>一句话概括：一个轻量级的pytorch推荐模型框架（详见ppt）。</p>
-<p>比较认可的一点是：“模型训练与模型定义解耦，无basemodel概念，易拓展”，因为之前接触过 RUC 的开源框架 Recbole ，emm只能说对新手不是很友好（但不否认是一个伟大的开源项目），不友好主要就体现在各种 basemodel 的封装继承导致比较难修改。</p>
+<h2 id="Torch-RecHub-简介"><a href="#Torch-RecHub-简介" class="headerlink" title="Torch-RecHub 简介"></a>Torch-RecHub 简介</h2><p>​        一句话概括：一个轻量级的pytorch推荐模型框架（详见ppt）。</p>
+<p>​        比较认可的一点是：“模型训练与模型定义解耦，无basemodel概念，易拓展”，因为之前接触过 RUC 的开源框架 Recbole ，emm只能说对新手不是很友好（但不否认是一个伟大的开源项目），不友好主要就体现在各种 basemodel 的封装继承导致比较难修改。</p>
 <span id="more"></span>
 <h2 id="Torch-RecHub-框架"><a href="#Torch-RecHub-框架" class="headerlink" title="Torch-RecHub 框架"></a>Torch-RecHub 框架</h2><h3 id="框架图"><a href="#框架图" class="headerlink" title="框架图"></a>框架图</h3><p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220614130949977.png" alt="image-20220614130949977"></p>
-<p>框架图可以看出，<strong>数据</strong>（特征工程、预处理）、<strong>模型定义</strong>、<strong>模型训练</strong>三部分是完全解耦的，除此之外还有 utils ，包含了损失函数、激活函数、优化器、采样器、评估等其它功能，可能因为东西比较多所以统一叫 utils 吧。</p>
+<p>​        从框架图可以看出，<strong>数据</strong>（特征工程、预处理）、<strong>模型定义</strong>、<strong>模型训练</strong>三部分是完全解耦的，除此之外还有 utils ，包含了损失函数、激活函数、优化器、采样器、评估等其它功能，可能因为东西比较多所以统一叫 utils 吧。</p>
 <h3 id="查看项目文件树"><a href="#查看项目文件树" class="headerlink" title="查看项目文件树"></a>查看项目文件树</h3><p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220614132446809.png" alt="image-20220614132446809"></p>
 <p>框架图体现设计思路，实际项目文件结构没有严格按照框架图来设计，还是有一些差别的。</p>
 <ol>
 <li>Data （数据）模块没有独立的 module ，预处理似乎是写到了 examples 里（毕竟每个数据集的处理方式都不一样，难以统一），三种 Feature 的处理写在了 <code>basic/features.py</code> 里。</li>
 <li>框架图里 Utils 的功能基本都写在了 <code>basic</code> 里</li>
 </ol>
-<h2 id="Toy-example"><a href="#Toy-example" class="headerlink" title="Toy example"></a>Toy example</h2><p>以 dataset=ml-1m, model=GRU4Rec 为例介绍整个 pipeline，文件位于 <code>examples/matching/run_ml_gru4rec.py</code> 。</p>
-<p>为了和框架图对应上，本人将 pipeline 分为三个环节：定义阶段、训练阶段、推理阶段。定义阶段里定义了 Torch-RecHub 架构里最核心的三个模块， Data 、Model 和 Trainer；训练阶段做训练模型；推理阶段做模型评估。</p>
-<ol>
-<li><p>定义阶段：</p>
-<ul>
-<li><p>Data</p>
-<ul>
-<li><p>数据预处理和特征工程</p>
-</li>
-<li><p>定义 DataGenerator (Dataset + Dataloader)</p>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ol>
-<ul>
-<li><p>Model</p>
-<ul>
-<li>定义模型</li>
-</ul>
-</li>
-</ul>
-<ul>
-<li><p>Trainer</p>
-<ul>
-<li>定义训练器</li>
-</ul>
-</li>
-</ul>
-<ol>
-<li><p>训练阶段：</p>
-<ul>
-<li>Train </li>
-</ul>
-</li>
-<li><p>推理阶段：</p>
-<ul>
-<li>Evaluation<ul>
-<li>评估</li>
-</ul>
-</li>
-</ul>
-</li>
-</ol>
-<p>下面是主体代码，将逐步介绍。</p>
+<h2 id="Toy-example"><a href="#Toy-example" class="headerlink" title="Toy example"></a>Toy example</h2><p>​        以 dataset=ml-1m, model=GRU4Rec 为例介绍整个 pipeline。</p>
+<p>​        文件位于 <code>examples/matching/run_ml_gru4rec.py</code> </p>
+<p>​        为了和框架图对应上，本人将 pipeline 分为三个环节：定义阶段、训练阶段、推理阶段。定义阶段里定义了 Torch-RecHub 架构里最核心的三个模块， Data 、Model 和 Trainer；训练阶段做训练模型；推理阶段做模型评估。</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220614225829571.png" alt="image-20220614225829571"  /></p>
+<p>​        下面是主体代码，将逐步介绍。</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#========== 1.定义阶段 ==========#</span></span><br><span class="line"><span class="comment"># 数据预处理和特征工程</span></span><br><span class="line">user_features, history_features, item_features, neg_item_feature, x_train, y_train, all_item, test_user = get_movielens_data(dataset_path)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义 DataGenerator (Dataset + Dataloader)</span></span><br><span class="line">dg = MatchDataGenerator(x=x_train, y=y_train)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义 model</span></span><br><span class="line">model = GRU4Rec(user_features, history_features, item_features, neg_item_feature, user_params=&#123;<span class="string">&quot;dims&quot;</span>: [<span class="number">128</span>, <span class="number">64</span>, <span class="number">16</span>]&#125;, temperature=<span class="number">0.02</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义 trainer</span></span><br><span class="line"><span class="comment">#mode=1 means pair-wise learning</span></span><br><span class="line">trainer = MatchTrainer(model,</span><br><span class="line">                        mode=<span class="number">2</span>,</span><br><span class="line">                        optimizer_params=&#123;</span><br><span class="line">                            <span class="string">&quot;lr&quot;</span>: learning_rate,</span><br><span class="line">                            <span class="string">&quot;weight_decay&quot;</span>: weight_decay</span><br><span class="line">                        &#125;,</span><br><span class="line">                        n_epoch=epoch,</span><br><span class="line">                        device=device,</span><br><span class="line">                        model_path=save_dir,</span><br><span class="line">                        gpus=[<span class="number">0</span>])</span><br><span class="line"></span><br><span class="line">train_dl, test_dl, item_dl = dg.generate_dataloader(test_user, all_item, batch_size=batch_size, num_workers=<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#========== 2.训练阶段 ==========#</span></span><br><span class="line">trainer.fit(train_dl)</span><br><span class="line"></span><br><span class="line"><span class="comment">#========== 3.推理阶段 ==========#</span></span><br><span class="line"><span class="comment"># model inference</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;inference embedding&quot;</span>)</span><br><span class="line">user_embedding = trainer.inference_embedding(model=model, mode=<span class="string">&quot;user&quot;</span>, data_loader=test_dl, model_path=save_dir)</span><br><span class="line">item_embedding = trainer.inference_embedding(model=model, mode=<span class="string">&quot;item&quot;</span>, data_loader=item_dl, model_path=save_dir)</span><br><span class="line"><span class="built_in">print</span>(user_embedding.shape, item_embedding.shape)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 保存 embedding</span></span><br><span class="line"><span class="comment">#torch.save(user_embedding.data.cpu(), save_dir + &quot;user_embedding.pth&quot;)</span></span><br><span class="line"><span class="comment">#torch.save(item_embedding.data.cpu(), save_dir + &quot;item_embedding.pth&quot;)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># evaluate</span></span><br><span class="line">match_evaluation(user_embedding, item_embedding, test_user, all_item, topk=<span class="number">10</span>)</span><br></pre></td></tr></table></figure>
 <h3 id="1-定义阶段"><a href="#1-定义阶段" class="headerlink" title="1.定义阶段"></a>1.定义阶段</h3><h4 id="Data"><a href="#Data" class="headerlink" title="Data"></a>Data</h4><h5 id="预处理和特征工程"><a href="#预处理和特征工程" class="headerlink" title="预处理和特征工程"></a>预处理和特征工程</h5><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#========== 1.定义阶段 ==========#</span></span><br><span class="line"><span class="comment"># 数据预处理和特征工程</span></span><br><span class="line">user_features, history_features, item_features, neg_item_feature, x_train, y_train, all_item, test_user = get_movielens_data(dataset_path)</span><br></pre></td></tr></table></figure>
-<p>这个示例使用的数据集是 Movielens，调用<code>get_movielens_data()</code>函数进行预处理，代码里比较通用的部分在于提取三种特征：Dense Feature 、 Sparse Feature 和 Sequence Feature。</p>
+<p>​        这个示例使用的数据集是 Movielens，调用<code>get_movielens_data()</code>函数进行预处理，代码里比较通用的部分在于提取三种特征：Dense Feature 、 Sparse Feature 和 Sequence Feature。</p>
 <blockquote>
 <p><strong>Dense Feature</strong>：数值型特征，例如年龄、薪资、日点击量等。</p>
 </blockquote>
-<p>这里好像已经把所有 dense 特征都处理成 sparse 了。</p>
+<p>​        这里好像已经把所有 dense 特征都处理成 sparse 了。</p>
 <blockquote>
 <p><strong>Sparse Feature</strong>：类别型特征，例如城市、学历、性别等。主要使用了 sklearn 的 LabelEncoder。</p>
 </blockquote>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> MinMaxScaler, LabelEncoder</span><br><span class="line"></span><br><span class="line">feature_max_idx = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> feature <span class="keyword">in</span> sparse_features:</span><br><span class="line">    lbe = LabelEncoder()</span><br><span class="line">    data[feature] = lbe.fit_transform(data[feature]) + <span class="number">1</span>	<span class="comment"># lbe默认从0开始编号，这里+1表示从1开始编号</span></span><br><span class="line">    feature_max_idx[feature] = data[feature].<span class="built_in">max</span>() + <span class="number">1</span>		</span><br><span class="line">    <span class="keyword">if</span> feature == user_col:</span><br><span class="line">        user_map = &#123;encode_id + <span class="number">1</span>: raw_id <span class="keyword">for</span> encode_id, raw_id <span class="keyword">in</span> <span class="built_in">enumerate</span>(lbe.classes_)&#125;  <span class="comment">#encode user id: raw user id</span></span><br><span class="line">    <span class="keyword">if</span> feature == item_col:</span><br><span class="line">        item_map = &#123;encode_id + <span class="number">1</span>: raw_id <span class="keyword">for</span> encode_id, raw_id <span class="keyword">in</span> <span class="built_in">enumerate</span>(lbe.classes_)&#125;  <span class="comment">#encode item id: raw item id</span></span><br><span class="line">np.save(<span class="string">&quot;./data/ml-1m/saved/raw_id_maps.npy&quot;</span>, (user_map, item_map))	<span class="comment"># 保存 user_id 和 item_id 的索引</span></span><br></pre></td></tr></table></figure>
-<p>这里需要留意两点，第一，所有类别特征都从 1 开始编号。第二，user_id 和 item_id 也作为 Sparse Feature 来处理，并且保存了 user_id 和 item_id 的索引。</p>
+<p>​        这里需要留意两点，第一，所有类别特征都从 1 开始编号。第二，user_id 和 item_id 也作为 Sparse Feature 来处理，并且保存了 user_id 和 item_id 的索引。</p>
 <blockquote>
 <p><strong>Sequence Feature</strong>：序列特征，分为有序（时序）兴趣序列：例如最近一周点击过的 item list 和 无序标签特征：例如电影类型（动作|悬疑|犯罪）。</p>
 </blockquote>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> load_cache:  <span class="comment">#if you have run this script before and saved the preprocessed data</span></span><br><span class="line">    x_train, y_train, x_test = np.load(<span class="string">&quot;./data/ml-1m/saved/data_cache.npy&quot;</span>, allow_pickle=<span class="literal">True</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="comment">#Note: mode=2 means list-wise negative sample generate, saved in last col &quot;neg_items&quot;</span></span><br><span class="line">    df_train, df_test = generate_seq_feature_match(data,</span><br><span class="line">                                                    user_col,</span><br><span class="line">                                                    item_col,</span><br><span class="line">                                                    time_col=<span class="string">&quot;timestamp&quot;</span>,</span><br><span class="line">                                                    item_attribute_cols=[],</span><br><span class="line">                                                    sample_method=<span class="number">1</span>,</span><br><span class="line">                                                    mode=<span class="number">2</span>,</span><br><span class="line">                                                    neg_ratio=<span class="number">3</span>,</span><br><span class="line">                                                    min_item=<span class="number">0</span>)</span><br><span class="line">    x_train = gen_model_input(df_train, user_profile, user_col, item_profile, item_col, seq_max_len=<span class="number">50</span>, padding=<span class="string">&#x27;post&#x27;</span>, truncating=<span class="string">&#x27;post&#x27;</span>)</span><br><span class="line">    y_train = np.array([<span class="number">0</span>] * df_train.shape[<span class="number">0</span>])  <span class="comment">#label=0 means the first pred value is positiva sample</span></span><br><span class="line">    x_test = gen_model_input(df_test, user_profile, user_col, item_profile, item_col, seq_max_len=<span class="number">50</span>, padding=<span class="string">&#x27;post&#x27;</span>, truncating=<span class="string">&#x27;post&#x27;</span>)</span><br><span class="line">    np.save(<span class="string">&quot;./data/ml-1m/saved/data_cache.npy&quot;</span>, (x_train, y_train, x_test))</span><br></pre></td></tr></table></figure>
-<p>调用 <code>torch_rechub/utils/match.py</code> 的 <code>generate_seq_feature_match</code> 函数构建序列特征。该函数主要实现以下功能：</p>
-<ol>
-<li>提取点击序列特征</li>
-</ol>
-<p>具体地，对每个 user 在规定时间段内的点击序列用留一法进行切分，即最后一次点击作为测试集 label ，前 n-1 次作为测试集序列；用 <em>数据增强</em> 的方式生成训练集。举个例子比较容易说明，例如用户依次点击了 [A, C, B, D, E]，那么很自然地得到一条训练集：[A, C, B, D] —&gt; E ，用 [A, C, B, D] 作为输入，预测 label = E。数据增强的意思是，除了将最后一个标签作为 label 外，每个标签（除第一次点击以外）也都可以作为 label ，label 之前的序列都当作输入。这个例子里就可以额外产生：[A, C, B]—&gt; D， [A, C]—&gt; B ，[A]—&gt; C。所以由 [A, C, B, D, E] 可以生成E、D、B、C 为 label 的四条训练数据。只不过为了训练和评估模型，把 [A, C, B, D] —&gt; E 当作测试集了。</p>
-<ol>
-<li>提取无序标签特征</li>
-</ol>
-<p>其实也是有序的，把标签特征也当作序列里的 item 。 line 118：<code>sample.append(hist[attr_col].tolist()[:i])</code> </p>
-<ol>
-<li>负采样</li>
-</ol>
-<p>提供了三种负采样方式，point-wise、pair-wise 和 list-wise。</p>
-<p>调用 <code>gen_model_input</code> ，对序列进行 truncating 和 padding，生成训练集和测试集，最后输出的是 pandas.DataFrame 格式。</p>
-<p>最后再对上面三种特征进行封装，对 Sparse Feature 主要定义了每个特征的词表大小、 embedding 维度、embedding 初始化方法，对 Sequence Feature 还定义了 pooling 的方式，目前支持 [“mean”, “sum”, “concat”] 三种方式。</p>
+<p>​        调用 <code>torch_rechub/utils/match.py</code> 的 <code>generate_seq_feature_match</code> 函数构建序列特征。该函数主要实现以下功能：</p>
+<p><strong>提取点击序列特征</strong></p>
+<p>​        具体地，对每个 user 在规定时间段内的点击序列用留一法进行切分，即最后一次点击作为测试集 label ，前 n-1 次作为测试集序列；用 <em>数据增强</em> 的方式生成训练集。举个例子比较容易说明，例如用户依次点击了 [A, C, B, D, E]，那么很自然地得到一条训练集：[A, C, B, D] —&gt; E ，用 [A, C, B, D] 作为输入，预测 label = E。数据增强的意思是，除了将最后一个标签作为 label 外，每个标签（除第一次点击以外）也都可以作为 label ，label 之前的序列都当作输入。这个例子里就可以额外产生：[A, C, B]—&gt; D， [A, C]—&gt; B ，[A]—&gt; C。所以由 [A, C, B, D, E] 可以生成E、D、B、C 为 label 的四条训练数据。只不过为了训练和评估模型，把 [A, C, B, D] —&gt; E 当作测试集了。</p>
+<p><strong>提取无序标签特征</strong></p>
+<p>​        其实也是有序的，把标签特征也当作序列里的 item 。 line 118：<code>sample.append(hist[attr_col].tolist()[:i])</code> </p>
+<p><strong>负采样</strong></p>
+<p>​        提供了三种负采样方式，point-wise、pair-wise 和 list-wise。</p>
+<p>​        调用 <code>gen_model_input</code> ，对序列进行 truncating 和 padding，生成训练集和测试集，最后输出的是 pandas.DataFrame 格式。</p>
+<p>​        最后再对上面三种特征进行封装，对 Sparse Feature 主要定义了每个特征的词表大小、 embedding 维度、embedding 初始化方法，对 Sequence Feature 还定义了 pooling 的方式，目前支持 [“mean”, “sum”, “concat”] 三种方式。</p>
 <h5 id="定义-DataGenerator"><a href="#定义-DataGenerator" class="headerlink" title="定义 DataGenerator"></a>定义 DataGenerator</h5><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 定义 DataGenerator (Dataset + Dataloader)</span></span><br><span class="line"><span class="comment"># 1.</span></span><br><span class="line">dg = MatchDataGenerator(x=x_train, y=y_train)</span><br><span class="line"><span class="comment"># 2.</span></span><br><span class="line">train_dl, test_dl, item_dl = dg.generate_dataloader(test_user, all_item, batch_size=batch_size, num_workers=<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
-<p>DataGenerator 主要继承了 torch 的 Dataset 类和 Dataloader 类，最终会返回三个 dataloader，分别是训练集 dataloader 、测试集 dataloader 和 item_dataloader，前两个比较好理解，最后一个 item_dataloader</p>
+<p>​        DataGenerator 主要继承了 torch 的 Dataset 类和 Dataloader 类，最终会返回三个 dataloader，分别是训练集 dataloader 、测试集 dataloader 和 item_dataloader，前两个比较好理解，最后一个 item_dataloader</p>
 <h4 id="Model"><a href="#Model" class="headerlink" title="Model"></a>Model</h4><h5 id="定义模型"><a href="#定义模型" class="headerlink" title="定义模型"></a>定义模型</h5><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 定义 model</span></span><br><span class="line">model = GRU4Rec(user_features, history_features, item_features, neg_item_feature, user_params=&#123;<span class="string">&quot;dims&quot;</span>: [<span class="number">128</span>, <span class="number">64</span>, <span class="number">16</span>]&#125;, temperature=<span class="number">0.02</span>)</span><br></pre></td></tr></table></figure>
-<p>所有模型都在 <code>torch_rechub/models</code> 下，都可以直接 call （所有计算都在 model.forward() 里）</p>
+<p>​        所有模型都在 <code>torch_rechub/models</code> 下，都可以直接 call （所有计算都在 model.forward() 里）</p>
 <h4 id="Train"><a href="#Train" class="headerlink" title="Train"></a>Train</h4><h5 id="定义训练器"><a href="#定义训练器" class="headerlink" title="定义训练器"></a>定义训练器</h5><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 定义 trainer</span></span><br><span class="line">trainer = MatchTrainer(model,</span><br><span class="line">                        mode=<span class="number">2</span>,</span><br><span class="line">                        optimizer_params=&#123;</span><br><span class="line">                            <span class="string">&quot;lr&quot;</span>: learning_rate,</span><br><span class="line">                            <span class="string">&quot;weight_decay&quot;</span>: weight_decay</span><br><span class="line">                        &#125;,</span><br><span class="line">                        n_epoch=epoch,</span><br><span class="line">                        device=device,</span><br><span class="line">                        model_path=save_dir,</span><br><span class="line">                        gpus=[<span class="number">0</span>])</span><br></pre></td></tr></table></figure>
-<p>Trainer 主要定义了模型训练的有关参数，比如：训练模式：{0:point-wise, 1:pair-wise, 2:list-wise}，不同训练模式决定使用不同的损失函数；学习率；权重衰减系数；训练轮次；训练设备；gpu编号等。</p>
-<p>Trainer 的方法有 fit（用于训练）、evaluate（用于评估）、predict（用于预测）、inference_embedding（用于推断），但是似乎这个代码只用到了 fit 和 inference_embedding，evaluate 和 predict 的具体用法还不清楚，predict 和 inference_embedding 的区别也不清楚。</p>
+<p>​        Trainer 主要定义了模型训练的有关参数，比如：训练模式：{0:point-wise, 1:pair-wise, 2:list-wise}，不同训练模式决定使用不同的损失函数；学习率；权重衰减系数；训练轮次；训练设备；gpu编号等。</p>
+<p>​        Trainer 的方法有 fit（用于训练）、evaluate（用于评估）、predict（用于预测）、inference_embedding（用于推断），但是似乎这个代码只用到了 fit 和 inference_embedding，evaluate 和 predict 的具体用法还不清楚，predict 和 inference_embedding 的区别也不清楚。</p>
 <h3 id="2-训练阶段"><a href="#2-训练阶段" class="headerlink" title="2. 训练阶段"></a>2. 训练阶段</h3><h4 id="Train-1"><a href="#Train-1" class="headerlink" title="Train"></a>Train</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#========== 2.训练阶段 ==========#</span></span><br><span class="line">trainer.fit(train_dl)</span><br></pre></td></tr></table></figure>
-<p>只需要调用 trainer.fit()</p>
+<p>​        只需要调用 trainer.fit()</p>
 <h3 id="3-推理阶段"><a href="#3-推理阶段" class="headerlink" title="3. 推理阶段"></a>3. 推理阶段</h3><h4 id="Evaluation"><a href="#Evaluation" class="headerlink" title="Evaluation"></a>Evaluation</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#========== 3.推理阶段 ==========#</span></span><br><span class="line"><span class="comment"># model inference</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;inference embedding&quot;</span>)</span><br><span class="line">user_embedding = trainer.inference_embedding(model=model, mode=<span class="string">&quot;user&quot;</span>, data_loader=test_dl, model_path=save_dir)</span><br><span class="line">item_embedding = trainer.inference_embedding(model=model, mode=<span class="string">&quot;item&quot;</span>, data_loader=item_dl, model_path=save_dir)</span><br><span class="line"><span class="built_in">print</span>(user_embedding.shape, item_embedding.shape)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 保存 embedding</span></span><br><span class="line"><span class="comment">#torch.save(user_embedding.data.cpu(), save_dir + &quot;user_embedding.pth&quot;)</span></span><br><span class="line"><span class="comment">#torch.save(item_embedding.data.cpu(), save_dir + &quot;item_embedding.pth&quot;)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># evaluate</span></span><br><span class="line">match_evaluation(user_embedding, item_embedding, test_user, all_item, topk=<span class="number">10</span>)</span><br></pre></td></tr></table></figure>
-<p>user_embedding 和 item_embedding 分别调用不同模式（mode=[“user”, “item”]）的 model 推理得到。这似乎是双塔特有的方式：user 和 item 联合训练，但是推理时解耦，分别推理。（第一次接触双塔的代码，不确定说的对不对…）</p>
-<p><code>match_evaluation()</code> 用 annoy 进行向量检索召回 topk 个 item ，接着调用  <code>torch_rechub/basic/metric.py</code> 中的 topk_metrics() 函数评估，涵盖了 NDCG、MRR、Recall、Hit、Precision 。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这次任务有赖神直播讲解，讲解后再摸盘整个项目就比较顺利了。于是通过 debug 一个 toy example 大致了解了 Torch-RecHub 项目的架构、工程设计，以及大致的 pipeline。因为我是做会话推荐的，对 GRU4Rec 这个模型比较熟悉，所以上来就用它来当作 example 学习，原以为会很顺利，结果发现在 Model 里使用了我不太熟悉的”双塔结构“，有点懵逼。因为会话推荐任务里，其实没有 user 侧信息，所以根本不需要 model.inference_embedding()，只需要调用 model.predict() 做模型推断，所以刚开始一直没转过弯，也没有理解这两个的区别。后来想起曾经听过赖神的双塔分享，才恍然大悟。。</p>
-<p>第一次打卡任务顺利完成！希望可以坚持！</p>
+<p>​        user_embedding 和 item_embedding 分别调用不同模式（mode=[“user”, “item”]）的 model 推理得到。这似乎是双塔特有的方式：user 和 item 联合训练，但是推理时解耦，分别推理。（第一次接触双塔的代码，不确定说的对不对…）</p>
+<p>​        <code>match_evaluation()</code> 用 annoy 进行向量检索召回 topk 个 item ，接着调用  <code>torch_rechub/basic/metric.py</code> 中的 topk_metrics() 函数评估，涵盖了 NDCG、MRR、Recall、Hit、Precision 。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>​        这次任务有赖神直播讲解，讲解后再摸盘整个项目就比较顺利了。于是通过 debug 一个 toy example 大致了解了 Torch-RecHub 项目的架构、工程设计，以及大致的 pipeline。因为我是做会话推荐的，对 GRU4Rec 这个模型比较熟悉，所以上来就用它来当作 example 学习，原以为会很顺利，结果发现在 Model 里使用了我不太熟悉的”双塔结构“，有点懵逼。因为会话推荐任务里，其实没有 user 侧信息，所以根本不需要 model.inference_embedding()，只需要调用 model.predict() 做模型推断，所以刚开始一直没转过弯，也没有理解这两个的区别。后来想起曾经听过赖神的双塔分享，才恍然大悟。。</p>
+<p>​        第一次打卡任务顺利完成！希望可以坚持！</p>
 ]]></content>
       <tags>
         <tag>Datawhale组队学习</tag>
