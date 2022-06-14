@@ -2135,7 +2135,7 @@ p_u = p_u + \gamma (e_{ui}-\ \lambda q_i)</script><p>而对于 $p_{u}$ 和$q_{i}
   </entry>
   <entry>
     <title>RecHub推荐项目学习1</title>
-    <url>/2021/10/17/RecHub%E6%8E%A8%E8%8D%90%E9%A1%B9%E7%9B%AE%E5%AD%A6%E4%B9%A01/</url>
+    <url>/2022/06/14/RecHub%E6%8E%A8%E8%8D%90%E9%A1%B9%E7%9B%AE%E5%AD%A6%E4%B9%A01/</url>
     <content><![CDATA[<h1 id="Task01"><a href="#Task01" class="headerlink" title="Task01"></a>Task01</h1><p>Task01：熟悉Torch-RecHub框架设计与使用方法</p>
 <p>参考资料：0613晚直播讲解，直播ppt，<a href="https://github.com/datawhalechina/torch-rechub">RecHub源码</a></p>
 <h2 id="Torch-RecHub-简介"><a href="#Torch-RecHub-简介" class="headerlink" title="Torch-RecHub 简介"></a>Torch-RecHub 简介</h2><p>一句话概括：一个轻量级的pytorch推荐模型框架（详见ppt）。</p>
