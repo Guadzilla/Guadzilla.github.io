@@ -1314,7 +1314,10 @@ pip install xxx.whl
   <entry>
     <title>模板</title>
     <url>/2021/10/17/%E6%A8%A1%E6%9D%BF/</url>
-    <content><![CDATA[<hr>
+    <content><![CDATA[<p>中文空格用</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&amp;emsp;</span><br></pre></td></tr></table></figure>
+<p>替换</p>
+<hr>
 <p>原paper：</p>
 <p>源码解读：</p>
 <hr>
@@ -1322,7 +1325,6 @@ pip install xxx.whl
 <p>总结：</p>
 <hr>
 <span id="more"></span>
-
 <h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><ul>
 <li>question作者想解决什么问题？ </li>
 </ul>
@@ -1364,10 +1366,11 @@ pip install xxx.whl
 <li></li>
 <li></li>
 </ul>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><h2 id="一些备注"><a href="#一些备注" class="headerlink" title="一些备注"></a>一些备注</h2><p>数学公式不能正确显示的情况：<br>1.<br>$$<br>\mathit{L}=\mathit{L}<em>{cr} + \lambda_1\mathit{L}</em>{in}+\lambda_2||\Theta||^2_2<br>$$</p>
-<p>在每个下划线 “ _ ” 前后各加一个空格就好了</p>
-<p>$$<br>\mathit{L}=\mathit{L} _ {cr} + \lambda_1\mathit{L} _ {in}+\lambda_2||\Theta||^2 _ 2<br>$$</p>
-<p>2.</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><h2 id="一些备注"><a href="#一些备注" class="headerlink" title="一些备注"></a>一些备注</h2><p>数学公式不能正确显示的情况：<br>1.</p>
+<script type="math/tex; mode=display">
+\mathit{L}=\mathit{L}_{cr} + \lambda_1\mathit{L}_{in}+\lambda_2||\Theta||^2_2</script><p>在每个下划线 “ _ ” 前后各加一个空格就好了</p>
+<script type="math/tex; mode=display">
+\mathit{L}=\mathit{L} _ {cr} + \lambda_1\mathit{L} _ {in}+\lambda_2||\Theta||^2 _ 2</script><p>2.</p>
 <p><img src="https://gitee.com/Guadzilla/img-hosting/raw/master/image-20211118185724771.png" alt="image-20211118185724771"></p>
 ]]></content>
   </entry>
@@ -2193,6 +2196,154 @@ p_u = p_u + \gamma (e_{ui}-\ \lambda q_i)</script><p>而对于 $p_{u}$ 和$q_{i}
 <p>&emsp;&emsp;<code>match_evaluation()</code> 用 annoy 进行向量检索召回 topk 个 item ，接着调用  <code>torch_rechub/basic/metric.py</code> 中的 topk_metrics() 函数评估，涵盖了 NDCG、MRR、Recall、Hit、Precision 。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>&emsp;&emsp;这次任务有赖神直播讲解，讲解后再摸盘整个项目就比较顺利了。于是通过 debug 一个 toy example 大致了解了 Torch-RecHub 项目的架构、工程设计，以及大致的 pipeline。因为我是做会话推荐的，对 GRU4Rec 这个模型比较熟悉，所以上来就用它来当作 example 学习，原以为会很顺利，结果发现在 Model 里使用了我不太熟悉的”双塔结构“，有点懵逼。因为会话推荐任务里，其实没有 user 侧信息，所以根本不需要 model.inference_embedding()，只需要调用 model.predict() 做模型推断，所以刚开始一直没转过弯，也没有理解这两个的区别。后来想起曾经听过赖神的双塔分享，才恍然大悟。。</p>
 <p>&emsp;&emsp;第一次打卡任务顺利完成！希望可以坚持！</p>
+]]></content>
+      <categories>
+        <category>推荐系统</category>
+      </categories>
+      <tags>
+        <tag>Datawhale组队学习</tag>
+        <tag>RecHub</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>RecHub推荐项目学习2</title>
+    <url>/2022/06/19/RecHub%E6%8E%A8%E8%8D%90%E9%A1%B9%E7%9B%AE%E5%AD%A6%E4%B9%A02/</url>
+    <content><![CDATA[<h1 id="Task02"><a href="#Task02" class="headerlink" title="Task02"></a>Task02</h1><p>&emsp;&emsp;Task02：精排模型 DeepFM</p>
+<p>&emsp;&emsp;参考资料：<a href="https://datawhalechina.github.io/fun-rec/#/">FunRec文档</a>，<a href="https://github.com/datawhalechina/torch-rechub">RecHub源码</a></p>
+<h1 id="推荐模型发展的时间线"><a href="#推荐模型发展的时间线" class="headerlink" title="推荐模型发展的时间线"></a>推荐模型发展的时间线</h1><p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220618103615992.png" alt="image-20220618103615992" style="zoom:50%;" /></p>
+<p>&emsp;&emsp;这张图来自[1]，放出这张图的原因是便于从时间线上感受这些模型的发展，拿本期学习的 DeepFM 举例，从时间线上可以看到 DeepFM 模型是在 FM、FNN、PNN、Wide&amp;Deep 之后推出的，其实也是对这些模型的改进，为了更好地理解 DeepFM，至少得先了解它们。</p>
+<span id="more"></span>
+<h1 id="DeepFM"><a href="#DeepFM" class="headerlink" title="DeepFM"></a>DeepFM</h1><p>&emsp;&emsp;DeepFM 提出的动机主要有两点：</p>
+<ul>
+<li><p>CTR 预估任务中特征交叉至关重要，但是特征交叉通常需要非常专业的特征工程。例如Wide&amp;Deep的Wide部分需要手工构造pairwise特征，huge size并且费人力，复杂。</p>
+</li>
+<li><p>一些模型例如FNN、PNN只能学习到高阶特征组合；Wide&amp;Deep在输出层直接将低阶和高阶特征相加组合，很容易让模型最终偏向（bias）学习到低阶或者高阶的特征，而不能很好地结合。</p>
+</li>
+</ul>
+<p>针对上面两个问题，DeepFM的解决方案分别是：</p>
+<ul>
+<li>改进 Wide&amp;Deep 的 Wide 部分，使用 FM 代替手工构造特征</li>
+<li>Wide 部分和 Deep 部分使用相同的 embedding 输入，不会导致 bias</li>
+</ul>
+<h2 id="DeepFM-的前辈们"><a href="#DeepFM-的前辈们" class="headerlink" title="DeepFM 的前辈们"></a>DeepFM 的前辈们</h2><p>&emsp;&emsp;上面提到了FM、FNN、PNN、Wide&amp;Deep，为了更好地理解 DeepFM ，这里简单介绍下：FM 捕捉低阶特征组合，FNN、PNN 捕捉高阶特征组合，Wide&amp;Deep 的 Wide 部分捕捉低阶特征组合，Deep 部分捕捉高阶特征组合。更详细的介绍如下</p>
+<h3 id="低阶特征组合：FM"><a href="#低阶特征组合：FM" class="headerlink" title="低阶特征组合：FM"></a>低阶特征组合：FM</h3><p>&emsp;&emsp;用[2]的例子介绍 FM ，假设一个广告分类的问题，根据用户和广告位相关的特征，预测用户是否点击了广告。源数据如下：</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220618155318348.png" alt="image-20220618155318348"></p>
+<p>&emsp;&emsp;Clicked? 是 label ，Country、Day、Ad_type 是三类特征，并且都是类别型特征，需要经过 one-hot 编码才能转换为数值型特征，经过 one-hot 编码后如下所示：</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220618155325444.png" alt="image-20220618155325444"></p>
+<p>&emsp;&emsp;可以看出，经过 one-hot 编码，每条数据都变稀疏了，每个样本有7维特征，但仅有3维特征具有非零值。在实际场景中，商品种类、用户职业、地区等类别非常多，经过 one-hot 编码后样本维度会迅速上升，且非常稀疏。</p>
+<h4 id="POLY2"><a href="#POLY2" class="headerlink" title="POLY2"></a>POLY2</h4><p>&emsp;&emsp;这时候其实可以用 LR 训练了，但是通过观察大量的样本数据可以发现，某些特征经过<strong>关联</strong>之后，与label之间的相关性就会提高。例如，“USA”与“Thanksgiving”、“China”与“Chinese New Year”这样的关联特征，对用户的点击有着正向的影响。换句话说，来自“China”的用户很可能会在“Chinese New Year”有大量的浏览、购买行为，而在“Thanksgiving”却不会有特别的消费行为。这种关联特征与label的正向相关性在实际问题中是普遍存在的，如“化妆品”类商品与“女”性，“球类运动配件”的商品与“男”性，“电影票”的商品与“电影”品类偏好等。因此，引入两个<strong>特征的组合</strong>是非常有意义的，这也就是常说的<strong>特征交叉</strong>。因此，一个非常自然的想法诞生了，在 LR 的基础上加入<strong>二阶特征组合</strong>，这也是 <strong>POLY2</strong> 的思路：</p>
+<script type="math/tex; mode=display">
+y(\mathbf{x})=w_{0}+\sum_{i=1}^{n} w_{i} x_{i}+\sum_{i=1}^{n} \sum_{j=i+1}^{n} w_{i j} x_{i} x_{j}</script><p>&emsp;&emsp;公式中的 $x_i \in \{0,1\}$ 表示每个特征。</p>
+<p>&emsp;&emsp;这样做考虑了<strong>二阶特征交叉</strong>，但是也产生了新的问题。</p>
+<ul>
+<li>假设经过 one-hot 编码以后的样本特征维度为 $n$ ，那么上述公式中的 $w_{ij}$ 共有 $\frac{n(n-1)}{2}$ 个，权重参数量从 $O(n)$ 上升到了 $O(n^2)$ 。</li>
+<li>并且 $w_{ij}$ 还有一个“训练难”的问题，因为每个参数 $w_{ij}$ 的训练需要大量 $x_i$ 和 $x_j$ 都非零的样本；由于样本数据本来就比较稀疏，满足“ $x_i$ 和 $x_j$ 都非零”的样本将会非常少。训练样本的不足，很容易导致参数 $w_{ij}$ 不准确，最终将严重影响模型的性能。</li>
+</ul>
+<script type="math/tex; mode=display">
+y(\mathbf{x})=w_{0}+\sum_{i=1}^{n} w_{i} x_{i}+\sum_{i=1}^{n} \sum_{j=i+1}^{n} <\mathbf{w}_i,\mathbf{w}_j> x_{i} x_{j}</script><p>&emsp;&emsp;受矩阵分解算法的启发，FM 提出隐向量的概念，用两个向量的内积 $&lt;\mathbf{w}_i,\mathbf{w}_j&gt;$ 代替 $w_{ij}$ ，也就是每一维特征都对应一个隐向量，共有 $n$ 个隐向量，在做二阶特征交叉时，用两个向量的内积表示这两个组合特征的权重 $w_{ij}$，这样一来就解决了 POLY2 的两个问题：</p>
+<ul>
+<li>权重参数量由 $O(n^2)$ 减少到  $O(nk),k&lt;&lt;n$ 。</li>
+<li>隐向量的引入使得 $ x_{h} x_{i}$ 的参数和 $ x_{i} x_{j}$ 的参数不再是相互独立的，因此我们可以在样本稀疏的情况下相对合理地估计 FM 的二次项参数。具体来说， $ x_{h} x_{i}$ 和 $ x_{i} x_{j}$ 的系数分别为 $&lt;\mathbf{w}_h,\mathbf{w}_i&gt;$ 和$&lt;\mathbf{w}_i,\mathbf{w}_j&gt;$，它们之间有共同项 $\mathbf{w}_i$。也就是说，所有包含“ $x_i$ 的非零组合特征”（存在某个 $j\neq i$，使得 $ x_{i} x_{j}\neq 0$ ）的样本都可以用来学习隐向量 $\mathbf{w}_i$，这很大程度上缓解了数据稀疏性的问题。相比POLY2， FM虽然丢失了某些具体特征组合的精确记忆能力， 但是泛化能力大大提高。  </li>
+</ul>
+<h4 id="计算优化"><a href="#计算优化" class="headerlink" title="计算优化"></a>计算优化</h4><p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220619134325217.png" alt="image-20220619134325217" style="zoom: 80%;" /></p>
+<p>&emsp;&emsp;补一个小知识点，FM的计算公式可以<a href="https://zhuanlan.zhihu.com/p/343174108">化简</a>[4]，将时间复杂度从 $O(n^2)$ 减少到 $O(n)$ 。</p>
+<h3 id="高阶特征组合：DNN、FNN"><a href="#高阶特征组合：DNN、FNN" class="headerlink" title="高阶特征组合：DNN、FNN"></a>高阶特征组合：DNN、FNN</h3><h4 id="DNN"><a href="#DNN" class="headerlink" title="DNN"></a>DNN</h4><p>&emsp;&emsp;比起 FM 的二阶特征组合能力，DNN 能实现<strong>更高阶的特征组合</strong>。但是 DNN 也存在一些问题[3]：</p>
+<p>&emsp;&emsp;当我们使用DNN网络解决推荐问题的时候，存在网络参数过于庞大的问题，这是因为在进行特征处理的时候我们需要使用one-hot编码来处理离散特征，这会导致输入的维度猛增。这里借用AI大会的一张图片：</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220619101907599.png" alt="image-20220619101907599"></p>
+<p>&emsp;&emsp;这样庞大的参数量也是不实际的。为了解决 DNN 参数量过大的局限性，可以采用非常经典的 Field 思想，将 OneHot 特征转换为 Dense Vector </p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220619101925322.png" alt="image-20220619101925322" style="zoom:50%;" /></p>
+<p>&emsp;&emsp;此时通过增加全连接层就可以实现<strong>高阶的特征组合</strong>，如下图所示：</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220619101941306.png" alt="image-20220619101941306" style="zoom:50%;" /></p>
+<h4 id="FNN"><a href="#FNN" class="headerlink" title="FNN"></a>FNN</h4><p>&emsp;&emsp;DNN 能够实现高阶特征组合，但是低阶的特征组合也很重要，于是一些模型例如 FNN ，在 DNN 基础上，增加 FM 来表示低阶的特征组合，以下是 FNN 的模型图。</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220619101451894.png" alt="image-20220619101451894" style="zoom: 60%;" />       <img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220619102848286.png" alt="image-20220619102848286" style="zoom: 60%;" />   </p>
+<p>&emsp;&emsp;可以看出 FNN 在Embedding 层做了改进，利用 FM 的权重进行参数初始化，这样做其实有两点好处：</p>
+<ul>
+<li>因为 1）Embedding 层的参数数量巨大；2）在进行梯度下降优化时，只有与非零特征相连的 Embedding 层权重会被更新。这两点原因导致 Embedding 层收敛速度很慢，利用 FM 训练好的隐向量初始化 Embedding 层的参数，相当于在初始化神经网络参数时，已经引入了有价值的先验信息。 也就是说， 神经网络训练的起点更接近目标最优点， 自然<strong>加速了整个神经网络的收敛过程</strong>。  </li>
+<li>模型图的 Embedding 层， $w_0$ 是 FM 公式里的偏置项，$w_1$ 是一阶特征组合项，剩下的是二阶特征组合项，所以 FNN 也加入了低阶特征组合（虽然经过 DNN 后这些低阶特征组合几乎没有了）</li>
+</ul>
+<h3 id="Wide-amp-Deep"><a href="#Wide-amp-Deep" class="headerlink" title="Wide&amp;Deep"></a>Wide&amp;Deep</h3><p>&emsp;&emsp;紧接着上面，“经过 DNN 后这些低阶特征组合几乎没有了”，这是实际上是由于 FNN 中，“ FM 预训练，再用 DNN 训练最终的模型”，这样<strong>串行</strong>的模式导致的，也就是虽然 FM 学到了低阶特征组合，但是 DNN 的全连接结构导致低阶特征在 DNN 中又被组合成了高阶特征组合，所以没有保留下低阶特征组合。看来我们已经找到问题了，将<strong>串行</strong>方式改进为<strong>并行</strong>方式能比较好的解决这个问题。于是Google提出了 Wide&amp;Deep 模型，见下图。</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220619104157758.png" alt="image-20220619104157758"></p>
+<p>&emsp;&emsp;Wide&amp;Deep 的设计初衷是为了赋予模型<strong>记忆能力</strong>和<strong>泛化能力</strong>，记忆能力通过 Wide 部分实现，泛化能力通过 Deep 部分实现。</p>
+<blockquote>
+<p>“记忆能力” 可以被理解为模型直接学习并利用历史数据中物品或者特征的“共现频率”的能力。 一般来说， 协同过滤、 逻辑回归等简单模型有较强的“记忆能力”。 由于这类模型的结构简单， 原始数据往往可以直接影响推荐结果， 产生类似于“如果点击过A， 就推荐B”这类规则式的推荐， 这就相当于模型直接记住了历史数据的分布特点， 并利用这些记忆进行推荐。</p>
+<p>“泛化能力” 可以被理解为模型传递特征的相关性， 以及发掘稀疏甚至从未出现过的稀有特征与最终标签相关性的能力。 矩阵分解比协同过滤的泛化能力强， 因为矩阵分解引入了隐向量这样的结构， 使得数据稀少的用户或者物品也能生成隐向量， 从而获得有数据支撑的推荐得分， 这就是非常典型的将全局数据传递到稀疏物品上， 从而提高泛化能力的例子。 再比如， 深度神经网络通过特征的多次自动组合， 可以深度发掘数据中潜在的模式， 即使是非常稀疏的特征向量输入， 也能得到较稳定平滑的推荐概率， 这就是简单模型所缺乏的“泛化能力”。</p>
+</blockquote>
+<p>&emsp;&emsp;但是如果深入探究 Wide&amp;Deep 的构成方式，虽然将整个模型的结构调整为了并行结构，在实际的使用中 Wide 部分需要较为精巧的特征工程，换句话说人工处理对于模型的效果具有比较大的影响，大家可以看到下图红圈内的 Wide 部分采用了两个 id 类特征的乘积，这是 Google 团队<strong>根据业务精心选择</strong>的想让模型<strong>直接记忆</strong>的特征组合。</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220619104313037.png" alt="image-20220619104313037"></p>
+<p>&emsp;&emsp;Wide&amp;Deep 其实还有一个没那么容易能够发现的问题，我们看下面这张图（图片来自FunRec）：</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220619123835759.png" alt="image-20220619123835759"></p>
+<p>&emsp;&emsp;在模型前向计算的时候，Wide 和 Deep 部分的输入不同，Wide 的输入只有低阶特征组合，Deep 则可以输入低阶和高阶；两部分各自输出一个标量 logits，最后学习它们的权重系数加权求和，再过 sigmoid 激活。DeepFM 的论文里，指出这样做可能使得模型最终<strong>偏向学习到低阶或者高阶的特征</strong>，不能做到很好的结合，究其原因还是高阶和低阶特征的输入是分开的。</p>
+<h2 id="回到DeepFM"><a href="#回到DeepFM" class="headerlink" title="回到DeepFM"></a>回到DeepFM</h2><p>&emsp;&emsp;综合上述几个模型，FM 能够高效进行特征交叉捕捉<strong>低阶</strong>特征组合；DNN、FNN、PNN 能够捕捉<strong>高阶特征组合</strong>；Wide&amp;Deep 结合两者，同时捕捉低阶和高阶特征，但仍有两个问题：1）学习有偏，最后会偏向学习低阶或者高阶特征。2）Wide 部分需要手工设计特征，费时费力。</p>
+<p>&emsp;&emsp;至此，终于轮到 DeepFM 登场。</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220619132058752.png" alt="image-20220619132058752"></p>
+<p>&emsp;&emsp;DeepFM 仍然沿用了 Wide&amp;Deep “记忆+泛化”两部分建模的思想，设计 FM Component 负责“记忆”，Deep Component 负责“泛化”。其中巧妙地利用 FM 的思想解决了 Wide&amp;Deep 的两个问题：<strong>特征工程困难</strong>和<strong>学习有偏</strong>。</p>
+<p>&emsp;&emsp;具体是如何用 FM 思想解决这两部分问题的呢？下面看 FM 部分的模型图：</p>
+<h3 id="FM-Component"><a href="#FM-Component" class="headerlink" title="FM Component"></a>FM Component</h3><p>&emsp;&emsp;FM 部分，改进 Wide&amp;Deep  的 Wide，使得不再需要手动构造（二阶）交叉特征，也能捕捉低阶特征组合。</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220619133002341.png" alt="image-20220619133002341" style="zoom:67%;" /></p>
+<p>&emsp;公式：</p>
+<script type="math/tex; mode=display">
+y_{F M}=\langle w, x\rangle+\sum_{i=1}^{d} \sum_{j=i+1}^{d}\left\langle V_{i}, V_{j}\right\rangle x_{i} \cdot x_{j}</script><blockquote>
+<p>这里每个 field 都是 one-hot ，原文里说的，所以不用纠结同一个 field 里是否是 multi-hot 了，如果是 multi-hot 也可以用各种 pooling 方式转化成一个向量。</p>
+</blockquote>
+<p>&emsp;&emsp;在 FM Layer，共有两种操作，Addition 和 Inner Product（分别用绿色和蓝色箭头标出）。</p>
+<ul>
+<li><strong>Addition</strong>. 对 Sparse Feature（Field level）线性加和，即 $\langle w, x\rangle$ .</li>
+<li><strong>Inner Product</strong>. 将每个 field 的 one-hot 向量转化成 dense embedding，把它看作 FM 的 latent vector（Dense Embeddings 层在 Deep Component 里介绍），然后做点积操作即  $\sum_{i=1}^{d} \sum_{j=i+1}^{d}\left\langle V_{i}, V_{j}\right\rangle x_{i} \cdot x_{j}$ . </li>
+</ul>
+<p>&emsp;&emsp;这里我曾经纠结了很久，因为不知道特征究竟是如何组合的，是 $\frac{n(n-1)}{2}$ 次组合，还是 $\frac{m(m-1)}{2}$ 次组合。最后查阅资料加上自己整理，回答是这样的：</p>
+<ul>
+<li>$\sum_{i=1}^{d} \sum_{j=i+1}^{d}\left\langle V_{i}, V_{j}\right\rangle x_{i} \cdot x_{j}$  反映二阶特征交叉，$V_i$ , $V_j$ 是特征对应的 latent vector，也就是对应的embedding。<br>所以这里其实不是所有 feature（所有field里的所有feature，num=$n$）的两两交叉，其实是 $m$ 个域的特征交叉，不过每个域是可以涵盖到域里所有的 feature 的（每个域从域包含的特征里选择一个，因为是 one-hot）。也就是说，当一条数据输入进去的时候，不会对所有 feature 做特征交叉（即 $\frac{n(n-1)}{2}$ 次组合），而是会对所有域做特征交叉（即 $\frac{m(m-1)}{2}$ 次组合），但是当数据量足够多时，就能涵盖到所有feature的交叉。</li>
+</ul>
+<h3 id="Deep-Component"><a href="#Deep-Component" class="headerlink" title="Deep Component"></a>Deep Component</h3><p>&emsp;&emsp;Deep 部分和 DNN 一样，捕捉高阶特征组合。</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220619135133347.png" alt="image-20220619135133347"></p>
+<p>&emsp;&emsp;用全连接的方式将 Dense Embedding 输入到 Hidden Layer ，这里面 Dense Embeddings 就是用 Field 思想解决 DNN 中的参数爆炸问题，这也是推荐模型中常用的处理方法。然后 Dense Embeddings 拼接以后传入 DNN 。</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220619135849196.png" alt="image-20220619135849196"></p>
+<p>&emsp;&emsp;上图是 Dense Embeddings 层的结构，这里有两点需要指出：1）尽管不同 field 的长度可能不同，但 embedding 维度 $k$ 都是相同的；2）FM 里的 latent vector 现在充当作为网络的权重参数（回忆一下矩阵乘法，有 1 的地方对应的一列权重参数就是 latent vector），它们是学习得到的，被用来将 field 的 one-hot 向量压缩成 embedding 向量。</p>
+<p>&emsp;与 FNN 不同的是，这里的 latent vector 不是预训练而是随机初始化得到的，并且是不断学习优化的。</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220619143513920.png" alt="image-20220619143513920" style="zoom:67%;" /></p>
+<p>&emsp;&emsp;至此我们还可以发现，FM 部分和 Deep 部分是共享 embedding 的，这就解决了“<strong>学习有偏</strong>”的问题，因为高阶和低阶特征都是从同一个 embedding 层获得的。再回想 FM 部分，用 latent vector 做内积组合二阶特征的方式避免了“<strong>特征工程困难</strong>”的问题。DeepFM 的主要贡献就是在于对 Wide&amp;Deep 进行了这两方面的改进。</p>
+<h1 id="DeepFM-代码"><a href="#DeepFM-代码" class="headerlink" title="DeepFM 代码"></a>DeepFM 代码</h1><p>&emsp;&emsp;开源代码见：<a href="https://github.com/datawhalechina/torch-rechub/blob/main/tutorials/DeepFM.ipynb">torch-rechub/DeepFM.ipynb at main · datawhalechina/torch-rechub (github.com)</a></p>
+<h2 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h2><p>&emsp;&emsp;使用的是 Criteo 的一个 sample</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220619152139173.png" alt="image-20220619152139173"></p>
+<h2 id="特征工程"><a href="#特征工程" class="headerlink" title="特征工程"></a>特征工程</h2><p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220619152209082.png" alt="image-20220619152209082"></p>
+<p>&emsp;&emsp;至此都比较好理解。</p>
+<h3 id="Dense-特征"><a href="#Dense-特征" class="headerlink" title="Dense 特征"></a>Dense 特征</h3><p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220619152251762.png" alt="image-20220619152251762"></p>
+<p>&emsp;&emsp;这里 <code>convert_numeric_feature()</code> 有点令人费解，据说是比赛中冠军队伍使用的方法，emm，EDA做得好，同时不得不佩服大佬们的创造力~ 总之经过这样的变换，将 dense 特征都转化成了新的 sparse 特征列。</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220619152310615.png" alt="image-20220619152310615"></p>
+<p>&emsp;&emsp;将 dense 特征转化成新的 sparse 特征后，dense 特征本身还要做一些归一化操作，这里使用 <code>MinMaxScaler()</code> 。</p>
+<p>&emsp;&emsp;其实 Wide&amp;Deep 里做完归一化以后还做了分组，见下图：</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220619150451559.png" alt="image-20220619150451559" style="zoom:50%;" /></p>
+<h3 id="Sparse-特征"><a href="#Sparse-特征" class="headerlink" title="Sparse 特征"></a>Sparse 特征</h3><p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220619152328870.png" alt="image-20220619152328870"></p>
+<p>&emsp;&emsp;直接用 <code>LabelEncoder()</code> 编码。</p>
+<h2 id="定义-DataGenerator-Dataset-Dataloader"><a href="#定义-DataGenerator-Dataset-Dataloader" class="headerlink" title="定义 DataGenerator (Dataset + Dataloader)"></a>定义 DataGenerator (Dataset + Dataloader)</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#重点：将每个特征定义为torch-rechub所支持的特征基类，dense特征只需指定特征名，sparse特征需指定特征名、特征取值个数(vocab_size)、embedding维度(embed_dim)</span></span><br><span class="line">dense_features = [DenseFeature(feature_name) <span class="keyword">for</span> feature_name <span class="keyword">in</span> dense_cols]</span><br><span class="line">sparse_features = [SparseFeature(feature_name, vocab_size=data[feature_name].nunique(), embed_dim=<span class="number">16</span>) <span class="keyword">for</span> feature_name <span class="keyword">in</span> sparse_cols]</span><br><span class="line">y = data[<span class="string">&quot;label&quot;</span>]</span><br><span class="line"><span class="keyword">del</span> data[<span class="string">&quot;label&quot;</span>]</span><br><span class="line">x = data</span><br><span class="line"></span><br><span class="line"><span class="comment"># 构建模型输入所需要的dataloader，区分验证集、测试集，指定batch大小</span></span><br><span class="line"><span class="comment">#split_ratio=[0.7,0.1] 指的是训练集占比70%，验证集占比10%，剩下的全部为测试集</span></span><br><span class="line">dg = DataGenerator(x, y) </span><br><span class="line">train_dataloader, val_dataloader, test_dataloader = dg.generate_dataloader(split_ratio=[<span class="number">0.7</span>, <span class="number">0.1</span>], batch_size=<span class="number">256</span>, num_workers=<span class="number">8</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="定义-Model"><a href="#定义-Model" class="headerlink" title="定义 Model"></a>定义 Model</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> torch_rechub.models.ranking <span class="keyword">import</span> DeepFM</span><br><span class="line"><span class="keyword">from</span> torch_rechub.trainers <span class="keyword">import</span> CTRTrainer</span><br><span class="line"></span><br><span class="line"><span class="comment">#定义模型</span></span><br><span class="line">model = DeepFM(</span><br><span class="line">        deep_features=dense_features+sparse_features,</span><br><span class="line">        fm_features=sparse_features,</span><br><span class="line">        mlp_params=&#123;<span class="string">&quot;dims&quot;</span>: [<span class="number">256</span>, <span class="number">128</span>], <span class="string">&quot;dropout&quot;</span>: <span class="number">0.2</span>, <span class="string">&quot;activation&quot;</span>: <span class="string">&quot;relu&quot;</span>&#125;,</span><br><span class="line">    )</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;我们进入 DeepFM 模型内部看一看：</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220619153802390.png" alt="image-20220619153802390"></p>
+<p>&emsp;&emsp;从 forward() 里可以看出，在代码实现时，其实不完全是分成 deep 和 fm 两部分，而是分成 deep 、fm、linear 三部分。论文里的 fm 部分是包含一阶特征和二阶特征交叉的，代码实现的时候把一阶特征单独拿出来用 linear 实现。</p>
+<p>&emsp;&emsp;LR 的实现如下：</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220619154134742.png" alt="image-20220619154134742"></p>
+<p>&emsp;&emsp;FM 的实现如下（不是完全体的 FM ，这里是只计算二阶特征的 FM ）：</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220619154214878.png" alt="image-20220619154214878"></p>
+<p>&emsp;&emsp;这里 FM 的公式是计算优化后的，可以参考下面的公式：</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220619134325217.png" alt="image-20220619134325217" style="zoom: 80%;" /></p>
+<p>&emsp;&emsp;MLP 的实现如下：</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220619154603820.png" alt="image-20220619154603820"></p>
+<p>&emsp;&emsp;我们在传参的时候：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">mlp_params=&#123;<span class="string">&quot;dims&quot;</span>: [<span class="number">256</span>, <span class="number">128</span>], <span class="string">&quot;dropout&quot;</span>: <span class="number">0.2</span>, <span class="string">&quot;activation&quot;</span>: <span class="string">&quot;relu&quot;</span>&#125;,</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;这里的 dims 的参数列表就表示从输入到输出，维度依次是多少，这个例子中就是： input_dim —&gt; 256 —&gt; 128 —&gt; 1 。没有指定 “output_layer” 的话，会默认再过一个 nn.linear() 让维度变成 1 ，当然 output_layer 后是不接激活函数的。 </p>
+<p>另外注意这里添加了 BatchNorm 。</p>
+<h2 id="定义-trainer"><a href="#定义-trainer" class="headerlink" title="定义 trainer"></a>定义 trainer</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 模型训练，需要学习率、设备等一般的参数，此外我们还支持earlystoping策略，及时发现过拟合</span></span><br><span class="line">ctr_trainer = CTRTrainer(</span><br><span class="line">    model,</span><br><span class="line">    optimizer_params=&#123;<span class="string">&quot;lr&quot;</span>: <span class="number">1e-4</span>, <span class="string">&quot;weight_decay&quot;</span>: <span class="number">1e-5</span>&#125;,</span><br><span class="line">    n_epoch=<span class="number">1</span>,</span><br><span class="line">    earlystop_patience=<span class="number">3</span>,</span><br><span class="line">    device=<span class="string">&#x27;cpu&#x27;</span>, <span class="comment">#如果有gpu，可设置成cuda:0</span></span><br><span class="line">    model_path=<span class="string">&#x27;./&#x27;</span>, <span class="comment">#模型存储路径</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;不需要定义损失函数，因为 ctr 预估任务都是 BCE loss，默认评价指标是 auc 。</p>
+<h2 id="训练和评估"><a href="#训练和评估" class="headerlink" title="训练和评估"></a>训练和评估</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">ctr_trainer.fit(train_dataloader, val_dataloader)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看在测试集上的性能</span></span><br><span class="line">auc = ctr_trainer.evaluate(ctr_trainer.model, test_dataloader)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&#x27;test auc: <span class="subst">&#123;auc&#125;</span>&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220619155836040.png" alt="image-20220619155836040"></p>
+<h1 id="使用其它排序模型"><a href="#使用其它排序模型" class="headerlink" title="使用其它排序模型"></a>使用其它排序模型</h1><h2 id="调用现成模型"><a href="#调用现成模型" class="headerlink" title="调用现成模型"></a>调用现成模型</h2><p>&emsp;&emsp;调用现成的模型非常容易，只需要修改 model 参数：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#定义相应的模型，用同样的方式训练</span></span><br><span class="line">model = WideDeep(wide_features=dense_features, deep_features=sparse_features, mlp_params=&#123;<span class="string">&quot;dims&quot;</span>: [<span class="number">256</span>, <span class="number">128</span>], <span class="string">&quot;dropout&quot;</span>: <span class="number">0.2</span>, <span class="string">&quot;activation&quot;</span>: <span class="string">&quot;relu&quot;</span>&#125;)</span><br><span class="line"></span><br><span class="line">model = DCN(features=dense_features + sparse_features, n_cross_layers=<span class="number">3</span>, mlp_params=&#123;<span class="string">&quot;dims&quot;</span>: [<span class="number">256</span>, <span class="number">128</span>]&#125;)</span><br></pre></td></tr></table></figure>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220619163102998.png" alt="image-20220619163102998"></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>&emsp;&emsp;以 DeepFM 为切入点，学习了 FM、POLY2、FNN、PNN、Wide&amp;Deep 以及 DeepFM 模型，对这几个模型的发展脉络有了比较清晰的认识。用 Torch-RecHub 实现 DeepFM 也非常容易。</p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p>[1]《深度学习推荐系统》王喆</p>
+<p>[2] <a href="http://www.cs.cmu.edu/~wcohen/10-605/2015-guest-lecture/FM.pdf">FM (cmu.edu)</a></p>
+<p>[3] <a href="https://datawhalechina.github.io/fun-rec/#/ch02/ch2.2/ch2.2.3/DeepFM">https://datawhalechina.github.io/fun-rec/#/ch02/ch2.2/ch2.2.3/DeepFM</a></p>
+<p>[4] <a href="https://zhuanlan.zhihu.com/p/343174108">https://zhuanlan.zhihu.com/p/343174108</a></p>
 ]]></content>
       <categories>
         <category>推荐系统</category>
