@@ -750,7 +750,7 @@ pip install xxx.whl
       </tags>
   </entry>
   <entry>
-    <title>RecHub推荐项目学习1</title>
+    <title>RecHub推荐项目学习1：Torch-RecHub框架</title>
     <url>/2022/06/14/RecHub%E6%8E%A8%E8%8D%90%E9%A1%B9%E7%9B%AE%E5%AD%A6%E4%B9%A01/</url>
     <content><![CDATA[<h1 id="Task01"><a href="#Task01" class="headerlink" title="Task01"></a>Task01</h1><p>&emsp;&emsp;Task01：熟悉Torch-RecHub框架设计与使用方法</p>
 <p>&emsp;&emsp;参考资料：0613晚直播讲解，直播ppt，<a href="https://github.com/datawhalechina/torch-rechub">RecHub源码</a></p>
@@ -819,7 +819,7 @@ pip install xxx.whl
       </tags>
   </entry>
   <entry>
-    <title>RecHub推荐项目学习2</title>
+    <title>RecHub推荐项目学习2：精排模型 DeepFM、DIN</title>
     <url>/2022/06/19/RecHub%E6%8E%A8%E8%8D%90%E9%A1%B9%E7%9B%AE%E5%AD%A6%E4%B9%A02/</url>
     <content><![CDATA[<h1 id="Task02"><a href="#Task02" class="headerlink" title="Task02"></a>Task02</h1><p>&emsp;&emsp;Task02：精排模型 DeepFM DIN</p>
 <p>&emsp;&emsp;参考资料：<a href="https://datawhalechina.github.io/fun-rec/#/">FunRec文档</a>，<a href="https://github.com/datawhalechina/torch-rechub">RecHub源码</a></p>
