@@ -1677,7 +1677,7 @@ Popularity= \sum _u \sum _ { i \in R(u) } \log (Popularity(i)+1)</script><figure
       </tags>
   </entry>
   <entry>
-    <title>推荐系统基础1</title>
+    <title>推荐系统基础1：评价指标、召回&amp;精排</title>
     <url>/2022/04/22/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%801/</url>
     <content><![CDATA[<hr>
 <h1 id="任务1：推荐系统基础"><a href="#任务1：推荐系统基础" class="headerlink" title="任务1：推荐系统基础"></a>任务1：推荐系统基础</h1><ul>
@@ -1746,7 +1746,7 @@ Precision = \frac{TP}{TP+FP}</script><p>ROC曲线的横坐标为假阳性率（F
       </tags>
   </entry>
   <entry>
-    <title>推荐系统基础2</title>
+    <title>推荐系统基础2：Movielens数据集介绍</title>
     <url>/2022/04/22/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%802/</url>
     <content><![CDATA[<hr>
 <h1 id="任务2：Movielens介绍"><a href="#任务2：Movielens介绍" class="headerlink" title="任务2：Movielens介绍"></a>任务2：Movielens介绍</h1><ul>
@@ -1779,7 +1779,7 @@ Precision = \frac{TP}{TP+FP}</script><p>ROC曲线的横坐标为假阳性率（F
       </tags>
   </entry>
   <entry>
-    <title>推荐系统基础4</title>
+    <title>推荐系统基础4：协同过滤进阶进阶</title>
     <url>/2022/04/23/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%804/</url>
     <content><![CDATA[<hr>
 <h1 id="任务4：协同过滤进阶"><a href="#任务4：协同过滤进阶" class="headerlink" title="任务4：协同过滤进阶"></a>任务4：协同过滤进阶</h1><ul>
@@ -1895,7 +1895,7 @@ P_{Alice, 物品5}=\bar{R}_{物品5}+\frac{\sum_{k=1}^{2}\left(S_{物品5,物品
 <p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220422195802322.png" alt="image-20220422195802322"></p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="string">&quot;&quot;&quot;计算前n个相似的用户&quot;&quot;&quot;</span></span><br><span class="line">n = <span class="number">2</span></span><br><span class="line">similar_items = <span class="built_in">dict</span>()</span><br><span class="line"><span class="keyword">for</span> item <span class="keyword">in</span> items:</span><br><span class="line">    similar_items[item] = similarity_matrix[item].sort_values(ascending=<span class="literal">False</span>)[:n].index.tolist()</span><br><span class="line">    </span><br><span class="line">similar_items[<span class="string">&#x27;E&#x27;</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 与E最相似的2个物品是A和D</span></span><br><span class="line">[<span class="string">&#x27;A&#x27;</span>, <span class="string">&#x27;D&#x27;</span>]</span><br></pre></td></tr></table></figure>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="string">&quot;&quot;&quot;计算最后得分,用户1对物品E的预测评分&quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 计算物品平均打分情况</span></span><br><span class="line">item_ratings_mean = <span class="built_in">dict</span>()</span><br><span class="line"><span class="keyword">for</span> item,rating <span class="keyword">in</span> items.items():</span><br><span class="line">    item_ratings_mean[item] = np.mean([value <span class="keyword">for</span> value <span class="keyword">in</span> rating.values()])</span><br><span class="line"></span><br><span class="line">weighted_scores = <span class="number">0.</span></span><br><span class="line">corr_values_sum = <span class="number">0.</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> item <span class="keyword">in</span> similar_items[<span class="string">&#x27;E&#x27;</span>]:</span><br><span class="line">    weighted_scores += similarity_matrix[<span class="string">&#x27;E&#x27;</span>][item]</span><br><span class="line">    corr_values_sum += similarity_matrix[<span class="string">&#x27;E&#x27;</span>][item] * (users[<span class="number">1</span>][item] -  item_ratings_mean[item])</span><br><span class="line"></span><br><span class="line">predict = item_ratings_mean[<span class="string">&#x27;E&#x27;</span>] + corr_values_sum/weighted_scores</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&#x27;用户1对物品E的预测得分为 <span class="subst">&#123;predict:<span class="number">.2</span>f&#125;</span>&#x27;</span>)</span><br></pre></td></tr></table></figure>
-<h3 id="9-协同过滤算法的问题分析"><a href="#9-协同过滤算法的问题分析" class="headerlink" title="9. 协同过滤算法的问题分析"></a>9. 协同过滤算法的问题分析</h3><p>协同过滤算法存在的问题之一就是<strong>泛化能力弱</strong>， 即协同过滤无法将两个物品相似的信息推广到其他物品的相似性上。 导致的问题是<strong>热门物品具有很强的头部效应， 容易跟大量物品产生相似， 而尾部物品由于特征向量稀疏， 导致很少被推荐</strong>。 比如下面这个例子：</p>
+<h3 id="协同过滤算法的问题分析"><a href="#协同过滤算法的问题分析" class="headerlink" title="协同过滤算法的问题分析"></a>协同过滤算法的问题分析</h3><p>协同过滤算法存在的问题之一就是<strong>泛化能力弱</strong>， 即协同过滤无法将两个物品相似的信息推广到其他物品的相似性上。 导致的问题是<strong>热门物品具有很强的头部效应， 容易跟大量物品产生相似， 而尾部物品由于特征向量稀疏， 导致很少被推荐</strong>。 比如下面这个例子：</p>
 <p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220422203637025.png" alt="image-20220422203637025"></p>
 <p>A, B, C, D是物品， 看右边的物品共现矩阵， 可以发现物品D与A、B、C的相似度比较大， 所以很有可能将D推荐给用过A、B、C的用户。 但是物品D与其他物品相似的原因是因为D是一件热门商品， 系统无法找出A、B、C之间相似性的原因是其特征太稀疏， 缺乏相似性计算的直接数据。 所以这就是协同过滤的天然缺陷：<strong>推荐系统头部效应明显， 处理稀疏向量的能力弱</strong>。</p>
 <p>为了解决这个问题， 同时增加模型的泛化能力，2006年，<strong>矩阵分解技术(Matrix Factorization,MF</strong>)被提出， 该方法在协同过滤共现矩阵的基础上， 使用更稠密的隐向量表示用户和物品， 挖掘用户和物品的隐含兴趣和隐含特征， 在一定程度上弥补协同过滤模型处理稀疏矩阵能力不足的问题。</p>
@@ -1941,7 +1941,7 @@ P_{i, j}=\bar{R}_{i}+\frac{\sum_{k=1}^{n}\left(S_{i, k}\left(R_{k, j}-\bar{R}_{k
       </tags>
   </entry>
   <entry>
-    <title>推荐系统基础3</title>
+    <title>推荐系统基础3：协同过滤基础</title>
     <url>/2022/04/22/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%803/</url>
     <content><![CDATA[<hr>
 <h1 id="任务3：协同过滤基础"><a href="#任务3：协同过滤基础" class="headerlink" title="任务3：协同过滤基础"></a>任务3：协同过滤基础</h1><ul>
@@ -1984,7 +1984,7 @@ sim(u,v)=\frac{\sum_{i\in I}(r_{ui}-\bar r_u)(r_{vi}-\bar r_v)}{\sqrt{\sum_{i\in
       </tags>
   </entry>
   <entry>
-    <title>推荐系统基础5</title>
+    <title>推荐系统基础5：矩阵分解SVD</title>
     <url>/2022/04/25/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%805/</url>
     <content><![CDATA[<hr>
 <h1 id="任务5：矩阵分解SVD"><a href="#任务5：矩阵分解SVD" class="headerlink" title="任务5：矩阵分解SVD"></a>任务5：矩阵分解SVD</h1><ul>
@@ -2129,7 +2129,7 @@ p_u = p_u + \gamma (e_{ui}-\ \lambda q_i)</script><p>而对于 $p_{u}$ 和$q_{i}
       </tags>
   </entry>
   <entry>
-    <title>推荐系统基础6</title>
+    <title>推荐系统基础6：Slope One</title>
     <url>/2022/04/26/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%806/</url>
     <content><![CDATA[<hr>
 <h1 id="任务6：Slope-One"><a href="#任务6：Slope-One" class="headerlink" title="任务6：Slope One"></a>任务6：Slope One</h1><ul>
@@ -2200,7 +2200,7 @@ p_u = p_u + \gamma (e_{ui}-\ \lambda q_i)</script><p>而对于 $p_{u}$ 和$q_{i}
       </tags>
   </entry>
   <entry>
-    <title>推荐系统基础7</title>
+    <title>推荐系统基础7：词向量基础</title>
     <url>/2022/04/27/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%807/</url>
     <content><![CDATA[<hr>
 <h1 id="任务7：词向量基础"><a href="#任务7：词向量基础" class="headerlink" title="任务7：词向量基础"></a>任务7：词向量基础</h1><ul>
@@ -2354,7 +2354,7 @@ p_u = p_u + \gamma (e_{ui}-\ \lambda q_i)</script><p>而对于 $p_{u}$ 和$q_{i}
       </tags>
   </entry>
   <entry>
-    <title>推荐系统基础9</title>
+    <title>推荐系统基础9：多路召回实践</title>
     <url>/2022/04/28/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%809/</url>
     <content><![CDATA[<hr>
 <h1 id="任务9：多路召回实践"><a href="#任务9：多路召回实践" class="headerlink" title="任务9：多路召回实践"></a>任务9：多路召回实践</h1><ul>
@@ -2401,7 +2401,7 @@ p_u = p_u + \gamma (e_{ui}-\ \lambda q_i)</script><p>而对于 $p_{u}$ 和$q_{i}
       </tags>
   </entry>
   <entry>
-    <title>推荐系统基础8</title>
+    <title>推荐系统基础8：向量召回基础</title>
     <url>/2022/04/27/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%808/</url>
     <content><![CDATA[<hr>
 <h1 id="任务8：向量召回基础"><a href="#任务8：向量召回基础" class="headerlink" title="任务8：向量召回基础"></a>任务8：向量召回基础</h1><ul>
