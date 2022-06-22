@@ -293,7 +293,6 @@
 <li>概要：用GNN实现某些真实的节点分类任务，与MLP效果更好。</li>
 </ul>
 <span id="more"></span>
-
 <p><a target="_blank" rel="noopener" href="https://colab.research.google.com/drive/1I8a0DfQ3fI7Njc62__mVXUlcAleUclnb?usp=sharing#scrollTo=CN3sRVuaQ88l">3. Graph Classification.ipynb - Colaboratory (google.com)</a></p>
 <ul>
 <li><p>In this chapter, you have learned how to apply GNNs to the task of graph classification. You have learned how graphs can be batched together for better GPU utilization, and how to apply readout layers for obtaining graph embeddings rather than node embeddings.</p>
@@ -333,13 +332,14 @@
 </ul>
 <p><a target="_blank" rel="noopener" href="https://colab.research.google.com/drive/1D45E5bUK3gQ40YpZo65ozs7hg5l-eo_U?usp=sharing#scrollTo=iWRxB3JYFXNF">5. Point Cloud Classification.ipynb - Colaboratory (google.com)</a></p>
 <ul>
-<li>概要：介绍了点云分类任务的三大步骤。又在PointNet++和PPFNet的实践中，介绍了如何自定义MessagePassing以及采样策略。</li>
-<li>PointNet++<ul>
+<li><p>概要：介绍了点云分类任务的三大步骤。又在PointNet++和PPFNet的实践中，介绍了如何自定义MessagePassing以及采样策略。</p>
+</li>
+<li><p>PointNet++</p>
+<ul>
 <li><p>Grouping阶段，用knn graph或者半径图</p>
 <ul>
 <li><p>```python<br>from torch_cluster import knn_graph<br>根据点的坐标计算最近的k个点，连起来</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- 邻居聚合阶段。聚合邻居信息</span><br><span class="line"></span><br><span class="line">  - 从</span><br><span class="line"></span><br><span class="line">    ```python</span><br><span class="line">    class PointNetLayer(torch_geometric.nn.MessagePassing)：</span><br><span class="line">    	def __init__(self, in_channels, out_channels):</span><br><span class="line">            pass</span><br><span class="line">        def forward(self, h, pos, edge_index):</span><br><span class="line">            pass</span><br><span class="line">        def message(self, h_j, pos_j, pos_i):</span><br><span class="line">            pass</span><br></pre></td></tr></table></figure>
-
 <p>继承，并定义出一个与<code>GraphConv()</code> 、<code>GCNConv()</code> 同一级别的类，例如一种新的卷积层。</p>
 </li>
 <li><p>MessagePassing接口通过自动处理消息传播，来帮助我们创建<strong>消息传递图神经网络</strong>。只需要定义 message 功能即可。</p>
@@ -358,7 +358,7 @@
 </li>
 <li><p>不同batch中fps是独立的，所以要传入batch向量</p>
 <ul>
-<li><pre><code class="python">index = fps(pos, batch, ratio=0.5)
+<li><pre><code class="lang-python">index = fps(pos, batch, ratio=0.5)
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[6. GNN Explanation.ipynb - Colaboratory (google.com)](https://colab.research.google.com/drive/1fLJbFPz0yMCQg81DdCP5I8jXw9LoggKO?usp=sharing#scrollTo=F1op-CbyLuN4)</span><br><span class="line"></span><br><span class="line">- 占坑</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 安装</span><br><span class="line"></span><br><span class="line">建个新环境</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 conda create -n pyg python==3.8.0
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">安装torch</span><br><span class="line"></span><br></pre></td></tr></table></figure>
@@ -374,7 +374,7 @@ pip install xxx.whl
 </ul>
 </li>
 </ul>
-<p>注意要切换到安装目录，且按顺序安装 scatter–&gt;sparse–&gt;cluster–&gt;spline</p>
+<p>注意要切换到安装目录，且按顺序安装 scatter—&gt;sparse—&gt;cluster—&gt;spline</p>
 
     </div>
 
@@ -503,16 +503,22 @@ pip install xxx.whl
       <span class="links-of-author-item">
         <a href="/374733751@qq.com" title="E-Mail → 374733751@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
       </span>
+      <span class="links-of-author-item">
+        <a href="https://space.bilibili.com/1567748478" title="Study → https:&#x2F;&#x2F;space.bilibili.com&#x2F;1567748478" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>Study</a>
+      </span>
   </div>
 
 
   <div class="links-of-blogroll motion-element">
     <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
-      学习资料
+      友情链接
     </div>
     <ul class="links-of-blogroll-list">
         <li class="links-of-blogroll-item">
-          <a href="https://space.bilibili.com/1567748478" title="https:&#x2F;&#x2F;space.bilibili.com&#x2F;1567748478" rel="noopener" target="_blank">跟李沐学AI</a>
+          <a href="https://www.hellohank.cn/" title="https:&#x2F;&#x2F;www.hellohank.cn" rel="noopener" target="_blank">极客Hank</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://zhang-xiaokun.github.io/" title="https:&#x2F;&#x2F;zhang-xiaokun.github.io&#x2F;" rel="noopener" target="_blank">学术Star堃</a>
         </li>
     </ul>
   </div>

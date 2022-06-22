@@ -303,58 +303,57 @@
 <p>总结：比较早使用self-attention的序列推荐模型</p>
 <hr>
 <span id="more"></span>
-
 <h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><ul>
-<li>  question作者想解决什么问题？  </li>
+<li>question作者想解决什么问题？  </li>
 </ul>
 <p>序列动态是许多当代推荐系统的一个重要特征，它试图根据用户最近执行的操作来捕捉用户活动的“上下文“。RNN模型可以在稠密数据集上捕捉长期语义。（马尔科夫链）MC模型可以在稀疏数据集上仅根据最近几次action做出预测。本文想平衡这两个目标：在稀疏和稠密数据集上做到捕捉长期语义、依赖较少的action做预测。</p>
 <ul>
-<li>  method作者通过什么理论/模型来解决这个问题？</li>
+<li>method作者通过什么理论/模型来解决这个问题？</li>
 </ul>
 <p>本文提出了一个基于self-attention的序列模型（SASRec），在每个时间步寻找与用户历史最相关的物品作为next item的预测。</p>
 <ul>
-<li>  answer作者给出的答案是什么？</li>
+<li>answer作者给出的答案是什么？</li>
 </ul>
 <p>在稀疏和稠密数据集上，与MC/CNN/RNN方法相比都取得了SOTA效果。</p>
 <h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><ul>
-<li>  why作者为什么研究这个课题？    </li>
+<li>why作者为什么研究这个课题？    </li>
 </ul>
 <p>MC方法模型简单，但因为它的强假设（当前预测仅取决于最近n次）使得它在稀疏数据上表现好，但是不能捕捉更复杂的动态转换。RNN方法需要稠密数据，并且计算复杂。最近出现新的序列模型Transformer，它是基于self-attention的，效率高并且可以捕获句子中单词的句法和语义模式。受self-attention方法启发，应用到序列推荐上。</p>
 <ul>
-<li>  how当前研究到了哪一阶段？ </li>
+<li>how当前研究到了哪一阶段？ </li>
 </ul>
 <p>第一个将transformer里的self-attention应用到了序列推荐上。</p>
 <ul>
-<li>  what作者基于什么样的假设（看不懂最后去查）？</li>
+<li>what作者基于什么样的假设（看不懂最后去查）？</li>
 </ul>
 <h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><ul>
 <li>优点 <ul>
-<li>  SASRec模型建模了整个序列，自适应地考虑items来预测</li>
-<li>  在dense和sparse的数据集上效果都很好</li>
-<li>  比CNN/RNN方法快了一个数量级</li>
+<li>SASRec模型建模了整个序列，自适应地考虑items来预测</li>
+<li>在dense和sparse的数据集上效果都很好</li>
+<li>比CNN/RNN方法快了一个数量级</li>
 </ul>
 </li>
-<li>  缺点</li>
+<li>缺点</li>
 <li>展望<ul>
-<li>  引进更多上下文信息，比如等待时间、行为类型、位置、设备等。</li>
-<li>  探索处理超长序列（如clicks）的方法</li>
+<li>引进更多上下文信息，比如等待时间、行为类型、位置、设备等。</li>
+<li>探索处理超长序列（如clicks）的方法</li>
 </ul>
 </li>
 </ul>
 <h2 id="Dataset-amp-Metric"><a href="#Dataset-amp-Metric" class="headerlink" title="Dataset &amp; Metric"></a>Dataset &amp; Metric</h2><ul>
 <li>数据来源 （都开源）<ul>
-<li>  Amazon</li>
-<li>  Steam 作者爬的，开源了</li>
-<li>  Movielens</li>
+<li>Amazon</li>
+<li>Steam 作者爬的，开源了</li>
+<li>Movielens</li>
 </ul>
 </li>
 <li>重要指标 <ul>
-<li>  Hit@10</li>
-<li>  NDCG@10</li>
+<li>Hit@10</li>
+<li>NDCG@10</li>
 </ul>
 </li>
 </ul>
-<h2 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h2><p>这部分主要参考了知乎[[1]](<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/277660092?utm_source=qq">推荐算法炼丹笔记：序列化推荐算法SASRec - 知乎 (zhihu.com)</a>)</p>
+<h2 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h2><p>这部分主要参考了知乎<a href="[推荐算法炼丹笔记：序列化推荐算法SASRec - 知乎 (zhihu.com">[1]</a>](<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/277660092?utm_source=qq">https://zhuanlan.zhihu.com/p/277660092?utm_source=qq</a>))</p>
 <p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211115114043810.png" alt="image-20211115114043810"></p>
 <p><strong>1.Embedding层</strong></p>
 <p><img src="https://pic4.zhimg.com/80/v2-6127cd6bfcdc00f007ba287f11c1f55f_720w.jpg" alt="img"></p>
@@ -543,16 +542,22 @@
       <span class="links-of-author-item">
         <a href="/374733751@qq.com" title="E-Mail → 374733751@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
       </span>
+      <span class="links-of-author-item">
+        <a href="https://space.bilibili.com/1567748478" title="Study → https:&#x2F;&#x2F;space.bilibili.com&#x2F;1567748478" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>Study</a>
+      </span>
   </div>
 
 
   <div class="links-of-blogroll motion-element">
     <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
-      学习资料
+      友情链接
     </div>
     <ul class="links-of-blogroll-list">
         <li class="links-of-blogroll-item">
-          <a href="https://space.bilibili.com/1567748478" title="https:&#x2F;&#x2F;space.bilibili.com&#x2F;1567748478" rel="noopener" target="_blank">跟李沐学AI</a>
+          <a href="https://www.hellohank.cn/" title="https:&#x2F;&#x2F;www.hellohank.cn" rel="noopener" target="_blank">极客Hank</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://zhang-xiaokun.github.io/" title="https:&#x2F;&#x2F;zhang-xiaokun.github.io&#x2F;" rel="noopener" target="_blank">学术Star堃</a>
         </li>
     </ul>
   </div>

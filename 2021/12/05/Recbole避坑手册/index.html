@@ -290,7 +290,6 @@
 <p><strong>使用方法</strong>就是：<a target="_blank" rel="noopener" href="https://github.com/RUCAIBox/RecBole">RUCAIBox/RecBole (github.com)</a>，下载下来unzip或者clone到设备上。然后再RecBole主目录下编写一个test.yaml文件记录一些配置，再运行run_recbole.py就可以。test.yaml大概要设置4类东西：dateset setting, model setting, train setting, evaluate setting.</p>
 <p>整个项目文件如下，几个比较重要的文件夹和文件标出来了，后面会说到。</p>
 <span id="more"></span>
-
 <p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/lenovo/image-20211205143321872.png" alt="image-20211205143321872"></p>
 <p>接下来以一个<strong>用自己数据集跑SASRec模型</strong>的例子说明如何使用RecBole。</p>
 <h2 id="配置test-yaml文件"><a href="#配置test-yaml文件" class="headerlink" title="配置test.yaml文件"></a>配置test.yaml文件</h2><h3 id="构造数据集——data-setting"><a href="#构造数据集——data-setting" class="headerlink" title="构造数据集——data setting"></a>构造数据集——data setting</h3><p>如果想跑自己的实验，那么很重要的一件事就是构造自己的数据集，recbole要求个人首先构建可以处理的原子文件，然后就可以传给模型处理了。详细见：<a target="_blank" rel="noopener" href="https://recbole.io/cn/data_flow.html">数据流 | 伯乐 (recbole.io)</a></p>
@@ -306,29 +305,20 @@
 <p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/lenovo/image-20211205145659369.png" alt="image-20211205145659369"></p>
 <p>然后我们在RecBole主目录下新建一个test.yaml文件，在里面输入：（暂时不明白没事，抄下来就行）</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># dataset config</span></span><br><span class="line">field_separator: <span class="string">&quot;,&quot;</span>  <span class="comment">#指定数据集field的分隔符</span></span><br><span class="line">seq_separator: <span class="string">&quot; &quot;</span>   <span class="comment">#指定数据集中token_seq或者float_seq域里的分隔符</span></span><br><span class="line">USER_ID_FIELD: user_id <span class="comment">#指定用户id域</span></span><br><span class="line">ITEM_ID_FIELD: item_id <span class="comment">#指定物品id域</span></span><br><span class="line">TIME_FIELD: timestamp  <span class="comment">#指定时间域</span></span><br><span class="line">NEG_PREFIX: neg_   <span class="comment">#指定负采样前缀</span></span><br><span class="line"><span class="comment">#指定从什么文件里读什么列，这里就是从book.inter里面读取user_id, item_id,timestamp这四列</span></span><br><span class="line">load_col:</span><br><span class="line">  inter: [user_id, item_id, timestamp]</span><br></pre></td></tr></table></figure>
-
 <p>需要注意前两条separator，csv文件的话默认分隔符是”,”，还有最后一行local:这里按照数据集的列指定就行，到此数据集基本构造好了。</p>
 <h3 id="用Sequential-model类跑模型——model-setting"><a href="#用Sequential-model类跑模型——model-setting" class="headerlink" title="用Sequential model类跑模型——model setting"></a>用Sequential model类跑模型——model setting</h3><p>以SASRec为例，想跑一个模型，如何看这个模型需要的参数？到 RecBole/recbole/properties/model 底下找到对应模型的yaml文件，打开以后大概长这样。</p>
 <p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/lenovo/image-20211205150832821.png" alt="image-20211205150832821"></p>
 <p>这里包含了模型需要的参数，每次调用都到这里改很麻烦，所以recbole可以实现用test.yaml的设置覆盖具体模型的设置，所以只要在test.yaml（主目录下的那个配置文件）里改我们添加，并做一点修改：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">n_layers: <span class="number">2</span></span><br><span class="line">n_heads: <span class="number">2</span></span><br><span class="line">hidden_size: <span class="number">100</span></span><br><span class="line">inner_size: <span class="number">256</span></span><br><span class="line">hidden_dropout_prob: <span class="number">0.5</span></span><br><span class="line">attn_dropout_prob: <span class="number">0.5</span></span><br><span class="line">hidden_act: <span class="string">&#x27;gelu&#x27;</span></span><br><span class="line">layer_norm_eps: <span class="number">1e-12</span></span><br><span class="line">initializer_range: <span class="number">0.02</span></span><br><span class="line">loss_type: <span class="string">&#x27;CE&#x27;</span></span><br></pre></td></tr></table></figure>
-
-
-
 <h3 id="训练设置——train-setting"><a href="#训练设置——train-setting" class="headerlink" title="训练设置——train setting"></a>训练设置——train setting</h3><p>通用的训练设置也要写到test.yaml中：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># training settings</span><br><span class="line">epochs: 500  				#训练的最大轮数</span><br><span class="line">train_batch_size: 20 #2048 	#训练的batch_size</span><br><span class="line">learner: adam 				#使用的pytorch内置优化器</span><br><span class="line">learning_rate: 0.001 		#学习率</span><br><span class="line">training_neg_sample_num: 0 	#负采样数目</span><br></pre></td></tr></table></figure>
-
-
-
 <h3 id="评估设置——evaluate-setting"><a href="#评估设置——evaluate-setting" class="headerlink" title="评估设置——evaluate setting"></a>评估设置——evaluate setting</h3><p>通用的评估设置也要写道test.yaml中：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># evalution settings</span><br><span class="line">eval_step: 1 				#每次训练后做evalaution的次数</span><br><span class="line">eval_setting: RO_RS,full 	#对数据随机重排，设置按比例划分数据集，且使用全排序</span><br><span class="line">group_by_user: True 		#是否将一个user的记录划到一个组里，当eval_setting使用RO_RS的时候该项必须是True</span><br><span class="line">split_ratio: [0.8,0.1,0.1] 	#切分比例</span><br><span class="line">metrics: [&quot;Recall&quot;, &quot;MRR&quot;,&quot;NDCG&quot;,&quot;Hit&quot;,&quot;Precision&quot;] #评测标准</span><br><span class="line">topk: [10] #评测标准使用topk，设置成10评测标准就是[&quot;Recall@10&quot;, &quot;MRR@10&quot;, &quot;NDCG@10&quot;, &quot;Hit@10&quot;, &quot;Precision@10&quot;]</span><br><span class="line">valid_metric: MRR@10 		#选取哪个评测标准作为作为提前停止训练的标准</span><br><span class="line">stopping_step: 10 			#控制训练收敛的步骤数，在该步骤数内若选取的评测标准没有什么变化，就可以提前停止了</span><br><span class="line">eval_batch_size: 4096 		#评测的batch_size</span><br></pre></td></tr></table></figure>
-
 <p>recbole实现了earlystopping早停策略，可以设置控制收敛的步骤数。</p>
 <p>eval_setting，可以设置不同的数据切分方式，具体可见<a target="_blank" rel="noopener" href="https://recbole.io/cn/evaluation.html">评测 | 伯乐 (recbole.io)</a>，大致如下：</p>
 <p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/lenovo/image-20211205163312199.png" alt="image-20211205163312199"></p>
 <h2 id="run！跑起来吧，baseline！"><a href="#run！跑起来吧，baseline！" class="headerlink" title="run！跑起来吧，baseline！"></a>run！跑起来吧，baseline！</h2><p>我们cd到RecBole目录下，此时数据集已经准备好，test.yaml文件也已经写好，可以开始跑实验了，用以下指令：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python run_recbole.py --model=SASRec --dataset=book ----config_files=test.yaml</span><br></pre></td></tr></table></figure>
-
 <p>如果看不懂参数的话，点进run_recbole.py看一下就明白了！</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>RecBole是个集成度很高，也比较方便用于复现一些基本推荐模型的开源库（在此致敬中国人民大学AI BOX小组！），需要用recbole跑自己的baseline时，只需要三步：</p>
 <ol>
@@ -338,9 +328,6 @@
 </ol>
 <h2 id="记录一些遇到的坑"><a href="#记录一些遇到的坑" class="headerlink" title="记录一些遇到的坑"></a>记录一些遇到的坑</h2><h3 id="1-neg-sampling-不能使用-‘CE’-loss"><a href="#1-neg-sampling-不能使用-‘CE’-loss" class="headerlink" title="1. neg_sampling 不能使用 ‘CE’ loss"></a>1. neg_sampling 不能使用 ‘CE’ loss</h3><p>在配置文件中加上一行：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">neg_sampling: (注意这里冒号后面有个空格)</span><br></pre></td></tr></table></figure>
-
-
-
 <h3 id="2-使用不上gpu"><a href="#2-使用不上gpu" class="headerlink" title="2.使用不上gpu"></a>2.使用不上gpu</h3><p><strong>问题描述：</strong>程序可以跑起来，但是nvtop看不到它在gpu上运行。并且无论如何修改配置文件都没有用。非常奇怪的问题。检查torch.cuda.is_available()的时候发现，居然输出False，所以原因是用不了CUDA。</p>
 <p><strong>问题原因</strong>：用不了CUDA。</p>
 <p>用conda list检查安装的库时发现，默认安装的torch是cpu的</p>
@@ -350,11 +337,9 @@
 </blockquote>
 <p>卸载cpu版本再安装cuda版本有点麻烦，所以我直接新建了一个环境，并且自带torch=1.10，然后再根据依赖安装，使用命令：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install -r requirement.txt</span><br></pre></td></tr></table></figure>
-
 <p>这里不用担心torch会被覆盖，因为torch版本大于1.17就会自动跳过了。</p>
 <p>然后总可以跑了吧，运行下面指令（用RecBole需要这样输）</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python run_recbole.py --model=BERT4Rec --dataset=book ----config_files=bert4rec.yaml</span><br></pre></td></tr></table></figure>
-
 <p>按理说此时torch是建环境时我安装的cuda版本，一定不是cpu版本，然而每次运行仍然是device=cpu。实在让人崩溃！</p>
 <p><strong>解决方案</strong>：</p>
 <p>最后debug多轮，寻找到的解决方案是：</p>
@@ -492,16 +477,22 @@
       <span class="links-of-author-item">
         <a href="/374733751@qq.com" title="E-Mail → 374733751@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
       </span>
+      <span class="links-of-author-item">
+        <a href="https://space.bilibili.com/1567748478" title="Study → https:&#x2F;&#x2F;space.bilibili.com&#x2F;1567748478" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>Study</a>
+      </span>
   </div>
 
 
   <div class="links-of-blogroll motion-element">
     <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
-      学习资料
+      友情链接
     </div>
     <ul class="links-of-blogroll-list">
         <li class="links-of-blogroll-item">
-          <a href="https://space.bilibili.com/1567748478" title="https:&#x2F;&#x2F;space.bilibili.com&#x2F;1567748478" rel="noopener" target="_blank">跟李沐学AI</a>
+          <a href="https://www.hellohank.cn/" title="https:&#x2F;&#x2F;www.hellohank.cn" rel="noopener" target="_blank">极客Hank</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://zhang-xiaokun.github.io/" title="https:&#x2F;&#x2F;zhang-xiaokun.github.io&#x2F;" rel="noopener" target="_blank">学术Star堃</a>
         </li>
     </ul>
   </div>

@@ -266,7 +266,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117164643993.png"></p>
+          <p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117164643993.png" alt=""></p>
 <hr>
 <p>原paper：<a target="_blank" rel="noopener" href="https://dl.acm.org/doi/10.1145/3336191.3371786">https://dl.acm.org/doi/10.1145/3336191.3371786</a></p>
 <p>源码解读：<a target="_blank" rel="noopener" href="https://github.com/Guadzilla/Paper_notebook/tree/main/TiSASRec">https://github.com/Guadzilla/Paper_notebook/tree/main/TiSASRec</a></p>
@@ -456,7 +456,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>8.7k</span>
+              <span>8.6k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -480,12 +480,10 @@
 <p>论文笔记：<a href="https://guadzilla.github.io/2021/11/03/SASRec/">https://guadzilla.github.io/2021/11/03/SASRec/</a></p>
 <hr>
 <h2 id="collections-defaultdict-list"><a href="#collections-defaultdict-list" class="headerlink" title="collections.defaultdict(list)"></a>collections.defaultdict(list)</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">collections</span>.<span class="title">defaultdict</span>(<span class="params">default_factory=<span class="literal">None</span>, /[, ...]</span>)</span></span><br></pre></td></tr></table></figure>
-
-<p>返回一个新的类似字典的对象。<code>defaultdict</code> 是内置 <code>dict </code>类的子类。 它重载了一个方法并添加了一个可写的实例变量。</p>
+<p>返回一个新的类似字典的对象。<code>defaultdict</code> 是内置 <code>dict</code>类的子类。 它重载了一个方法并添加了一个可写的实例变量。</p>
 <p>本对象包含一个名为 <code>default_factory</code> 的属性，构造时，第一个参数用于为该属性提供初始值，默认为 None。所有其他参数（包括关键字参数）都相当于传递给 dict 的构造函数。</p>
-<p>使用<code> defulydict(list)</code>实例化对象时， <code>default_factory=list</code>，可以很轻松地<strong>将（键-值对组成的）序列转换为（键-列表组成的）字典</strong>：</p>
+<p>使用<code>defulydict(list)</code>实例化对象时， <code>default_factory=list</code>，可以很轻松地<strong>将（键-值对组成的）序列转换为（键-列表组成的）字典</strong>：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">s = [(<span class="string">&#x27;yellow&#x27;</span>, <span class="number">1</span>), (<span class="string">&#x27;blue&#x27;</span>, <span class="number">2</span>), (<span class="string">&#x27;yellow&#x27;</span>, <span class="number">3</span>), (<span class="string">&#x27;blue&#x27;</span>, <span class="number">4</span>), (<span class="string">&#x27;red&#x27;</span>, <span class="number">1</span>)]</span><br><span class="line">d = defaultdict(<span class="built_in">list</span>)</span><br><span class="line"><span class="keyword">for</span> k, v <span class="keyword">in</span> s:</span><br><span class="line">    d[k].append(v)</span><br><span class="line"></span><br><span class="line"><span class="built_in">sorted</span>(d.items())</span><br><span class="line"><span class="comment"># 输出：[(&#x27;blue&#x27;, [2, 4]), (&#x27;red&#x27;, [1]), (&#x27;yellow&#x27;, [1, 3])]</span></span><br></pre></td></tr></table></figure>
-
 <p>当字典中没有的键第一次出现时，python自动为其返回一个空列表，list.append()会将值添加进新列表；再次遇到相同的键时，list.append()将其它值再添加进该列表。</p>
           <!--noindex-->
             <div class="post-button">
@@ -903,16 +901,22 @@
       <span class="links-of-author-item">
         <a href="/374733751@qq.com" title="E-Mail → 374733751@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
       </span>
+      <span class="links-of-author-item">
+        <a href="https://space.bilibili.com/1567748478" title="Study → https:&#x2F;&#x2F;space.bilibili.com&#x2F;1567748478" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>Study</a>
+      </span>
   </div>
 
 
   <div class="links-of-blogroll motion-element">
     <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
-      学习资料
+      友情链接
     </div>
     <ul class="links-of-blogroll-list">
         <li class="links-of-blogroll-item">
-          <a href="https://space.bilibili.com/1567748478" title="https:&#x2F;&#x2F;space.bilibili.com&#x2F;1567748478" rel="noopener" target="_blank">跟李沐学AI</a>
+          <a href="https://www.hellohank.cn/" title="https:&#x2F;&#x2F;www.hellohank.cn" rel="noopener" target="_blank">极客Hank</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://zhang-xiaokun.github.io/" title="https:&#x2F;&#x2F;zhang-xiaokun.github.io&#x2F;" rel="noopener" target="_blank">学术Star堃</a>
         </li>
     </ul>
   </div>

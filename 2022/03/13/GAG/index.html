@@ -273,7 +273,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>7.1k</span>
+              <span>7k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -302,7 +302,6 @@
 <p>展望：如何引入跨会话信息到SSR问题中，十分值得研究。</p>
 <hr>
 <span id="more"></span>
-
 <h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><ul>
 <li><p>question作者想解决什么问题？ </p>
 <p>1）SR任务中，用户信息常常被忽略，所以难以抓住用户的长期兴趣。SSR任务中，流数据常常是单个交互而不是会话数据。</p>
@@ -352,7 +351,7 @@
 </ul>
 <h2 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h2><h3 id="任务定义"><a href="#任务定义" class="headerlink" title="任务定义"></a>任务定义</h3><p>Item embdding： $ x_i =Embed_v(v_i)$ ；User embdding： $ p_j =Embed_u(u_j)$  ；</p>
 <p>User u 在时间步 t 的会话序列：$ S_{u,t}=[v_1,v_2,…,v_l]$ </p>
-<p>任务目标，根据用户 $u$ 的历史会话 ${S_{u,0},S_{u,1},…,S_{u,t}}$ 预测下一个可能交互的物品 $ v_{t+1}$ </p>
+<p>任务目标，根据用户 $u$ 的历史会话 $\{S_{u,0},S_{u,1},…,S_{u,t}\}$ 预测下一个可能交互的物品 $ v_{t+1}$ </p>
 <p>与会话推荐不同的是，这里假设所有会话 $S$ 都以很快的速度达到，所以受限于算力，必须选取高效的方式处理历史会话信息和当前会话信息。而会话推荐，没有流数据这一设定，可以同时处理用户所有序列，不必考虑效率。</p>
 <h3 id="GAG模型框架"><a href="#GAG模型框架" class="headerlink" title="GAG模型框架"></a>GAG模型框架</h3><p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220309205703438.png" alt="image-20220309205703438"></p>
 <p>GAG的主要工作由两部分构成，1）GAG model：将用户信息转化为全局属性并将其融入到会话图中；2）Wasserstein reservoir存储库策略用来学习流数据。</p>
@@ -362,23 +361,57 @@
 <ol>
 <li>逐边更新 per-edge update</li>
 </ol>
-<p>边特征在这里指的是边的权值，是固定值，不是dense vector，不会更新。所以边信息只用来更新节点特征和全局特征。因为是有向图，所以对于一条边来说，需要双向更新，一个节点既作为sender，也作为receiver。更新公式：<br>$$<br>\begin{equation}<br>\begin{aligned}<br>e_{k,in}’ &amp;= \phi ^e_{in}(e_k,v_{r_k},v_{s_k},u)<br>\&amp;= w_k \cdot MLP(v_{s_k}||u),<br>\<br>e_{k,out}’ &amp;= \phi ^e_{out}(e_k,v_{r_k},v_{s_k},u)<br>\&amp;= w_k \cdot MLP(v_{s_k}||u),<br>\end{aligned}<br>\end{equation}<br>$$<br>其中两个MLP是不共享权重的，因为含义不同，一个是计算sender方向的特征，一个是计算receiver方向的特征。</p>
-<ol start="2">
+<p>边特征在这里指的是边的权值，是固定值，不是dense vector，不会更新。所以边信息只用来更新节点特征和全局特征。因为是有向图，所以对于一条边来说，需要双向更新，一个节点既作为sender，也作为receiver。更新公式：</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\begin{aligned}
+e_{k,in}' &= \phi ^e_{in}(e_k,v_{r_k},v_{s_k},u)
+\\&= w_k \cdot MLP(v_{s_k}||u),
+\\
+e_{k,out}' &= \phi ^e_{out}(e_k,v_{r_k},v_{s_k},u)
+\\&= w_k \cdot MLP(v_{s_k}||u),
+\end{aligned}
+\end{equation}</script><p>其中两个MLP是不共享权重的，因为含义不同，一个是计算sender方向的特征，一个是计算receiver方向的特征。</p>
+<ol>
 <li>逐点更新 per-node update</li>
 </ol>
-<p>逐点更新是基于逐边更新的结果的。逐点更新的结果是包含所有入or出的邻居信息的标准化后的加和。以第一个公式为例， $s_j$ 是所有指向 $r_i$（也即 $i$ ） 的邻居。节点 $i$ 的<strong>节点</strong>的 in-coming feature 是所有指向 $i$ 的<strong>边的</strong>标准化后的 out-going feature 的加和。 标准化是将 $j$ 指向 $i$ 的这条边的 out-going feature 除以 $\sqrt{i的入度 \cdot j的出度}$ ，可以看出， $j$ 的出度越大（从 $j$ 发出的边越多），$i$ 的入度越大（指向 $i$ 的边越多），都会导致 $i$ 来自节点 $j$ 的 in-coming feature 值越小。这是符合直觉的。<br>$$<br>\begin{equation}<br>\begin{aligned}<br>v_{i,in}’ =\sum_{j \in { v_{s_j} = v_{r_i}}} \frac{e_{j,out’}}{\sqrt{N_{in}(i)N_{out}(j)}}<br>\<br>v_{i,out}’ =\sum_{j \in { v_{r_j} = v_{s_i}}} \frac{e_{j,in’}}{\sqrt{N_{out}(i)N_{in}(j)}} </p>
-<p>\end{aligned}<br>\end{equation}<br>$$</p>
-<ol start="3">
+<p>逐点更新是基于逐边更新的结果的。逐点更新的结果是包含所有入or出的邻居信息的标准化后的加和。以第一个公式为例， $s_j$ 是所有指向 $r_i$（也即 $i$ ） 的邻居。节点 $i$ 的<strong>节点</strong>的 in-coming feature 是所有指向 $i$ 的<strong>边的</strong>标准化后的 out-going feature 的加和。 标准化是将 $j$ 指向 $i$ 的这条边的 out-going feature 除以 $\sqrt{i的入度 \cdot j的出度}$ ，可以看出， $j$ 的出度越大（从 $j$ 发出的边越多），$i$ 的入度越大（指向 $i$ 的边越多），都会导致 $i$ 来自节点 $j$ 的 in-coming feature 值越小。这是符合直觉的。</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\begin{aligned}
+v_{i,in}' =\sum_{j \in \{ v_{s_j} = v_{r_i}\}} \frac{e_{j,out'}}{\sqrt{N_{in}(i)N_{out}(j)}} 
+\\
+v_{i,out}' =\sum_{j \in \{ v_{r_j} = v_{s_i}\}} \frac{e_{j,in'}}{\sqrt{N_{out}(i)N_{in}(j)}} 
+
+\end{aligned}
+\end{equation}</script><ol>
 <li>节点的最终表示</li>
 </ol>
-<p>最后节点 $i$ 表示融合了自己的 in-coming feature 和 out-going feature，节点最后的表示实际上包含了 1）自身的节点信息；2）邻居信息（通过边传播）；3）连接的边的权重；4）全局属性：<br>$$<br>v_i’= MLP (v_{i,in}’ || v_{i,out}’)<br>$$</p>
-<ol start="4">
+<p>最后节点 $i$ 表示融合了自己的 in-coming feature 和 out-going feature，节点最后的表示实际上包含了 1）自身的节点信息；2）邻居信息（通过边传播）；3）连接的边的权重；4）全局属性：</p>
+<script type="math/tex; mode=display">
+v_i'= MLP (v_{i,in}' || v_{i,out}')</script><ol>
 <li>会话表示</li>
 </ol>
-<p>与NARM、STAMP、SRGNN工作类似，也用序列中的最后一个节点对其它节点做 self-attention 。有的工作用内积计算最后一个节点与其他节点的相似度作为权重，如NARM；也有用MLP获得权重的，如STAMP、SRGNN。这里用MLP。<br>$$<br>\begin{equation}<br>\begin{aligned}<br>\<br>u’ &amp;= \phi ^ u (V’,u)<br>\<br>&amp;= Self-Atten(v_l’,v_i’,u) + u</p>
-<p>\end{aligned}<br>\end{equation}<br>$$<br>Self-Atten 分为以下两个部分：<br>$$<br>\begin{equation}<br>\begin{aligned}</p>
-<p>\alpha <em>i &amp;= MLP(v_l’||v_i’||u)<br>\<br>u</em>{s,g} &amp;= \sum ^n _{i=1} \alpha_i v_i’<br>\end{aligned}<br>\end{equation}<br>$$</p>
-<p>这样得到的 $u_{s,g}$ 可以看作short-term兴趣增强的会话表示，再融合全局属性 $u$ ，得到长短期兴趣结合的会话表示： $u’ = u_{s,g} + u$ 。这种residual connection残差连接的方式，还可以减轻直接学习全局属性 $u$ 的负担。</p>
+<p>与NARM、STAMP、SRGNN工作类似，也用序列中的最后一个节点对其它节点做 self-attention 。有的工作用内积计算最后一个节点与其他节点的相似度作为权重，如NARM；也有用MLP获得权重的，如STAMP、SRGNN。这里用MLP。</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\begin{aligned}
+\\
+u' &= \phi ^ u (V',u)
+\\
+&= Self-Atten(v_l',v_i',u) + u
+
+\end{aligned}
+\end{equation}</script><p>Self-Atten 分为以下两个部分：</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\begin{aligned}
+
+\alpha _i &= MLP(v_l'||v_i'||u)
+\\
+u_{s,g} &= \sum ^n _{i=1} \alpha_i v_i'
+\end{aligned}
+\end{equation}</script><p>这样得到的 $u_{s,g}$ 可以看作short-term兴趣增强的会话表示，再融合全局属性 $u$ ，得到长短期兴趣结合的会话表示： $u’ = u_{s,g} + u$ 。这种residual connection残差连接的方式，还可以减轻直接学习全局属性 $u$ 的负担。</p>
 <h3 id="推荐-预测"><a href="#推荐-预测" class="headerlink" title="推荐/预测"></a>推荐/预测</h3><p>Session embedding 和 item embedding 做内积，再经过softmax得到概率分布： $\hat y = Softmax(u’^T X)$ 。</p>
 <h3 id="Wasserstein-Reservoir"><a href="#Wasserstein-Reservoir" class="headerlink" title="Wasserstein Reservoir"></a>Wasserstein Reservoir</h3><p>将离线模型拓展到流设定下，提出Wasserstein reservoir方法。提出该方法的目标是：用新来的数据更新模型，并且保持从历史交互中学到的知识。</p>
 <p>传统的在线学习方法通常只用新数据更新模型，所以导致模型会忘记过去的知识。为了避免这一点，本文利用reservoir来保持对历史数据的长期记忆，reservoir技术在流数据库管理系统中非常常见。</p>
@@ -390,24 +423,26 @@
 <ol>
 <li>Wasserstein 距离（EMD 距离）：</li>
 </ol>
-<p>$$<br>d_{W}\left(\mathbb{P}<em>{r}, \mathbb{P}</em>{g}\right)=\inf <em>{\gamma \in \Pi\left(\mathbb{P}</em>{r}, \mathbb{P}<em>{g}\right)} \mathbb{E}</em>{(x, y) \sim \gamma}[|x-y|]<br>$$</p>
-<ol start="2">
+<script type="math/tex; mode=display">
+d_{W}\left(\mathbb{P}_{r}, \mathbb{P}_{g}\right)=\inf _{\gamma \in \Pi\left(\mathbb{P}_{r}, \mathbb{P}_{g}\right)} \mathbb{E}_{(x, y) \sim \gamma}[\|x-y\|]</script><ol>
 <li>Kullback-Leibler（KL）散度：</li>
 </ol>
-<p>$$<br>d_{K L}\left(\mathbb{P}<em>{r} | \mathbb{P}</em>{g}\right)=\sum_{i=1}^{n} P_{r}(x) \log \frac{P_{r}(x)}{P_{g}(x)}<br>$$</p>
-<ol start="3">
+<script type="math/tex; mode=display">
+d_{K L}\left(\mathbb{P}_{r} \| \mathbb{P}_{g}\right)=\sum_{i=1}^{n} P_{r}(x) \log \frac{P_{r}(x)}{P_{g}(x)}</script><ol>
 <li>Total Variation（全变分）距离：</li>
 </ol>
-<p>$$<br>d_{T V}\left(\mathbb{P}<em>{r}, \mathbb{P}</em>{g}\right)=\sup <em>{A \in \Sigma}\left|\mathbb{P}</em>{r}(A)-\mathbb{P}_{g}(A)\right|<br>$$</p>
-<p>在推荐任务中，真实分布是one-hot向量，只有真实标签处为1。</p>
+<script type="math/tex; mode=display">
+d_{T V}\left(\mathbb{P}_{r}, \mathbb{P}_{g}\right)=\sup _{A \in \Sigma}\left|\mathbb{P}_{r}(A)-\mathbb{P}_{g}(A)\right|</script><p>在推荐任务中，真实分布是one-hot向量，只有真实标签处为1。</p>
 <p>KL散度，也称交叉熵、相对熵。不选择KL散度的原因是：在推荐任务中，公式简化为：$d_{K L}(\mathbf{y} | \hat{\mathbf{y}})=-\log P_{g}\left(v_{i}\right)$ ，实际上只衡量了真实标签处的差异，没有考虑整个分布之间的差异。而且KL散度本身就是非对称性函数：$D(p | q) \neq D(q | p)$ ，用它作为一个真正的距离度量可能不是很合适。</p>
-<p>不选择全变分距离的原因是：在推荐任务中，公式简化为： $d_{T V}(\mathbf{y}, \hat{\mathbf{y}})=\max <em>{j \neq i}\left(1-P</em>{g}\left(v_{i}\right), P_{g}\left(v_{j}\right)\right)$  ，这个结果要么只衡量了真实标签以外的差异，要么只衡量了真实标签。</p>
+<p>不选择全变分距离的原因是：在推荐任务中，公式简化为： $d_{T V}(\mathbf{y}, \hat{\mathbf{y}})=\max _{j \neq i}\left(1-P_{g}\left(v_{i}\right), P_{g}\left(v_{j}\right)\right)$  ，这个结果要么只衡量了真实标签以外的差异，要么只衡量了真实标签。</p>
 <h4 id="在线训练算法描述"><a href="#在线训练算法描述" class="headerlink" title="在线训练算法描述"></a>在线训练算法描述</h4><p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220313210103872.png" alt="image-20220313210103872"></p>
 <p>$S$ 是用来更新模型的，与 $C$ 无关。</p>
 <p>因为流数据中会有新用户和新物品出现，为了防止模型忽略这些新的会话，它们会被直接加入 $S$ 当作训练数据。</p>
-<p>$C \cup C^{n e w} - S$ 即其余的会话数据，分别计算它们的Wasserstein距离，再根据以下公式计算各自的采样概率：<br>$$<br>p_{\text {sample }}\left(s_{i}\right)=\frac{d_{i}}{\sum_{s_{j} \in C \cup C^{n e w}-S} d_{j}},<br>$$<br>采样完以后就得到训练数据 $S$ ，这个 $S$ 是对当前模型来说信息量最大的数据集，用它来更新模型最有效。</p>
+<p>$C \cup C^{n e w} - S$ 即其余的会话数据，分别计算它们的Wasserstein距离，再根据以下公式计算各自的采样概率：</p>
+<script type="math/tex; mode=display">
+p_{\text {sample }}\left(s_{i}\right)=\frac{d_{i}}{\sum_{s_{j} \in C \cup C^{n e w}-S} d_{j}},</script><p>采样完以后就得到训练数据 $S$ ，这个 $S$ 是对当前模型来说信息量最大的数据集，用它来更新模型最有效。</p>
 <p>最后还要更新 reservoir $C$ ，用随机采样算法来更新，以保持模型的 long-term 记忆。</p>
-<h3 id="模型训练"><a href="#模型训练" class="headerlink" title="模型训练"></a>模型训练</h3><p>$ Cross \ Entropy \ Loss=-\sum_{i=1}^{l} \mathrm{y}<em>{i} \log \left(\hat{\mathrm{y}}</em>{i}\right) $</p>
+<h3 id="模型训练"><a href="#模型训练" class="headerlink" title="模型训练"></a>模型训练</h3><p>$ Cross \ Entropy \ Loss=-\sum_{i=1}^{l} \mathrm{y}_{i} \log \left(\hat{\mathrm{y}}_{i}\right) $</p>
 <h2 id="Experiment-amp-Table"><a href="#Experiment-amp-Table" class="headerlink" title="Experiment &amp; Table"></a>Experiment &amp; Table</h2><h3 id="对比实验结果"><a href="#对比实验结果" class="headerlink" title="对比实验结果"></a>对比实验结果</h3><p>S-POP居然比GRU4Rec结果好，可能因为S-POP能抽取出会话间的信息。</p>
 <p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220314084551972.png" alt="image-20220314084551972"></p>
 <h3 id="细化评价指标的top-k"><a href="#细化评价指标的top-k" class="headerlink" title="细化评价指标的top k"></a>细化评价指标的top k</h3><p>SSRM方法相比于另外三个基于图的方法，效果下降得幅度更大，说明图结构更适合做会话表示任务，也说明图结构有一定的泛化能力。</p>
@@ -576,16 +611,22 @@
       <span class="links-of-author-item">
         <a href="/374733751@qq.com" title="E-Mail → 374733751@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
       </span>
+      <span class="links-of-author-item">
+        <a href="https://space.bilibili.com/1567748478" title="Study → https:&#x2F;&#x2F;space.bilibili.com&#x2F;1567748478" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>Study</a>
+      </span>
   </div>
 
 
   <div class="links-of-blogroll motion-element">
     <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
-      学习资料
+      友情链接
     </div>
     <ul class="links-of-blogroll-list">
         <li class="links-of-blogroll-item">
-          <a href="https://space.bilibili.com/1567748478" title="https:&#x2F;&#x2F;space.bilibili.com&#x2F;1567748478" rel="noopener" target="_blank">跟李沐学AI</a>
+          <a href="https://www.hellohank.cn/" title="https:&#x2F;&#x2F;www.hellohank.cn" rel="noopener" target="_blank">极客Hank</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://zhang-xiaokun.github.io/" title="https:&#x2F;&#x2F;zhang-xiaokun.github.io&#x2F;" rel="noopener" target="_blank">学术Star堃</a>
         </li>
     </ul>
   </div>

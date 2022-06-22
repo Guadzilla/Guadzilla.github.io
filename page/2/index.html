@@ -471,14 +471,12 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220405151429046.png" alt="image-20220405151429046" style="zoom:50%;" />
-
+          <p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220405151429046.png" alt="image-20220405151429046" style="zoom:50%;" /></p>
 <h2 id="什么是数据卷"><a href="#什么是数据卷" class="headerlink" title="什么是数据卷"></a>什么是数据卷</h2><p>数据不应该放在容器中，如果容器删除，数据就会丢失！==需求：数据 持久化==</p>
 <p>MYSQL，容器删了=删库跑路！==需求：MYSQL数据可以存储在本地==</p>
 <p>==&gt; 需要容器之间有一个数据共享的技术！Docker容器中产生的数据，同步到本地！</p>
 <p>这就是卷技术！说白了就是目录的挂载，将容器内的目录，挂载到 Linux 上</p>
-<img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220405151429046.png" alt="image-20220405151429046" style="zoom:50%;" />
-
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220405151429046.png" alt="image-20220405151429046" style="zoom:50%;" /></p>
 <p><strong>总结：容器的持久化和同步操作！ 容器间也可以数据共享！</strong></p>
 <h2 id="使用数据卷"><a href="#使用数据卷" class="headerlink" title="使用数据卷"></a>使用数据卷</h2><blockquote>
 <p>方式一：直接使用命令来挂载 -V</p>
@@ -571,8 +569,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220404192342184.png" alt="image-20220404192342184" style="zoom:67%;" />
-
+          <p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220404192342184.png" alt="image-20220404192342184" style="zoom:67%;" /></p>
 <h2 id="镜像"><a href="#镜像" class="headerlink" title="镜像"></a>镜像</h2><p>镜像：一种轻量级、可执行的独立软件包，用来打包软件运行环境和基于运行环境开发的软件，包含运行某个软件所需的所有内容，包括代码、库、环境变量和配置文件。</p>
 <p>每个文件叠加过后就是我们的应用，虽然是叠加而来，但是对外却是一个整体的系统文件</p>
 <h2 id="镜像加载原理"><a href="#镜像加载原理" class="headerlink" title="镜像加载原理"></a>镜像加载原理</h2><blockquote>
@@ -673,7 +670,6 @@
 
       
           <h2 id="帮助命令"><a href="#帮助命令" class="headerlink" title="帮助命令"></a>帮助命令</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker version		# 显示docker 的版本信息</span><br><span class="line">docker info			# 显示docker 的系统信息，包括镜像和容器的数量</span><br><span class="line">docker 命令 --help 	# 帮助命令</span><br></pre></td></tr></table></figure>
-
 <p>帮助文档的地址：<a target="_blank" rel="noopener" href="https://docs.docker.com/reference/">参考文档|Docker 文档</a></p>
 <h2 id="镜像命令"><a href="#镜像命令" class="headerlink" title="镜像命令"></a>镜像命令</h2><p><strong>docker images 查看所有本地的主机上的镜像</strong></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">xxx@data:~/solrdata$ sudo docker images </span><br><span class="line">REPOSITORY                        TAG                 IMAGE ID            CREATED             SIZE</span><br><span class="line">solr                              8                   ce1fcccc6f5e        5 days ago          563MB</span><br><span class="line">solr                              latest              ce1fcccc6f5e        5 days ago          563MB</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 解释</span></span><br><span class="line">REPOSITORY 镜像的仓库源</span><br><span class="line">TAG        镜像的标签</span><br><span class="line">IMAGE ID   镜像的id</span><br><span class="line">CREATE     镜像的创建时间</span><br><span class="line">SIZE       镜像的大小</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 可选项</span></span><br><span class="line">Options:</span><br><span class="line">  -a, --all             # 列出所有镜像</span><br><span class="line">  -q, --quiet           # 只显示镜像的id</span><br><span class="line"></span><br><span class="line">xxx@data:~/solrdata$ sudo docker images -aq</span><br><span class="line">ce1fcccc6f5e</span><br><span class="line">ce1fcccc6f5e</span><br></pre></td></tr></table></figure>
@@ -752,7 +748,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>7.1k</span>
+              <span>7k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -1079,7 +1075,6 @@
 </blockquote>
 <h2 id="实验设计"><a href="#实验设计" class="headerlink" title="实验设计"></a>实验设计</h2><p>采用K-fold交叉验证，将用户行为数据均匀分成K份，其中一份作为测试集，K-1份作为训练集。协同过滤算法只考虑物品/用户的共现关系，所以用户序列都用集合表示。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 划分数据集</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">SplitData</span>(<span class="params">data, M, k, seed</span>):</span></span><br><span class="line">    test = []</span><br><span class="line">    train = []</span><br><span class="line">    random.seed(seed)</span><br><span class="line">    <span class="keyword">for</span> user, item <span class="keyword">in</span> data:</span><br><span class="line">        <span class="keyword">if</span> random.randint(<span class="number">0</span>, M) == k:</span><br><span class="line">            test.append([user, item])</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            train.append([user, item])</span><br><span class="line">    train_ = defaultdict(<span class="built_in">set</span>)</span><br><span class="line">    test_ = defaultdict(<span class="built_in">set</span>)</span><br><span class="line">    <span class="keyword">for</span> user, item <span class="keyword">in</span> train:</span><br><span class="line">        train_[user].add(item)</span><br><span class="line">    <span class="keyword">for</span> user, item <span class="keyword">in</span> test:</span><br><span class="line">        test_[user].add(item)</span><br><span class="line">    <span class="keyword">return</span> train_, test_</span><br></pre></td></tr></table></figure>
-
 <h2 id="评价指标"><a href="#评价指标" class="headerlink" title="评价指标"></a>评价指标</h2><p>召回率Recall，准确率Precision，覆盖率Coverage，新颖度Popularity。</p>
           <!--noindex-->
             <div class="post-button">
@@ -1301,16 +1296,22 @@
       <span class="links-of-author-item">
         <a href="/374733751@qq.com" title="E-Mail → 374733751@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
       </span>
+      <span class="links-of-author-item">
+        <a href="https://space.bilibili.com/1567748478" title="Study → https:&#x2F;&#x2F;space.bilibili.com&#x2F;1567748478" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>Study</a>
+      </span>
   </div>
 
 
   <div class="links-of-blogroll motion-element">
     <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
-      学习资料
+      友情链接
     </div>
     <ul class="links-of-blogroll-list">
         <li class="links-of-blogroll-item">
-          <a href="https://space.bilibili.com/1567748478" title="https:&#x2F;&#x2F;space.bilibili.com&#x2F;1567748478" rel="noopener" target="_blank">跟李沐学AI</a>
+          <a href="https://www.hellohank.cn/" title="https:&#x2F;&#x2F;www.hellohank.cn" rel="noopener" target="_blank">极客Hank</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://zhang-xiaokun.github.io/" title="https:&#x2F;&#x2F;zhang-xiaokun.github.io&#x2F;" rel="noopener" target="_blank">学术Star堃</a>
         </li>
     </ul>
   </div>

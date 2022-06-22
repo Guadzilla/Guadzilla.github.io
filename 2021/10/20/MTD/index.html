@@ -287,23 +287,24 @@
 <p>complex transition dynamics 的”complex”体现在：multi-level relation(intra- and inter-session item relation) . 会话内：short-term and long-term item transition，会话间：long-range cross-session dependencies。复杂依赖的例子见Figure 1.</p>
 <p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/MTD-1.png" alt="MTD-1"></p>
 <span id="more"></span>
-
 <h3 id="主要贡献："><a href="#主要贡献：" class="headerlink" title="主要贡献："></a>主要贡献：</h3><p>1.开发了一种新的会话推荐框架，可以捕获会话内和会话间的物品转换模式（多层次转换动态）</p>
 <p>2.开发了一种位置感知的注意力机，用于学习会话内的序列行为和session-specific knowledge。此外，在图神经网络范例的基础上，建立了全局上下文增强的会话间关系编码器，赋予MTD来捕获会话间项目依赖关系。</p>
 <p>3.在三个数据集上取得了SOTA，Yoochoose、Diginetica、Retailrocket。</p>
 <h3 id="网络图："><a href="#网络图：" class="headerlink" title="网络图："></a>网络图：</h3><p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/MTD-2.png" alt="MTD-2"></p>
 <h3 id="方法论："><a href="#方法论：" class="headerlink" title="方法论："></a>方法论：</h3><h4 id="1-学习会话内的物品关系"><a href="#1-学习会话内的物品关系" class="headerlink" title="1.学习会话内的物品关系"></a>1.学习会话内的物品关系</h4><p>1）Self-attention层：</p>
 <p>QKV self-attention + feed forward network</p>
-<p>2）位置感知的物品级的注意力聚合模块：<br>$$<br>\alpha _ i = \delta(\mathbf{g}^T \cdot \sigma(\mathbf{W} _ 3\cdot\mathbf{x} _ {s,I} + \mathbf{W} _ 4\cdot\mathbf{x} _ {s,i}))<br>$$</p>
-<p>$$<br>\mathbf{x}^* _ s = \sum_{i=1}^I\alpha _ i\cdot\mathbf{x _ \mathit{s,i}}<br>$$</p>
-<p>$$<br>\mathbf{q} _ s = \mathbf{W} _ c[\mathbf{x} _ {s,I},\mathbf{x}^* _ s,\mathbf{p} _ s]<br>$$</p>
-<p>$\mathbf{x}_{s,I}$表示最后一次点击，$\mathbf{x^*_s}$表示聚合后的会话表示，$\mathbf{p}_s$表示加入物品相对位置信息的会话表示，$\mathbf{q}_s $是最后的会话表示。</p>
+<p>2）位置感知的物品级的注意力聚合模块：</p>
+<script type="math/tex; mode=display">
+\alpha _ i = \delta(\mathbf{g}^T \cdot \sigma(\mathbf{W} _ 3\cdot\mathbf{x} _ {s,I} + \mathbf{W} _ 4\cdot\mathbf{x} _ {s,i}))</script><script type="math/tex; mode=display">
+\mathbf{x}^* _ s = \sum_{i=1}^I\alpha _ i\cdot\mathbf{x _ \mathit{s,i}}</script><script type="math/tex; mode=display">
+\mathbf{q} _ s = \mathbf{W} _ c[\mathbf{x} _ {s,I},\mathbf{x}^* _ s,\mathbf{p} _ s]</script><p>$\mathbf{x}_{s,I}$表示最后一次点击，$\mathbf{x^*_s}$表示聚合后的会话表示，$\mathbf{p}_s$表示加入物品相对位置信息的会话表示，$\mathbf{q}_s $是最后的会话表示。</p>
 <p>3）loss = $\mathit{L_in}$</p>
 <h4 id="2-对全局转换动态建模"><a href="#2-对全局转换动态建模" class="headerlink" title="2.对全局转换动态建模"></a>2.对全局转换动态建模</h4><p>1）用图神经网络结构和GCN对inter-session的依赖建模</p>
 <p>2）用<strong>互信息学习</strong>来增强跨会话的建模物品间关系的encoder</p>
 <p>3）loss = $\mathit{L_cr}$</p>
-<h4 id="3-Model-Inference"><a href="#3-Model-Inference" class="headerlink" title="3.Model Inference"></a>3.Model Inference</h4><p>定义loss：<br>$$<br>\mathit{L}=\mathit{L} _ {cr} + \lambda_1\mathit{L} _ {in}+\lambda_2||\Theta||^2 _ 2<br>$$</p>
-
+<h4 id="3-Model-Inference"><a href="#3-Model-Inference" class="headerlink" title="3.Model Inference"></a>3.Model Inference</h4><p>定义loss：</p>
+<script type="math/tex; mode=display">
+\mathit{L}=\mathit{L} _ {cr} + \lambda_1\mathit{L} _ {in}+\lambda_2||\Theta||^2 _ 2</script>
     </div>
 
     
@@ -432,16 +433,22 @@
       <span class="links-of-author-item">
         <a href="/374733751@qq.com" title="E-Mail → 374733751@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
       </span>
+      <span class="links-of-author-item">
+        <a href="https://space.bilibili.com/1567748478" title="Study → https:&#x2F;&#x2F;space.bilibili.com&#x2F;1567748478" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>Study</a>
+      </span>
   </div>
 
 
   <div class="links-of-blogroll motion-element">
     <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
-      学习资料
+      友情链接
     </div>
     <ul class="links-of-blogroll-list">
         <li class="links-of-blogroll-item">
-          <a href="https://space.bilibili.com/1567748478" title="https:&#x2F;&#x2F;space.bilibili.com&#x2F;1567748478" rel="noopener" target="_blank">跟李沐学AI</a>
+          <a href="https://www.hellohank.cn/" title="https:&#x2F;&#x2F;www.hellohank.cn" rel="noopener" target="_blank">极客Hank</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://zhang-xiaokun.github.io/" title="https:&#x2F;&#x2F;zhang-xiaokun.github.io&#x2F;" rel="noopener" target="_blank">学术Star堃</a>
         </li>
     </ul>
   </div>

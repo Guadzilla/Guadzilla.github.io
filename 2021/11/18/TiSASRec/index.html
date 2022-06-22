@@ -305,7 +305,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117164643993.png"></p>
+        <p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117164643993.png" alt=""></p>
 <hr>
 <p>原paper：<a target="_blank" rel="noopener" href="https://dl.acm.org/doi/10.1145/3336191.3371786">https://dl.acm.org/doi/10.1145/3336191.3371786</a></p>
 <p>源码解读：<a target="_blank" rel="noopener" href="https://github.com/Guadzilla/Paper_notebook/tree/main/TiSASRec">https://github.com/Guadzilla/Paper_notebook/tree/main/TiSASRec</a></p>
@@ -313,61 +313,60 @@
 <p>中译：时间间隔感知的自注意力序列推荐</p>
 <p>总结：是SASRec工作的延续，在self-attention的基础上加了绝对位置信息和相对时间间隔信息（加在Q和K里）取得了更好的performamce。发现Beauty数据集序列模式不明显。</p>
 <span id="more"></span>
-
 <h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><ul>
-<li>  <strong>question作者想解决什么问题？</strong></li>
+<li><strong>question作者想解决什么问题？</strong></li>
 </ul>
 <p>MC模型和RNN模型都只将用户交互作为有序序列（一种强假设），却没有考虑交互与交互之间的时间间隔。</p>
 <ul>
-<li>  <strong>method作者通过什么理论/模型来解决这个问题？</strong></li>
+<li><strong>method作者通过什么理论/模型来解决这个问题？</strong></li>
 </ul>
 <p>在序列模型的结构中显式建模交互的时间戳（timestamps），并且探索不同时间间隔对next item推荐的影响。提出TiSASRec模型，模型建模了item在序列中的绝对位置以及交互之间的时间间隔。</p>
 <ul>
-<li>  <strong>answer作者给出的答案是什么？</strong></li>
+<li><strong>answer作者给出的答案是什么？</strong></li>
 </ul>
 <p>展示了不同设定下TiSASRec的特点，比较了不同位置编码下自注意力模块的表现。在dense和sparse数据集都取得了SOTA。</p>
 <h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><ul>
-<li>  <strong>why作者为什么研究这个课题？</strong></li>
+<li><strong>why作者为什么研究这个课题？</strong></li>
 </ul>
 <p>Temporal recommendation（实时推荐）主要建模“绝对时间”来捕获用户与物品的实时动态，即挖掘实时模式、依据时间建模。Sequential recommendation（序列推荐）主要依据交互的顺序挖掘序列模式。序列推荐只用timestamps来决定item顺序，其实假设了所有交互之间是等间隔的。但一天之内产生的序列和一个月内产生的序列显然对next item的影响区别很大。</p>
 <ul>
-<li>  <strong>how当前研究到了哪一阶段</strong></li>
+<li><strong>how当前研究到了哪一阶段</strong></li>
 </ul>
 <p>目前的序列推荐只挖掘序列模式，即假设交互之间是等间隔的，不合理。有模型使用自注意力+相对位置编码[1]，受到启发。</p>
 <ul>
-<li>  <strong>what作者基于什么样的假设（看不懂最后去查）</strong></li>
+<li><strong>what作者基于什么样的假设（看不懂最后去查）</strong></li>
 </ul>
 <p>交互序列应该被建模为包含时间间隔的序列。</p>
 <h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><ul>
 <li><p><strong>优点</strong></p>
 <ul>
-<li>  结合了<strong>绝对位置编码</strong>和<strong>相对时间间隔</strong>编码的优点。</li>
-<li>  证明了使用相对时间间隔的有效性。</li>
+<li>结合了<strong>绝对位置编码</strong>和<strong>相对时间间隔</strong>编码的优点。</li>
+<li>证明了使用相对时间间隔的有效性。</li>
 </ul>
 </li>
-<li><p>  <strong>缺点</strong></p>
+<li><p><strong>缺点</strong></p>
 </li>
-<li><p>  <strong>展望</strong></p>
+<li><p><strong>展望</strong></p>
 </li>
 </ul>
 <h2 id="Dataset-amp-Metric"><a href="#Dataset-amp-Metric" class="headerlink" title="Dataset &amp; Metric"></a>Dataset &amp; Metric</h2><ul>
 <li><p><strong>数据来源</strong></p>
 <ul>
-<li>  MovieLens-1m</li>
-<li>  Amazon CDs&amp;Vinyl/ Movies&amp;TV/ Beauty/ Games</li>
-<li>  Steam</li>
+<li>MovieLens-1m</li>
+<li>Amazon CDs&amp;Vinyl/ Movies&amp;TV/ Beauty/ Games</li>
+<li>Steam</li>
 </ul>
 </li>
 <li><p><strong>重要指标</strong></p>
 <ul>
-<li>  Hit@10、NDCG@10</li>
+<li>Hit@10、NDCG@10</li>
 </ul>
 </li>
 </ul>
 <h2 id="Method-amp-Table"><a href="#Method-amp-Table" class="headerlink" title="Method &amp; Table"></a>Method &amp; Table</h2><ul>
 <li>模型架构</li>
 </ul>
-<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211116223143274.png"></p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211116223143274.png" alt=""></p>
 <ul>
 <li>参数说明</li>
 </ul>
@@ -399,12 +398,12 @@
 <p>这里本质上也是这么做的，但对K和V做了一点改变。</p>
 <p>作者首先将$E^I=(m_{s_1},m_{s_2},…,m_{s_n})$表示的item序列变换新序列$Z=(z_1,z_2,…,z_n)$，$z_i\in R^d$。</p>
 <p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117222727853.png" alt="image-20211117222727853"></p>
-<p>其中$(m_{s_j}W^V+r_{ij}^v+p_j^v)$**对应QKV模式里的$Value$**，其中$m_{s_j}W^Q$是将item embedding投影到$Value$空间，不过在此基础上还加上了realation embedding（相对时间间隔）和position embedding（位置编码）的value表示。</p>
+<p>其中$(m_{s_j}W^V+r_{ij}^v+p_j^v)$<strong>对应QKV模式里的$Value$</strong>，其中$m_{s_j}W^Q$是将item embedding投影到$Value$空间，不过在此基础上还加上了realation embedding（相对时间间隔）和position embedding（位置编码）的value表示。</p>
 <p>找到$Value$以后，公式就可以写成：$z_i=\sum^n_{j=1}\alpha_{ij}\ Value_j$。</p>
 <p>系数$\alpha_{ij}$是其实就是$softmax(\frac{QK^T}{\sqrt{d_k}})$部分。$softmax()$在论文中体现在$\alpha_{ij}=\frac{exp\ e_{ij}}{\sum^n_{k=1}exp\ e_{ik}}$，那么可以猜测$\frac{QK^T}{\sqrt{d_k}}$就对应论文中的$e_{ij}$了。事实正如此，$e_{ij}$被定义为：</p>
 <p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117090739720.png" alt="image-20211117090739720"></p>
-<p>其中$m_{s_j}W^Q$是将item embedding投影到$Querry$空间，**对应QKV模式里的$Querry$**。</p>
-<p>$(m_{s_j}W^K+r^k_{ij}+p^k_j)$，**对应QKV模式里的$Key$**，其中$m_{s_j}W^K$是将item embedding投影到$Key$空间，不过在此基础上还加上了realation embedding（相对时间间隔）和position embedding（位置编码）的key表示，另外除以的$\sqrt{d}$是缩放系数。</p>
+<p>其中$m_{s_j}W^Q$是将item embedding投影到$Querry$空间，<strong>对应QKV模式里的$Querry$</strong>。</p>
+<p>$(m_{s_j}W^K+r^k_{ij}+p^k_j)$，<strong>对应QKV模式里的$Key$</strong>，其中$m_{s_j}W^K$是将item embedding投影到$Key$空间，不过在此基础上还加上了realation embedding（相对时间间隔）和position embedding（位置编码）的key表示，另外除以的$\sqrt{d}$是缩放系数。</p>
 <ul>
 <li><strong>因果关系Causality</strong></li>
 </ul>
@@ -424,7 +423,7 @@
 <p><strong>5.模型训练</strong></p>
 <p>取物品序列$\widetilde{S_{|S^u|}}=(S^u_1,S^u_2,…,S^u_{|S^u|})$和对应的时间序列$\widetilde{T_{|T^u|}}=(T^u_1,T^u_2,…,T^u_{|T^u|})$的前$|S^u|-1$项，即$\widetilde{S_{|S^u|-1}}=(S^=u_1,S^u_2,…,S^u_{|S^u|-1})$和$\widetilde{T_{|T^u|-1}}=(T^u_1,T^u_2,…,T^u_{|T^u-1|})$。通过裁剪和补长各自化成成相同长度n的两个序列$s=(s_1,s_2,…,s_n)$，和$t=(t_1,t_2,…,t_n)$。给定这两个序列，再规定对应的输出序列$o=(o_1,o_2,…,o_n)$，其中$o_i$定义为：</p>
 <p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117095415283.png" alt="image-20211117095415283"></p>
-<p>简而言之，padding项的输出为&lt;pad&gt;；$s$最后一项之前的输出（预测）为下一项；$s$最后一项的输出（预测）为$S^u_{|S^u|}$，注意$S^u_{|S^u|}$不在$s$里，因为一开始就把最后一项拿出来了。</p>
+<p>简而言之，padding项的输出为\<pad>；$s$最后一项之前的输出（预测）为下一项；$s$最后一项的输出（预测）为$S^u_{|S^u|}$，注意$S^u_{|S^u|}$不在$s$里，因为一开始就把最后一项拿出来了。</p>
 <p>loss采用进行负采样的binary cross entropy，加入了F正则项：</p>
 <p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20211117100703091.png" alt="image-20211117100703091"></p>
 <p>padding项也计算了loss，但是没有意义，所以实际计算时把padding项的loss mask掉。</p>
@@ -621,16 +620,22 @@
       <span class="links-of-author-item">
         <a href="/374733751@qq.com" title="E-Mail → 374733751@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
       </span>
+      <span class="links-of-author-item">
+        <a href="https://space.bilibili.com/1567748478" title="Study → https:&#x2F;&#x2F;space.bilibili.com&#x2F;1567748478" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>Study</a>
+      </span>
   </div>
 
 
   <div class="links-of-blogroll motion-element">
     <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
-      学习资料
+      友情链接
     </div>
     <ul class="links-of-blogroll-list">
         <li class="links-of-blogroll-item">
-          <a href="https://space.bilibili.com/1567748478" title="https:&#x2F;&#x2F;space.bilibili.com&#x2F;1567748478" rel="noopener" target="_blank">跟李沐学AI</a>
+          <a href="https://www.hellohank.cn/" title="https:&#x2F;&#x2F;www.hellohank.cn" rel="noopener" target="_blank">极客Hank</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://zhang-xiaokun.github.io/" title="https:&#x2F;&#x2F;zhang-xiaokun.github.io&#x2F;" rel="noopener" target="_blank">学术Star堃</a>
         </li>
     </ul>
   </div>
