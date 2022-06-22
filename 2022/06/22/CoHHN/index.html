@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"guadzilla.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="原paper：[2205.04181] Price DOES Matter! Modeling Price and Interest Preferences in Session-based Recommendation (arxiv.org) 作者本人解读：https:&#x2F;&#x2F;mp.weixin.qq.com&#x2F;s&#x2F;kSayir_jVwZbhEPm0qtYPA  中译：基于用户价格偏好及兴趣偏好的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="论文笔记：《Price DOES Matter! Modeling Price and Interest Preferences in Session-based Recommendation》">
+<meta property="og:url" content="http://guadzilla.github.io/2022/06/22/CoHHN/index.html">
+<meta property="og:site_name" content="瓜斯拉的逆袭">
+<meta property="og:description" content="原paper：[2205.04181] Price DOES Matter! Modeling Price and Interest Preferences in Session-based Recommendation (arxiv.org) 作者本人解读：https:&#x2F;&#x2F;mp.weixin.qq.com&#x2F;s&#x2F;kSayir_jVwZbhEPm0qtYPA  中译：基于用户价格偏好及兴趣偏好的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220405093804827.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220405095200598.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220405103854311.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220405101322691.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220405130624751.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220405130908396.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220405131901933.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220405133111306.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220405133652178.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220405134334807.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220405134742217.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220405135551415.png">
+<meta property="article:published_time" content="2022-06-22T01:39:02.000Z">
+<meta property="article:modified_time" content="2022-06-22T01:24:34.004Z">
+<meta property="article:author" content="Guadzilla">
+<meta property="article:tag" content="会话推荐">
+<meta property="article:tag" content="CoHHN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220405093804827.png">
+
+<link rel="canonical" href="http://guadzilla.github.io/2022/06/22/CoHHN/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>论文笔记：《Price DOES Matter! Modeling Price and Interest Preferences in Session-based Recommendation》 | 瓜斯拉的逆袭</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">瓜斯拉的逆袭</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://guadzilla.github.io/2022/06/22/CoHHN/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+      <meta itemprop="name" content="Guadzilla">
+      <meta itemprop="description" content="大连理工大学在读硕士，研究方向为：NLP/序列推荐">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="瓜斯拉的逆袭">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          论文笔记：《Price DOES Matter! Modeling Price and Interest Preferences in Session-based Recommendation》
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-06-22 09:39:02 / 修改时间：09:24:34" itemprop="dateCreated datePublished" datetime="2022-06-22T09:39:02+08:00">2022-06-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">论文笔记</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>9.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>23 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220405093804827.png" alt="image-20220405093804827"></p>
+<hr>
+<p>原paper：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2205.04181">[2205.04181] Price DOES Matter! Modeling Price and Interest Preferences in Session-based Recommendation (arxiv.org)</a></p>
+<p>作者本人解读：<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/kSayir_jVwZbhEPm0qtYPA">https://mp.weixin.qq.com/s/kSayir_jVwZbhEPm0qtYPA</a></p>
+<hr>
+<p>中译：基于用户价格偏好及兴趣偏好的会话推荐</p>
+<p>总结：</p>
+<p>&emsp;&emsp;异质超图=异质图+超图：异质图——融合异质特征，超图——捕捉高阶依赖</p>
+<p>&emsp;&emsp;双通道聚合：intra + inter ，聚合同类和异类信息，获得价格和兴趣偏好的初级表示</p>
+<p>&emsp;&emsp;协同指导学习：捕捉价格偏好和兴趣偏好之间的复杂联系，获得语义增强的价格和兴趣偏好的表示</p>
+<span id="more"></span>
+<h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><ul>
+<li>question作者想解决什么问题？ </li>
+</ul>
+<p>&emsp;&emsp;现有会话推荐系统中关注如何建模用户的兴趣偏好，然而忽略了物品的一项重要属性，即价格。同时建模价格和兴趣偏好不是件容易的事情。<strong>首先</strong>，它很难处理来自物品的各种特征的异质信息来捕捉用户的价格偏好；<strong>其次</strong>，在决定用户选择时，很难对价格和兴趣偏好之间的复杂关系进行建模。</p>
+<ul>
+<li>method作者通过什么理论/模型来解决这个问题？</li>
+</ul>
+<p>&emsp;&emsp;提出协同指导的异质超图网络（Co-guided Heterogeneous Hypergraph Network，CoHHN）。</p>
+<p>&emsp;&emsp;对于第一个挑战，提出用<strong>异质超图</strong>来表示异质信息，接着通过双通道聚合机制聚合这些信息，再通过attention层提取用户的价格偏好和兴趣偏好。</p>
+<p>&emsp;&emsp;对于第二个挑战，提出<strong>协同指导的学习方法</strong>，用来建模价格和兴趣偏好之间的关系。</p>
+<ul>
+<li>answer作者给出的答案是什么？</li>
+</ul>
+<p>&emsp;&emsp;三个数据集中取得SOTA。</p>
+<p>&emsp;&emsp;分析得出会话推荐任务中价格的重要性。</p>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><ul>
+<li>动机</li>
+</ul>
+<p>&emsp;&emsp;现有会话推荐系统中关注如何建模用户的兴趣偏好，然而忽略了物品的一项重要属性，即价格。但是许多市场研究展示出用户的购买行为非常容易受到价格因素的影响，所以价格应该被纳入考虑。</p>
+<ol>
+<li><p>价格偏好的特点：动态，受商品类别影响。（例如用户可能为了性能而购买很贵的笔记本电脑，但是却买比较便宜的睡衣。）所以在纳入用户价格偏好时，我们需要考虑商品对应的类别。因此这种场景下，商品序列，商品价格，商品类别，这些<strong>异质信息</strong>会使得现有方法失效。</p>
+</li>
+<li><p>此外，经济学上有一种现象叫做<strong>价格弹性</strong>，即用户愿意为某一物品支付的金钱会随着用户对该物品的兴趣而波动。这一现象充分显示用户的购买行为是<strong>由价格和兴趣共同决定</strong>的。（例如越感兴趣的商品越愿意花高价钱买，愿意花低价买那些不是特别喜欢的商品）</p>
+</li>
+</ol>
+<p>&emsp;&emsp;针对上面两个挑战，分别提出解决方案。</p>
+<ol>
+<li>现有的SOTA方法，只能捕捉 pairwise relation ，成对关系，例如商品序列、类别。本文提出的CoHHN中，<strong>异质超图</strong>结合了超图和异质图的优点。 <strong>超图</strong>可以捕捉比 pairwise 更高阶的依赖关系，具体是<item,category,price>。使用三种超边，特征超边，价格超边，会话超边捕捉<strong>异质</strong>信息。然后用双通道聚合机制，通过特征超边来传播节点 embedding ，基于这些节点 embedding ，分别基于价格超边和会话超边，利用 attention 层来提取原始的价格和兴趣偏好。</li>
+<li>提出 <strong>协同指导学习方法 </strong>，用于建模价格和兴趣之间的复杂关系。具体来说，利用异质超图学到的原始价格和兴趣偏好，让他们互相指导对方的学习以增强语义信息。最后，基于商品特征、价格偏好、兴趣偏好，共同做出推荐。</li>
+</ol>
+<ul>
+<li>基于什么样的假设？</li>
+</ul>
+<p>&emsp;&emsp;价格偏好的特点：动态，受商品类别影响。</p>
+<p>&emsp;&emsp;价格弹性现象。用户愿意支付的钱受兴趣影响，购买行为由兴趣和价格共同决定。</p>
+<h2 id="Preliminaries"><a href="#Preliminaries" class="headerlink" title="Preliminaries"></a>Preliminaries</h2><ul>
+<li>会话推荐定义（略）</li>
+</ul>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220405095200598.png" alt="image-20220405095200598" style="zoom:50%;" /></p>
+<ul>
+<li>价格离散化：每个类别由不同的价格 level 。根据 logistic 分布（上图），使得划分的每一部分概率相同。</li>
+</ul>
+<script type="math/tex; mode=display">
+p_{i}=\left\lfloor\frac{\Phi\left(x_{p}\right)-\Phi(\min )}{\Phi(\max )-\Phi(\min )} \times \rho\right\rfloor</script><p>​     &emsp;&emsp;其中 $x_i$ 的价格 $x_p$ ，$x_i$ 所属类别的价格范围是 $[min,max]$ ，其中 $\Phi\left(x\right)$ 是概率分布函数。</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220405103854311.png" alt="image-20220405103854311" style="zoom:67%;" /></p>
+<ul>
+<li><p>异质超图构建：见上图，每个超边可以连接任意个节点，共有三种超边，特征超边，价格超边，会话超边。</p>
+<ul>
+<li>1）特征超边连接一个 item 的所有特征：id、price、category；2）价格超边连接同一个会话中的价格节点；3）会话超边连接会话中所有的id节点。</li>
+<li>特征超边用来在异质节点间传播信息，价格超边和会话超边用来提取用户的价格和兴趣偏好。</li>
+</ul>
+</li>
+<li><p><strong>问题：为什么没有类别超边呢？因为类别信息用特征超边传播了，而且目的是获取价格和兴趣偏好？</strong></p>
+</li>
+<li><strong>问题：特征超边只用来传播不同特征？</strong> </li>
+</ul>
+<h2 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h2><p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220405101322691.png" alt="image-20220405101322691" style="zoom:50%;" /></p>
+<h3 id="总览"><a href="#总览" class="headerlink" title="总览"></a>总览</h3><p>&emsp;&emsp;首先基于所有会话数据构建异质超图，其次通过 Dual-channel 聚合 intra-type 信息和 inter-type 信息（注意不是 intra-session 和 inter-session）；接着，通过 attention 层提取价格偏好和兴趣偏好，两种偏好经过协同指导学习增强语义，最后利用商品特征、价格偏好、兴趣偏好共同做出推荐。</p>
+<h3 id="双通道聚合机制"><a href="#双通道聚合机制" class="headerlink" title="双通道聚合机制"></a>双通道聚合机制</h3><p>&emsp;&emsp;因为超边的存在，不同类别的节点会连接在一起。显然，拥有相同类型的节点提供同质的信息，不同类型的节点提供异质的信息，两种类型的节点对目标节点的贡献是不同类型的。所以设计两个通道， intro-type 通道和 inter-type 通道 。</p>
+<p><strong>&emsp;&emsp;Intra-type 聚合。</strong> $v^t$ 是 target node 的 embedding，它的属于类别 $\tau$ 的邻接点集合为 $N^{\tau}_t$ 。同类聚合的目的是区分同类节点的重要性差异，并且聚合这些信息。公式如下：</p>
+<script type="math/tex; mode=display">
+\begin{array}{l}
+\mathbf{e}_{t}^{\tau}=\sum_{i} \alpha_{i} \mathbf{v}_{i}^{\tau} \\
+\alpha_{i}=\frac{\exp \left(\mathbf{u}_{\tau} \mathbf{v}_{i}^{\tau}\right)}{\sum_{\mathbf{v}_{i}^{\tau} \in N_{t}^{\tau}} \exp \left(\mathbf{u}_{\tau} \mathbf{v}_{i}^{\tau}\right)}
+\end{array}</script><p>&emsp;&emsp;其中 $u_{\tau}$ 是 attention vector，决定了类别 $\tau$ 的节点对目标节点的重要程度，这里不同类别有不同类别的 attention vector ，使得模型可以学到每个节点特定类别的 embedding 。 $e^{\tau}_t$ 是 target node  $v^t$ 的类别 embedding 。 公式抽象为： $\mathbf{e}_{t}^{\tau}=f_{a}\left(N_{t}^{\tau}\right)$ 。</p>
+<p><strong>&emsp;&emsp;Inter-type 聚合。</strong> 基于学到的类别 embedding $e^{\tau}_t$ ，inter-type聚合的目的是聚合不同类别的 embedding 到目标节点上。公式如下：</p>
+<script type="math/tex; mode=display">
+\begin{array}{l}
+\mathbf{g}_{t}=\sigma\left(\mathbf{W}_{t}\left[\mathbf{v}^{t} ; \mathbf{e}_{t}^{\tau 1} ; \mathbf{e}_{t}^{\tau 2}\right]+\mathbf{W}_{t}^{\tau 1} \mathbf{e}_{t}^{\tau 1}+\mathbf{W}_{t}^{\tau 2} \mathbf{e}_{t}^{\tau 2}\right) \\
+\mathbf{h}^{t}=\mathbf{v}^{t}+\mathbf{g}_{t} * \mathbf{e}_{t}^{\tau 1}+\left(1-\mathbf{g}_{t}\right) * \mathbf{e}_{t}^{\tau 2}
+\end{array}</script><p>&emsp;&emsp;其中 $W _ t,W ^ {\tau 1} _ t,W ^ {\tau 2} _ t$ 是可学习参数。 $h_t$ 是经过邻接的异质节点与以增强过的 target node 的 embedding 。 公式抽象为： $\mathbf{h}^{t}=f_{b}\left(\mathbf{v}^{t}, \mathbf{e}_{t}^{\tau 1}, \mathbf{e}_{t}^{\tau 2}\right)$ 。</p>
+<p>&emsp;&emsp;双通道聚合公式如下：</p>
+<script type="math/tex; mode=display">
+\begin{array}{c}
+\mathbf{h}^{i d} = f_{b}\left(\mathbf{v}^{i d}, f_{a}\left(N_{i d}^{p}\right), f_{a}\left(N_{i d}^{c}\right)\right)+\operatorname{avg}\left(N_{i d}^{i d}\right) \\
+\mathbf{h}^{p} = f_{b}\left(\mathbf{v}^{p}, f_{a}\left(N_{p}^{i d}\right), f_{a}\left(N_{p}^{c}\right)\right) \\
+\mathbf{h}^{c} = f_{b}\left(\mathbf{v}^{c}, f_{a}\left(N_{c}^{p}\right), f_{a}\left(N_{c}^{i d}\right)\right)
+\end{array}</script><p>&emsp;&emsp;上标代表类别，c：category，id：item id，p：price。可以看到每个类别的 embedding 都会融合另外两个类别的信息。</p>
+<p>&emsp;&emsp;<strong>值得注意的是，邻接关系主要是基于特征超边的。</strong></p>
+<h3 id="偏好提取"><a href="#偏好提取" class="headerlink" title="偏好提取"></a>偏好提取</h3><p>&emsp;&emsp;基于 $\mathbf{h}^{i d}、\mathbf{h}^{p}、\mathbf{h}^{c}$ 这三个节点 embedding ，进一步提取价格和兴趣偏好。</p>
+<p><strong>&emsp;&emsp;提取价格偏好</strong>。因为用户的价格偏好反映在他购买的商品，所以依据价格超边提取用户的价格偏好。用多头自注意力机制。没有加入时间信息是因为价格偏好相对稳定，并且表示集体性依赖而非序列性依赖。公式如下：</p>
+<script type="math/tex; mode=display">
+\begin{array}{l}
+\mathbf{E}_{p}=\left[\mathbf{h}_{1}^{p} ; \mathbf{h}_{2}^{p} ; \ldots ; \mathbf{h}_{m}^{p}\right]\\
+\text { head }_{i}=\text { Attention }\left(W_{i}^{Q} \mathbf{E}_{p}, W_{i}^{K} \mathbf{E}_{p}, W_{i}^{V} \mathbf{E}_{p}\right)\\
+\mathrm{S}_{p}=\left[\text { head }_{1} ; \text { head }_{2} ; \ldots ; \text { head }_{h}\right]
+\end{array}</script><p>&emsp;&emsp;隐藏状态 $S_P$ 作为原始的价格偏好： $\hat{\mathbf{P}}_{p}=\mathrm{S}_{p}^{(t)}$ 。</p>
+<p><strong>&emsp;&emsp;提取兴趣偏好</strong>。依据会话超边提取用户兴趣偏好。因为兴趣可能随时间漂移，所以加入位置编码学习动态兴趣。这里使用 reversed position embedding，会话中第 $i$ 个物品的计算公式如下：</p>
+<script type="math/tex; mode=display">
+\mathbf{v}_{i}^{*}=\tanh \left(\mathbf{W}_{f}\left[\mathbf{h}_{i}^{i d} ; \operatorname{pos}_{i}\right]+\mathbf{b}_{f}\right)</script><p>&emsp;&emsp;其中$\mathbf{W}_{f}$ 和 $\mathbf{b}_{f}$ 是可学习参数。再过 soft 注意力层：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\hat{\mathrm{I}}_{p} &=\sum_{i=1}^{t} \beta_{i} \mathbf{h}_{i}^{i d} \\
+\beta_{i} &=\mathbf{u} \sigma\left(\mathbf{A}_{1} \mathbf{v}_{i}^{*}+\mathbf{A}_{2} \overline{\mathbf{v}}^{*}+\mathbf{b}\right)
+\end{aligned}</script><p>&emsp;&emsp;其中 $\mathbf{A}_{1}、 \mathbf{A}_{2}、\mathbf{b}$ 是可学习参数，$\mathbf u^T$ 是 attention vector。$\overline{\mathbf{v}}^{*}$ 是 $\mathbf{v}_{i}$ 的均值，$\hat{\mathrm{I}}_{p}$ 是原始的兴趣偏好。</p>
+<h3 id="协同指导-Learning-Schema"><a href="#协同指导-Learning-Schema" class="headerlink" title="协同指导 Learning Schema"></a>协同指导 Learning Schema</h3><p>&emsp;&emsp;有了原始的兴趣偏好 $\hat{\mathrm{I}}_{p}$ 和原始的价格偏好 $S_P$ ，可以简单定义用户对物品 $x_i$ 的预测得分：</p>
+<script type="math/tex; mode=display">
+y_{i}=\hat{\mathbf{P}}_{p}^{\top} \mathbf{v}_{i}^{p}+\hat{\mathbf{I}}_{p}^{\top} \mathbf{v}_{i}^{i d}</script><p>&emsp;&emsp;但是这种简单的加法方式不能处理复杂的情况，比如用户对越感兴趣的商品越愿意花高价钱买，同时愿意花低价买那些不是特别感兴趣的商品。所以提出<strong>协同指导的学习方法</strong>。</p>
+<p>&emsp;&emsp;首先用两种方式融合 价格偏好 和 兴趣偏好 ：</p>
+<script type="math/tex; mode=display">
+\begin{array}{l}
+\mathbf{m}_{c}=\tanh \left(\mathbf{W}_{1}^{p i}\left(\hat{\mathbf{P}}_{p} * \hat{\mathbf{I}}_{p}\right)+\mathbf{b}_{c}\right) \\
+\mathbf{m}_{j}=\tanh \left(\mathbf{W}_{2}^{p i}\left(\hat{\mathbf{P}}_{p}+\hat{\mathbf{I}}_{p}\right)+\mathbf{b}_{j}\right)
+\end{array}</script><p>&emsp;&emsp;$\mathbf{m}_{c}$ 和 $\mathbf{m}_{j}$ 用来表示<strong>不同语义空间下的价格和兴趣间交互关系</strong>。接着用门控机制进一步建模价格偏好和兴趣偏好之间的相互关系（mutual relations）。</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\mathbf{r}_{P} &=\sigma\left(\mathbf{W}_{1}^{r} \mathbf{m}_{c}+\mathbf{U}_{1}^{r} \mathbf{m}_{j}\right) \\
+\mathbf{r}_{I} &=\sigma\left(\mathbf{W}_{2}^{r} \mathbf{m}_{c}+\mathbf{U}_{2}^{r} \mathbf{m}_{j}\right) \\
+\mathbf{m}_{P} &=\tanh \left(\mathbf{W}^{P}\left(\mathbf{r}_{P} * \hat{\mathbf{P}}_{p}\right)+\mathrm{U}^{P}\left(\left(1-\mathbf{r}_{I}\right) * \hat{\mathbf{I}}_{p}\right)\right) \\
+\mathbf{m}_{I} &=\tanh \left(\mathbf{W}^{I}\left(\mathbf{r}_{I} * \hat{\mathbf{I}}_{p}\right)+\mathbf{U}^{I}\left(\left(1-\mathbf{r}_{P}\right) * \hat{\mathbf{P}}_{p}\right)\right)
+\end{aligned}</script><p>&emsp;&emsp;其中 $\mathbf W$ 和 $\mathbf U$ 是可学习参数，$\mathbf r$ 是记忆门。$\mathbf m$ 是语义增强后的价格和兴趣偏好表示。最终的价格和兴趣偏好表示如下：</p>
+<script type="math/tex; mode=display">
+\begin{array}{l}
+\mathbf{P}_{p}=\mathbf{m}_{P} *\left(\hat{\mathbf{P}}_{p}+\mathbf{m}_{I}\right) \\
+\mathbf{I}_{p}=\mathbf{m}_{I} *\left(\hat{\mathbf{I}}_{p}+\mathbf{m}_{P}\right)
+\end{array}</script><p> &emsp;&emsp;这里再次增强语义。</p>
+<h3 id="预测和训练"><a href="#预测和训练" class="headerlink" title="预测和训练"></a>预测和训练</h3><p>&emsp;&emsp;预测得分：$y_{i}=\mathbf{P}_{p}^{\top} \mathbf{v}_{i}^{p}+\mathbf{I}_{p}^{\top} \mathbf{v}_{i}^{i d}$</p>
+<p>&emsp;&emsp;转化为概率：$y_{i}=\frac{\exp \left(y_{i}\right)}{\sum_{j=1}^{n} \exp \left(y_{j}\right)}$</p>
+<p>&emsp;&emsp;CE loss：$\mathcal{L}(\mathrm{p}, \mathrm{y})=-\sum_{j=1}^{n} p_{j} \log \left(y_{j}\right)+\left(1-p_{j}\right) \log \left(1-y_{j}\right)$ ，其中 $p_{j}$ 是真实标签。</p>
+<h2 id="Experiment-Setup"><a href="#Experiment-Setup" class="headerlink" title="Experiment  Setup"></a>Experiment  Setup</h2><h3 id="研究问题"><a href="#研究问题" class="headerlink" title="研究问题"></a>研究问题</h3><ul>
+<li>RQ1：SOTA了吗？</li>
+<li>RQ2：价格因素的影响如何？</li>
+<li>RQ3：协同指导学习方法的影响如何？</li>
+<li>RQ4：不同价格 level 的影响如何？</li>
+<li>RQ5：关键超参数的影响如何？</li>
+</ul>
+<h3 id="数据集-和-预处理"><a href="#数据集-和-预处理" class="headerlink" title="数据集 和 预处理"></a>数据集 和 预处理</h3><p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220405130624751.png" alt="image-20220405130624751" style="zoom:50%;" /></p>
+<ul>
+<li><p><a target="_blank" rel="noopener" href="https://www.kaggle.com/mkechinov/ecommerce-events-history-in-cosmetics-shop">Cosmetics</a> ，We use one month (October 2019) records and only retain the interactions with type “add_to_cart” or “purchase” in our work.</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://competitions.codalab.org/competitions/11161">Diginetica-buy</a>.</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://jmcauley.ucsd.edu/data/amazon/">Amazon</a>，Grocery and Gourmet Food.</p>
+</li>
+</ul>
+<p>&emsp;&emsp;预处理：过滤掉长度为1的会话，出现次数小于10的物品。序列最后一位作为label，前面的用来建模用户偏好。时间顺序，前70%作为训练集，后20%作为验证集，最后10%作为测试集。</p>
+<h3 id="评价指标"><a href="#评价指标" class="headerlink" title="评价指标"></a>评价指标</h3><p>&emsp;&emsp;Precision、MRR，@10，@20.</p>
+<h2 id="结果分析"><a href="#结果分析" class="headerlink" title="结果分析"></a>结果分析</h2><h4 id="RQ1：SOTA了吗？"><a href="#RQ1：SOTA了吗？" class="headerlink" title="RQ1：SOTA了吗？"></a>RQ1：SOTA了吗？</h4><p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220405130908396.png" alt="image-20220405130908396"></p>
+<p>&emsp;&emsp;SOTA了。进一步分析：（1）NARM和Bert4Rec比GRU4Rec好的原因，注意力机制，但Bert4Rec效果没有达到预期的原因是，序列比较短；（2）SR-GNN、LESSR在图上建模 pairwise relation，$S^2-$DHCN和COTReec与之相比建模了比成对关系更高阶的关系，所以表现更好，但是也局限建模在单一类型交互上。CoHNN在此基础上用更多的特征建模了价格和兴趣偏好，效果更好。</p>
+<h4 id="RQ2：价格因素的影响如何？"><a href="#RQ2：价格因素的影响如何？" class="headerlink" title="RQ2：价格因素的影响如何？"></a>RQ2：价格因素的影响如何？</h4><p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220405131901933.png" alt="image-20220405131901933" style="zoom:67%;" /></p>
+<h5 id="价格特征和价格偏好的影响"><a href="#价格特征和价格偏好的影响" class="headerlink" title="价格特征和价格偏好的影响"></a>价格特征和价格偏好的影响</h5><p>&emsp;&emsp;CoHHN-c：去掉category特征，CoHHN-p：去掉价格特征（自然也没有协同指导学习？），CoHHN-pp：节点更新时考虑价格特征但没有提取价格偏好（自然也没有协同指导学习？）。</p>
+<p>（1）CoHHN-pp &gt; CoHHN-p、CoHHN-c &gt; CoHHN-p ：加入价格特征有用；</p>
+<p>（2）CoHHN &gt; CoHHN-pp ：考虑价格偏好有用；</p>
+<p>（3）CoHHN &gt; CoHHN-c：考虑类别特征有用，可以更准确地学习价格偏好。</p>
+<h5 id="不同分布划分的影响"><a href="#不同分布划分的影响" class="headerlink" title="不同分布划分的影响"></a>不同分布划分的影响</h5><p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220405133111306.png" alt="image-20220405133111306" style="zoom: 67%;" /></p>
+<p>&emsp;&emsp;logistic 分布 &gt; 均匀分布 ，logistic 分布能更准确反映价格信息。</p>
+<p>&emsp;&emsp;均匀分布 &gt; COTREC ，考虑价格因素，即使用均匀分布也高于之前的 SOTA ，说明考虑价格因素的有效性。</p>
+<h3 id="RQ3：协同指导学习方法的影响如何？"><a href="#RQ3：协同指导学习方法的影响如何？" class="headerlink" title="RQ3：协同指导学习方法的影响如何？"></a>RQ3：协同指导学习方法的影响如何？</h3><p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220405133652178.png" alt="image-20220405133652178" style="zoom:67%;" /></p>
+<p>&emsp;&emsp;CoHHN-co：对价格偏好和兴趣偏好简单加和，没用协同指导学习方法。</p>
+<p>&emsp;&emsp;CoHHN &gt; CoHHN-co ：证明价格偏好和兴趣偏好之间的关系复杂，简单加和无法提取。协同指导学习的方法可以。</p>
+<h3 id="RQ4：不同价格-level-的影响如何？"><a href="#RQ4：不同价格-level-的影响如何？" class="headerlink" title="RQ4：不同价格 level 的影响如何？"></a>RQ4：不同价格 level 的影响如何？</h3><p>&emsp;&emsp;也就是每个类别的价格分的那几个桶，各自的表现如何。</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220405134334807.png" alt="image-20220405134334807" style="zoom:67%;" /></p>
+<p>&emsp;&emsp;CoHHN在所有 level 都优于 COTREC，可能的原因是，离散化价格的方法可以优化价格分配。</p>
+<p>&emsp;&emsp;其次，在中低价位，两个模型表现都比较好，这和大多数人的购物习惯一致，倾向于购买中低价位的商品。</p>
+<h3 id="RQ5：关键超参数的影响如何？"><a href="#RQ5：关键超参数的影响如何？" class="headerlink" title="RQ5：关键超参数的影响如何？"></a>RQ5：关键超参数的影响如何？</h3><h4 id="价格-level-的数量的影响"><a href="#价格-level-的数量的影响" class="headerlink" title="价格 level 的数量的影响"></a>价格 level 的数量的影响</h4><p>&emsp;&emsp;也就是每个类别，价格各分几个桶，决定了建模的价格粒度。</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220405134742217.png" alt="image-20220405134742217" style="zoom: 67%;" /></p>
+<p>（1）越低粒度越粗，但是太高会使得价格相似的物品也区分开，就没有意义了。</p>
+<p>（2）其次，不同数据集价格分布不同，也会导致最优效果的粒度不同。</p>
+<p>（3）从绝对值来看，三个数据集接近最优 number of level 的附近，呈现出稳定的性能。本文认为，得益于所提出的离散化方法。</p>
+<h4 id="双通道聚合迭代次数"><a href="#双通道聚合迭代次数" class="headerlink" title="双通道聚合迭代次数"></a>双通道聚合迭代次数</h4><p>&emsp;&emsp;类似GNN层数。</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220405135551415.png" alt="image-20220405135551415" style="zoom: 67%;" /></p>
+<p>（1）2、3层性能最好，层数过多容易过平滑。</p>
+<p>（2）Amazon 商品个数最少，所以达到最优性能需要的迭代次数最少。</p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>&emsp;&emsp;异质超图=异质图+超图：异质图——融合异质特征，超图——捕捉高阶依赖</p>
+<p>&emsp;&emsp;双通道聚合：intra + inter ，聚合同类和异类信息，获得价格和兴趣偏好的初级表示</p>
+<p>&emsp;&emsp;协同指导学习：捕捉价格偏好和兴趣偏好之间的复杂联系，获得语义增强的价格和兴趣偏好的表示</p>
+<h2 id="展望"><a href="#展望" class="headerlink" title="展望"></a>展望</h2><p>&emsp;&emsp;融合更多特征，了例如品牌，卖家声誉等等。该模型可以适用于很多需要挖掘异质信息的任务。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E4%BC%9A%E8%AF%9D%E6%8E%A8%E8%8D%90/" rel="tag"># 会话推荐</a>
+              <a href="/tags/CoHHN/" rel="tag"># CoHHN</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/06/19/RecHub%E6%8E%A8%E8%8D%90%E9%A1%B9%E7%9B%AE%E5%AD%A6%E4%B9%A02/" rel="prev" title="RecHub推荐项目学习2">
+      <i class="fa fa-chevron-left"></i> RecHub推荐项目学习2
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC81NDcyNC8zMTE5NQ=="></div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Abstract"><span class="nav-number">1.</span> <span class="nav-text">Abstract</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction"><span class="nav-number">2.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Preliminaries"><span class="nav-number">3.</span> <span class="nav-text">Preliminaries</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Method"><span class="nav-number">4.</span> <span class="nav-text">Method</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E8%A7%88"><span class="nav-number">4.1.</span> <span class="nav-text">总览</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8C%E9%80%9A%E9%81%93%E8%81%9A%E5%90%88%E6%9C%BA%E5%88%B6"><span class="nav-number">4.2.</span> <span class="nav-text">双通道聚合机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%81%8F%E5%A5%BD%E6%8F%90%E5%8F%96"><span class="nav-number">4.3.</span> <span class="nav-text">偏好提取</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%8F%E5%90%8C%E6%8C%87%E5%AF%BC-Learning-Schema"><span class="nav-number">4.4.</span> <span class="nav-text">协同指导 Learning Schema</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%84%E6%B5%8B%E5%92%8C%E8%AE%AD%E7%BB%83"><span class="nav-number">4.5.</span> <span class="nav-text">预测和训练</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Experiment-Setup"><span class="nav-number">5.</span> <span class="nav-text">Experiment  Setup</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A0%94%E7%A9%B6%E9%97%AE%E9%A2%98"><span class="nav-number">5.1.</span> <span class="nav-text">研究问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86-%E5%92%8C-%E9%A2%84%E5%A4%84%E7%90%86"><span class="nav-number">5.2.</span> <span class="nav-text">数据集 和 预处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87"><span class="nav-number">5.3.</span> <span class="nav-text">评价指标</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E6%9E%9C%E5%88%86%E6%9E%90"><span class="nav-number">6.</span> <span class="nav-text">结果分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#RQ1%EF%BC%9ASOTA%E4%BA%86%E5%90%97%EF%BC%9F"><span class="nav-number">6.0.1.</span> <span class="nav-text">RQ1：SOTA了吗？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RQ2%EF%BC%9A%E4%BB%B7%E6%A0%BC%E5%9B%A0%E7%B4%A0%E7%9A%84%E5%BD%B1%E5%93%8D%E5%A6%82%E4%BD%95%EF%BC%9F"><span class="nav-number">6.0.2.</span> <span class="nav-text">RQ2：价格因素的影响如何？</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BB%B7%E6%A0%BC%E7%89%B9%E5%BE%81%E5%92%8C%E4%BB%B7%E6%A0%BC%E5%81%8F%E5%A5%BD%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="nav-number">6.0.2.1.</span> <span class="nav-text">价格特征和价格偏好的影响</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%8D%E5%90%8C%E5%88%86%E5%B8%83%E5%88%92%E5%88%86%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="nav-number">6.0.2.2.</span> <span class="nav-text">不同分布划分的影响</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RQ3%EF%BC%9A%E5%8D%8F%E5%90%8C%E6%8C%87%E5%AF%BC%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95%E7%9A%84%E5%BD%B1%E5%93%8D%E5%A6%82%E4%BD%95%EF%BC%9F"><span class="nav-number">6.1.</span> <span class="nav-text">RQ3：协同指导学习方法的影响如何？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RQ4%EF%BC%9A%E4%B8%8D%E5%90%8C%E4%BB%B7%E6%A0%BC-level-%E7%9A%84%E5%BD%B1%E5%93%8D%E5%A6%82%E4%BD%95%EF%BC%9F"><span class="nav-number">6.2.</span> <span class="nav-text">RQ4：不同价格 level 的影响如何？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RQ5%EF%BC%9A%E5%85%B3%E9%94%AE%E8%B6%85%E5%8F%82%E6%95%B0%E7%9A%84%E5%BD%B1%E5%93%8D%E5%A6%82%E4%BD%95%EF%BC%9F"><span class="nav-number">6.3.</span> <span class="nav-text">RQ5：关键超参数的影响如何？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%B7%E6%A0%BC-level-%E7%9A%84%E6%95%B0%E9%87%8F%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="nav-number">6.3.1.</span> <span class="nav-text">价格 level 的数量的影响</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%8C%E9%80%9A%E9%81%93%E8%81%9A%E5%90%88%E8%BF%AD%E4%BB%A3%E6%AC%A1%E6%95%B0"><span class="nav-number">6.3.2.</span> <span class="nav-text">双通道聚合迭代次数</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA"><span class="nav-number">7.</span> <span class="nav-text">结论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B1%95%E6%9C%9B"><span class="nav-number">8.</span> <span class="nav-text">展望</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Guadzilla"
+      src="/images/touxiang.jpg">
+  <p class="site-author-name" itemprop="name">Guadzilla</p>
+  <div class="site-description" itemprop="description">大连理工大学在读硕士，研究方向为：NLP/序列推荐</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">26</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/guadzilla" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;guadzilla" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/374733751@qq.com" title="E-Mail → 374733751@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      学习资料
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://space.bilibili.com/1567748478" title="https:&#x2F;&#x2F;space.bilibili.com&#x2F;1567748478" rel="noopener" target="_blank">跟李沐学AI</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zyh</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
+
+</body>
+</html>
