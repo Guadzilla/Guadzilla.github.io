@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"guadzilla.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Task01：环境搭建，初识数据库SQL 环境搭建主要 follw 教程：https:&#x2F;&#x2F;github.com&#x2F;datawhalechina&#x2F;wonderful-sql">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SQL组队学习01：环境搭建，初识数据库">
+<meta property="og:url" content="http://guadzilla.github.io/2022/06/14/SQL%E7%BB%84%E9%98%9F%E5%AD%A6%E4%B9%A001%EF%BC%9A%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%EF%BC%8C%E5%88%9D%E8%AF%86%E6%95%B0%E6%8D%AE%E5%BA%93/index.html">
+<meta property="og:site_name" content="瓜斯拉的逆袭">
+<meta property="og:description" content="Task01：环境搭建，初识数据库SQL 环境搭建主要 follw 教程：https:&#x2F;&#x2F;github.com&#x2F;datawhalechina&#x2F;wonderful-sql">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220710185610866.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220710190234782.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220712000449258.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220712000537847.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220712001902049.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220712002519329.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220712002054990.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220712224235900.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220712224503279.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220712224537910.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220712224626807.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220712225215297.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220712225543281.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220712225751354.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220712230108663.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220712230844459.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220712231249778.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220712231436444.png">
+<meta property="article:published_time" content="2022-06-14T14:39:02.000Z">
+<meta property="article:modified_time" content="2022-07-12T15:28:21.259Z">
+<meta property="article:author" content="Guadzilla">
+<meta property="article:tag" content="Datawhale组队学习">
+<meta property="article:tag" content="SQL">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220710185610866.png">
+
+<link rel="canonical" href="http://guadzilla.github.io/2022/06/14/SQL%E7%BB%84%E9%98%9F%E5%AD%A6%E4%B9%A001%EF%BC%9A%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%EF%BC%8C%E5%88%9D%E8%AF%86%E6%95%B0%E6%8D%AE%E5%BA%93/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>SQL组队学习01：环境搭建，初识数据库 | 瓜斯拉的逆袭</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?41fc030db57d5570dd22f78997dc4a7e";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">瓜斯拉的逆袭</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://guadzilla.github.io/2022/06/14/SQL%E7%BB%84%E9%98%9F%E5%AD%A6%E4%B9%A001%EF%BC%9A%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%EF%BC%8C%E5%88%9D%E8%AF%86%E6%95%B0%E6%8D%AE%E5%BA%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+      <meta itemprop="name" content="Guadzilla">
+      <meta itemprop="description" content="大连理工大学在读硕士，研究方向为：NLP/序列推荐">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="瓜斯拉的逆袭">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          SQL组队学习01：环境搭建，初识数据库
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-06-14 22:39:02" itemprop="dateCreated datePublished" datetime="2022-06-14T22:39:02+08:00">2022-06-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-12 23:28:21" itemprop="dateModified" datetime="2022-07-12T23:28:21+08:00">2022-07-12</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" itemprop="url" rel="index"><span itemprop="name">数据库</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>7.6k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>19 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Task01：环境搭建，初识数据库"><a href="#Task01：环境搭建，初识数据库" class="headerlink" title="Task01：环境搭建，初识数据库"></a>Task01：环境搭建，初识数据库</h1><h1 id="SQL-环境搭建"><a href="#SQL-环境搭建" class="headerlink" title="SQL 环境搭建"></a>SQL 环境搭建</h1><p>主要 follw 教程：<a target="_blank" rel="noopener" href="https://github.com/datawhalechina/wonderful-sql">https://github.com/datawhalechina/wonderful-sql</a></p>
+<span id="more"></span>
+<h2 id="1-安装-MySQL"><a href="#1-安装-MySQL" class="headerlink" title="1 安装 MySQL"></a>1 安装 MySQL</h2><p>系统为 MacOS ，根据教程一步步来，很简单。</p>
+<h2 id="2-DataGrip-的安装和连接MySQL"><a href="#2-DataGrip-的安装和连接MySQL" class="headerlink" title="2 DataGrip 的安装和连接MySQL"></a>2 DataGrip 的安装和连接MySQL</h2><p>安装好 MySQL 以后，使用 DataGrip 连接。DataGrip 教程：<a target="_blank" rel="noopener" href="https://www.jetbrains.com/help/datagrip/quick-start-with-datagrip.html">https://www.jetbrains.com/help/datagrip/quick-start-with-datagrip.html</a></p>
+<h2 id="3-创建学习用的数据库"><a href="#3-创建学习用的数据库" class="headerlink" title="3 创建学习用的数据库"></a>3 创建学习用的数据库</h2><p>根据《SQL基础教程》提供的MySQL版本的数据库,数据表的创建以及数据导入的代码, 经过一些修改, 创建了一份 sql 脚本, 运行该脚本可以一步到位地创建本文档所需的数据库shop及其中所有的表,并插入本教程所需要的所有数据。</p>
+<p>下述SQL脚本可用于创建本教程所使用的示例数据库 <code>shop</code> 以及数据库中表的创建和数据的插入。</p>
+<p>详见 <code>./materials/shop.sql</code></p>
+<p>将<code>shop.sql</code>复制到在 DataGrip 里并运行</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220710185610866.png" alt="image-20220710185610866"></p>
+<h3 id="3-1-执行-SQL-查询"><a href="#3-1-执行-SQL-查询" class="headerlink" title="3.1 执行 SQL 查询"></a>3.1 执行 SQL 查询</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> shopproduct <span class="keyword">where</span> quantity <span class="operator">&gt;</span> <span class="number">100</span>;</span><br></pre></td></tr></table></figure>
+<p>查询结果</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220710190234782.png" alt="image-20220710190234782"></p>
+<h1 id="SQL-初识数据库"><a href="#SQL-初识数据库" class="headerlink" title="SQL 初识数据库"></a>SQL 初识数据库</h1><h2 id="1-1-初识数据库"><a href="#1-1-初识数据库" class="headerlink" title="1.1 初识数据库"></a>1.1 初识数据库</h2><p>数据库（Database，DB）：将大量数据保存起来，通过计算机加工而成的可以进行高效访问的数据集合</p>
+<p>数据库管理系统（Database Management System，DBMS）：用来管理数据库的计算机系统</p>
+<h3 id="1-1-1-DBMS的种类"><a href="#1-1-1-DBMS的种类" class="headerlink" title="1.1.1 DBMS的种类"></a>1.1.1 DBMS的种类</h3><p>DBMS 主要通过数据的保存格式（数据库的种类）来进行分类，现阶段主要有以下 5 种类型：</p>
+<ul>
+<li><p>层次数据库（Hierarchical Database，HDB）</p>
+</li>
+<li><p>关系数据库（Relational Database，RDB）</p>
+<ul>
+<li>Oracle Database：甲骨文公司的RDBMS</li>
+<li>SQL Server：微软公司的RDBMS</li>
+<li>DB2：IBM公司的RDBMS</li>
+<li>PostgreSQL：开源的RDBMS</li>
+<li>MySQL：开源的RDBMS</li>
+</ul>
+<p>如上是5种具有代表性的RDBMS，其特点是由行和列组成的二维表来管理数据，这种类型的 DBMS 称为<strong>关系数据库管理系统</strong>（Relational Database Management System，RDBMS）。</p>
+</li>
+<li><p>面向对象数据库（Object Oriented Database，OODB）</p>
+</li>
+<li><p>XML数据库（XML Database，XMLDB）</p>
+</li>
+<li><p>键值存储系统（Key-Value Store，KVS），举例：MongoDB</p>
+</li>
+</ul>
+<h3 id="1-1-2-RDBMS的常见系统结构"><a href="#1-1-2-RDBMS的常见系统结构" class="headerlink" title="1.1.2 RDBMS的常见系统结构"></a>1.1.2 RDBMS的常见系统结构</h3><p>客户端 / 服务器类型（C/S类型）</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220712000449258.png" alt="image-20220712000449258"></p>
+<h2 id="1-2-初识SQL"><a href="#1-2-初识SQL" class="headerlink" title="1.2 初识SQL"></a>1.2 初识SQL</h2><p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220712000537847.png" alt="image-20220712000537847"></p>
+<p>数据库存储的表结构类似与excel的行和列，每一行称为一条<strong>记录</strong>，每一列称为一个<strong>字段</strong>。</p>
+<p>SQL语句可以分为以下三类：</p>
+<ul>
+<li><strong>DDL</strong> ：DDL（Data Definition Language，数据定义语言） 用来创建或者删除存储数据用的数据库以及数据库中的表等对象。DDL 包含以下几种指令。<ul>
+<li>CREATE ： 创建数据库和表等对象</li>
+<li>DROP ： 删除数据库和表等对象</li>
+<li>ALTER ： 修改数据库和表等对象的结构</li>
+</ul>
+</li>
+<li><strong>DML</strong> :DML（Data Manipulation Language，数据操纵语言） 用来查询或者变更表中的记录。DML 包含以下几种指令。（<strong>增删改查</strong>）<ul>
+<li>SELECT ：查询表中的数据</li>
+<li>INSERT ：向表中插入新数据</li>
+<li>UPDATE ：更新表中的数据</li>
+<li>DELETE ：删除表中的数据</li>
+</ul>
+</li>
+<li><strong>DCL</strong> ：DCL（Data Control Language，数据控制语言） 用来确认或者取消对数据库中的数据进行的变更。除此之外，还可以对 RDBMS 的用户是否有权限操作数据库中的对象（数据库表等）进行设定。DCL 包含以下几种指令。<ul>
+<li>COMMIT ： 确认对数据库中的数据进行的变更</li>
+<li>ROLLBACK ： 取消对数据库中的数据进行的变更</li>
+<li>GRANT ： 赋予用户操作权限</li>
+<li>REVOKE ： 取消用户的操作权限</li>
+</ul>
+</li>
+</ul>
+<p>实际使用的 SQL 语句当中有 90% 属于 DML，本书同样会以 DML 为中心进行讲解。</p>
+<h2 id="1-2-SQL语句"><a href="#1-2-SQL语句" class="headerlink" title="1.2 SQL语句"></a>1.2 SQL语句</h2><h3 id="1-2-1-SQL的基本书写规则"><a href="#1-2-1-SQL的基本书写规则" class="headerlink" title="1.2.1 SQL的基本书写规则"></a>1.2.1 SQL的基本书写规则</h3><p><strong>SQL语法规范总得的原则是，清楚、易读并且层次清晰。</strong>实际场景中常常动辄几百上千行的SQL语句，如果不写清楚，事后review或者别人接手的时候，会让人怀疑人生。</p>
+<p>当然这些规范都是笔者根据实际经验总结归纳的，并不是金科铁律，但是强烈建议新手按以下规范入门编写SQL语句。</p>
+<p><strong>常见注意事项如下：</strong></p>
+<ol>
+<li>MySQL本身不区分大小写，但<strong>强烈要求关键字大写</strong>，表名、列名用小写；</li>
+<li>创建表时，使用统一的、描述性强的字段命名规则保证字段名是独一无二且不是保留字的，不要使用连续的下划线，不用下划线结尾；最好以字母开头</li>
+<li>关键字右对齐，且不同层级的用空格或缩进控制，使其区分开，见样例二；</li>
+<li>列名少的时候写在一行里无伤大雅；多的时候以及涉及到CASE WHEN 或者聚合计算的时候，建议分行写；个人习惯是逗号在列名前面，方便之后删除某些列，放列名后亦可；</li>
+<li>表别名和列别名尽量用有具体含义的词组，不要用a b c，不然以后review的时候会非常痛苦；</li>
+<li>运算符前后都加一个空格；</li>
+<li>当用到多个表时，请在所有列名前写上引用的表别名，不要嫌麻烦；</li>
+<li>每条命令用分号结尾；</li>
+<li>养成随手写注释的习惯，注释方法：</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">单行注释 #注释文字</span><br><span class="line">单行注释 -- 注释文字</span><br><span class="line">多行注释：/* 注释文字 */</span><br></pre></td></tr></table></figure>
+<p>P.S. 养成良好的书写习惯，可以避免以后发生流血事件  →_→</p>
+<h3 id="1-2-2-数据库的创建（CREATE-DATABASE-语句）"><a href="#1-2-2-数据库的创建（CREATE-DATABASE-语句）" class="headerlink" title="1.2.2 数据库的创建（CREATE DATABASE 语句）"></a>1.2.2 数据库的创建（CREATE DATABASE 语句）</h3><p>语法：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> DATABASE <span class="operator">&lt;</span> 数据库名称 <span class="operator">&gt;</span> ;</span><br></pre></td></tr></table></figure>
+<p>创建本课程使用的数据库；因为之前已经用脚本创建过 DATABASE shop 了，这里数据库名改为 shop_test：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> DATABASE shop_test;</span><br></pre></td></tr></table></figure>
+<p>如图，创建成功空数据库</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220712001902049.png" alt="image-20220712001902049"></p>
+<h3 id="1-2-3-表的创建（-CREATE-TABLE-语句）"><a href="#1-2-3-表的创建（-CREATE-TABLE-语句）" class="headerlink" title="1.2.3 表的创建（ CREATE TABLE 语句）"></a>1.2.3 表的创建（ CREATE TABLE 语句）</h3><p>语法：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="operator">&lt;</span> 表名 <span class="operator">&gt;</span></span><br><span class="line">( <span class="operator">&lt;</span> 列名 <span class="number">1</span><span class="operator">&gt;</span> <span class="operator">&lt;</span> 数据类型 <span class="operator">&gt;</span> <span class="operator">&lt;</span> 该列所需约束 <span class="operator">&gt;</span> ,</span><br><span class="line">  <span class="operator">&lt;</span> 列名 <span class="number">2</span><span class="operator">&gt;</span> <span class="operator">&lt;</span> 数据类型 <span class="operator">&gt;</span> <span class="operator">&lt;</span> 该列所需约束 <span class="operator">&gt;</span> ,</span><br><span class="line">  <span class="operator">&lt;</span> 列名 <span class="number">3</span><span class="operator">&gt;</span> <span class="operator">&lt;</span> 数据类型 <span class="operator">&gt;</span> <span class="operator">&lt;</span> 该列所需约束 <span class="operator">&gt;</span> ,</span><br><span class="line">  <span class="operator">&lt;</span> 列名 <span class="number">4</span><span class="operator">&gt;</span> <span class="operator">&lt;</span> 数据类型 <span class="operator">&gt;</span> <span class="operator">&lt;</span> 该列所需约束 <span class="operator">&gt;</span> ,</span><br><span class="line">  .</span><br><span class="line">  .</span><br><span class="line">  .</span><br><span class="line">  <span class="operator">&lt;</span> 该表的约束 <span class="number">1</span><span class="operator">&gt;</span> , <span class="operator">&lt;</span> 该表的约束 <span class="number">2</span><span class="operator">&gt;</span> ,……);</span><br></pre></td></tr></table></figure>
+<p>创建本课程用到的商品表，照着敲</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> product</span><br><span class="line">(product_id <span class="type">CHAR</span>(<span class="number">4</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line"> product_name <span class="type">VARCHAR</span>(<span class="number">100</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line"> product_type <span class="type">VARCHAR</span>(<span class="number">32</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line"> sale_price <span class="type">INTEGER</span> ,</span><br><span class="line"> purchase_price <span class="type">INTEGER</span> ,</span><br><span class="line"> regist_date <span class="type">DATE</span> ,</span><br><span class="line"> <span class="keyword">PRIMARY</span> KEY (product_id));</span><br></pre></td></tr></table></figure>
+<p>创建成功如下：</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220712002519329.png" alt="image-20220712002519329"></p>
+<p>其中 product 列名称的解释：</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220712002054990.png" alt="image-20220712002054990"></p>
+<h3 id="1-2-4-数据类型"><a href="#1-2-4-数据类型" class="headerlink" title="1.2.4 数据类型"></a>1.2.4 数据类型</h3><p>数据库创建的表，所有的列都必须指定数据类型，每一列都不能存储与该列数据类型不符的数据。</p>
+<p>四种最基本的数据类型</p>
+<ul>
+<li>INTEGER 型</li>
+</ul>
+<p>用来指定存储整数的列的数据类型（数字型），不能存储小数。</p>
+<ul>
+<li>CHAR 型</li>
+</ul>
+<p>用来存储<strong>定长字符串</strong>，当列中存储的字符串长度达不到最大长度的时候，使用半角空格进行补足，由于会浪费存储空间，所以一般不使用。</p>
+<ul>
+<li>VARCHAR 型</li>
+</ul>
+<p>用来存储<strong>可变长度字符串</strong>，定长字符串在字符数未达到最大长度时会用半角空格补足，但可变长字符串不同，即使字符数未达到最大长度，也不会用半角空格补足。</p>
+<ul>
+<li>DATE 型</li>
+</ul>
+<p>用来指定存储日期（年月日）的列的数据类型（日期型）。</p>
+<blockquote>
+<p>CHAR 是定长字符串，VARCHAR 是变长字符串</p>
+</blockquote>
+<h3 id="1-2-5-约束的设置"><a href="#1-2-5-约束的设置" class="headerlink" title="1.2.5 约束的设置"></a>1.2.5 约束的设置</h3><p>约束是除了数据类型之外，对列中存储的数据进行限制或者追加条件的功能。</p>
+<p><code>NOT NULL</code>是非空约束，即该列必须输入数据。</p>
+<p><code>PRIMARY KEY</code>是主键约束，代表该列是唯一值，可以通过该列取出特定的行的数据。</p>
+<h3 id="1-2-6-表的删除和更新"><a href="#1-2-6-表的删除和更新" class="headerlink" title="1.2.6 表的删除和更新"></a>1.2.6 表的删除和更新</h3><ul>
+<li>删除表的语法：</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> <span class="operator">&lt;</span> 表名 <span class="operator">&gt;</span> ;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>删除 product 表</li>
+</ul>
+<p>需要特别注意的是，<strong>删除的表是无法恢复的</strong>，只能重新插入，请执行删除操作时要特别谨慎。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> product;</span><br></pre></td></tr></table></figure>
+<p>表已删除：</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220712224235900.png" alt="image-20220712224235900"></p>
+<ul>
+<li>添加列的 ALTER TABLE 语句</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> <span class="operator">&lt;</span> 表名 <span class="operator">&gt;</span> <span class="keyword">ADD</span> <span class="keyword">COLUMN</span> <span class="operator">&lt;</span> 列的定义 <span class="operator">&gt;</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>添加一列可以存储100位的可变长字符串的 product_name_pinyin 列</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> product <span class="keyword">ADD</span> <span class="keyword">COLUMN</span> product_name_pinyin <span class="type">VARCHAR</span>(<span class="number">100</span>);</span><br></pre></td></tr></table></figure>
+<p>重新建表并添加列：</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220712224503279.png" alt="image-20220712224503279" style="zoom:50%;" /><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220712224537910.png" alt="image-20220712224537910" style="zoom:50%;" /></p>
+<ul>
+<li>删除列的 ALTER TABLE 语句</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> <span class="operator">&lt;</span> 表名 <span class="operator">&gt;</span> <span class="keyword">DROP</span> <span class="keyword">COLUMN</span> <span class="operator">&lt;</span> 列名 <span class="operator">&gt;</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>删除 product_name_pinyin 列</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> product <span class="keyword">DROP</span> <span class="keyword">COLUMN</span> product_name_pinyin;</span><br></pre></td></tr></table></figure>
+<p>删除后恢复到添加列之前：</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220712224626807.png" alt="image-20220712224626807"></p>
+<ul>
+<li>删除表中特定的<strong>行</strong>（语法）</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 一定注意添加 WHERE 条件，否则将会删除所有的数据</span></span><br><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> product <span class="keyword">WHERE</span> COLUMN_NAME<span class="operator">=</span><span class="string">&#x27;XXX&#x27;</span>;</span><br></pre></td></tr></table></figure>
+<p>ALTER TABLE 语句和 DROP TABLE 语句一样，执行之后<strong>无法恢复</strong>。误添加的列可以通过 ALTER TABLE 语句删除，或者将表全部删除之后重新再创建。 【扩展内容】</p>
+<ul>
+<li>清空表内容</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">TRUNCATE</span> <span class="keyword">TABLE</span> TABLE_NAME;</span><br></pre></td></tr></table></figure>
+<p>优点：相比<code>drop / delete</code>，<code>truncate</code>用来清除数据时，<strong>速度最快</strong>。</p>
+<ul>
+<li>数据的更新</li>
+</ul>
+<p>基本语法：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">UPDATE <span class="operator">&lt;</span>表名<span class="operator">&gt;</span></span><br><span class="line">   <span class="keyword">SET</span> <span class="operator">&lt;</span>列名<span class="operator">&gt;</span> <span class="operator">=</span> <span class="operator">&lt;</span>表达式<span class="operator">&gt;</span> [, <span class="operator">&lt;</span>列名<span class="number">2</span><span class="operator">&gt;=</span><span class="operator">&lt;</span>表达式<span class="number">2</span><span class="operator">&gt;</span>...]  </span><br><span class="line"> <span class="keyword">WHERE</span> <span class="operator">&lt;</span>条件<span class="operator">&gt;</span>  <span class="comment">-- 可选，非常重要</span></span><br><span class="line"> <span class="keyword">ORDER</span> <span class="keyword">BY</span> 子句  <span class="comment">--可选</span></span><br><span class="line"> LIMIT 子句; <span class="comment">--可选</span></span><br></pre></td></tr></table></figure>
+<p><strong>使用 update 时要注意添加 where 条件，否则将会将所有的行按照语句修改</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 修改所有的注册时间</span></span><br><span class="line">UPDATE product</span><br><span class="line">   <span class="keyword">SET</span> regist_date <span class="operator">=</span> <span class="string">&#x27;2009-10-10&#x27;</span>;  </span><br><span class="line"><span class="comment">-- 仅修改部分商品的单价</span></span><br><span class="line">UPDATE product</span><br><span class="line">   <span class="keyword">SET</span> sale_price <span class="operator">=</span> sale_price <span class="operator">*</span> <span class="number">10</span></span><br><span class="line"> <span class="keyword">WHERE</span> product_type <span class="operator">=</span> <span class="string">&#x27;厨房用具&#x27;</span>;  </span><br></pre></td></tr></table></figure>
+<p>使用 UPDATE 也可以将列更新为 NULL（该更新俗称为NULL清空）。此时只需要将赋值表达式右边的值直接写为 NULL 即可。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 将商品编号为0008的数据（圆珠笔）的登记日期更新为NULL  </span></span><br><span class="line">UPDATE product</span><br><span class="line">   <span class="keyword">SET</span> regist_date <span class="operator">=</span> <span class="keyword">NULL</span></span><br><span class="line"> <span class="keyword">WHERE</span> product_id <span class="operator">=</span> <span class="string">&#x27;0008&#x27;</span>;  </span><br></pre></td></tr></table></figure>
+<p>和 INSERT 语句一样， UPDATE 语句也可以将 NULL 作为一个值来使用。 <strong>但是，只有未设置 NOT NULL 约束和主键约束的列才可以清空为NULL。</strong>如果将设置了上述约束的列更新为 NULL，就会出错，这点与INSERT 语句相同。</p>
+<p>多列更新</p>
+<p>UPDATE 语句的 SET 子句支持同时将多个列作为更新对象。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 基础写法，一条UPDATE语句只更新一列</span></span><br><span class="line">UPDATE product</span><br><span class="line">   <span class="keyword">SET</span> sale_price <span class="operator">=</span> sale_price <span class="operator">*</span> <span class="number">10</span></span><br><span class="line"> <span class="keyword">WHERE</span> product_type <span class="operator">=</span> <span class="string">&#x27;厨房用具&#x27;</span>;</span><br><span class="line">UPDATE product</span><br><span class="line">   <span class="keyword">SET</span> purchase_price <span class="operator">=</span> purchase_price <span class="operator">/</span> <span class="number">2</span></span><br><span class="line"> <span class="keyword">WHERE</span> product_type <span class="operator">=</span> <span class="string">&#x27;厨房用具&#x27;</span>;  </span><br></pre></td></tr></table></figure>
+<p>该写法可以得到正确结果，但是代码较为繁琐。可以采用合并的方法来简化代码。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 合并后的写法</span></span><br><span class="line">UPDATE product</span><br><span class="line">   <span class="keyword">SET</span> sale_price <span class="operator">=</span> sale_price <span class="operator">*</span> <span class="number">10</span>,</span><br><span class="line">       purchase_price <span class="operator">=</span> purchase_price <span class="operator">/</span> <span class="number">2</span></span><br><span class="line"> <span class="keyword">WHERE</span> product_type <span class="operator">=</span> <span class="string">&#x27;厨房用具&#x27;</span>;  </span><br></pre></td></tr></table></figure>
+<p>需要明确的是，SET 子句中的列不仅可以是两列，还可以是三列或者更多。</p>
+<h3 id="1-2-7-向-product-表中插入数据"><a href="#1-2-7-向-product-表中插入数据" class="headerlink" title="1.2.7 向 product 表中插入数据"></a>1.2.7 向 product 表中插入数据</h3><p>为了学习 <code>INSERT</code> 语句用法，我们首先创建一个名为 productins 的表，建表语句如下：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> productins</span><br><span class="line">(product_id    <span class="type">CHAR</span>(<span class="number">4</span>)      <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">product_name   <span class="type">VARCHAR</span>(<span class="number">100</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">product_type   <span class="type">VARCHAR</span>(<span class="number">32</span>)  <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">sale_price     <span class="type">INTEGER</span>      <span class="keyword">DEFAULT</span> <span class="number">0</span>,</span><br><span class="line">purchase_price <span class="type">INTEGER</span> ,</span><br><span class="line">regist_date    <span class="type">DATE</span> ,</span><br><span class="line"><span class="keyword">PRIMARY</span> KEY (product_id)); </span><br></pre></td></tr></table></figure>
+<p>建表如下，product_id 为主键：</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220712225215297.png" alt="image-20220712225215297"></p>
+<p>插入语句的基本语法：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="operator">&lt;</span>表名<span class="operator">&gt;</span> (列<span class="number">1</span>, 列<span class="number">2</span>, 列<span class="number">3</span>, ……) <span class="keyword">VALUES</span> (值<span class="number">1</span>, 值<span class="number">2</span>, 值<span class="number">3</span>, ……);  </span><br></pre></td></tr></table></figure>
+<p>对表进行<strong>全列 INSERT 时</strong>，可以省略表名后的列清单。这时 VALUES子句的值会默认按照从左到右的顺序赋给每一列。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 包含列清单</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> productins (product_id, product_name, product_type, sale_price, purchase_price, regist_date) <span class="keyword">VALUES</span> (<span class="string">&#x27;0006&#x27;</span>, <span class="string">&#x27;电饭煲&#x27;</span>, <span class="string">&#x27;厨房用具&#x27;</span>, <span class="number">1500</span>, <span class="number">1000</span>, <span class="string">&#x27;2022-07-12&#x27;</span>);</span><br><span class="line"><span class="comment">-- 省略列清单</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> productins <span class="keyword">VALUES</span> (<span class="string">&#x27;0005&#x27;</span>, <span class="string">&#x27;高压锅&#x27;</span>, <span class="string">&#x27;厨房用具&#x27;</span>, <span class="number">6800</span>, <span class="number">5000</span>, <span class="string">&#x27;2009-01-15&#x27;</span>);  </span><br></pre></td></tr></table></figure>
+<p>都成功插入一条记录：</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220712225543281.png" alt="image-20220712225543281"></p>
+<p>原则上，执行一次 INSERT 语句会插入一行数据。插入多行时，通常需要循环执行相应次数的 INSERT 语句。其实很多 RDBMS 都支持一次插入多行数据</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 多行INSERT （ DB2、SQL、SQL Server、 PostgreSQL 和 MySQL多行插入）</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> productins <span class="keyword">VALUES</span> (<span class="string">&#x27;0002&#x27;</span>, <span class="string">&#x27;打孔器&#x27;</span>, <span class="string">&#x27;办公用品&#x27;</span>, <span class="number">500</span>, <span class="number">320</span>, <span class="string">&#x27;2009-09-11&#x27;</span>),</span><br><span class="line">                              (<span class="string">&#x27;0003&#x27;</span>, <span class="string">&#x27;运动T恤&#x27;</span>, <span class="string">&#x27;衣服&#x27;</span>, <span class="number">4000</span>, <span class="number">2800</span>, <span class="keyword">NULL</span>),</span><br><span class="line">                              (<span class="string">&#x27;0004&#x27;</span>, <span class="string">&#x27;菜刀&#x27;</span>, <span class="string">&#x27;厨房用具&#x27;</span>, <span class="number">3000</span>, <span class="number">2800</span>, <span class="string">&#x27;2009-09-20&#x27;</span>);   </span><br></pre></td></tr></table></figure>
+<p>结果如下：</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220712225751354.png" alt="image-20220712225751354"></p>
+<h3 id="1-2-7-从其他表插入"><a href="#1-2-7-从其他表插入" class="headerlink" title="1.2.7* 从其他表插入"></a>1.2.7* 从其他表插入</h3><p>可以使用INSERT … SELECT 语句从其他表复制数据。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 将productins表中的数据复制到product表中</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> product (product_id, product_name, product_type, sale_price, purchase_price, regist_date)</span><br><span class="line"><span class="keyword">SELECT</span> product_id, product_name, product_type, sale_price, purchase_price, regist_date</span><br><span class="line">  <span class="keyword">FROM</span> productins;  </span><br></pre></td></tr></table></figure>
+<p>把productins表的内容复制到了product中：</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220712230108663.png" alt="image-20220712230108663"></p>
+<h3 id="1-2-8-索引"><a href="#1-2-8-索引" class="headerlink" title="1.2.8 索引"></a>1.2.8 索引</h3><ul>
+<li>索引的作用</li>
+</ul>
+<p>MySQL索引的建立对于MySQL的高效运行是很重要的，索引可以大大提高MySQL的检索速度。</p>
+<p>拿汉语字典的目录页（索引）打比方，我们可以按拼音、笔画、偏旁部首等排序的目录（索引）快速查找到需要的字。</p>
+<p>索引创建了一种有序的数据结构，采用二分法搜索数据时，其复杂度为 O(logN) ，1000多万的数据只要搜索23次，其效率是非常高效的。</p>
+<ul>
+<li>如何创建索引（两种方式）</li>
+</ul>
+<p>创建表时可以直接创建索引，语法如下：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 创建表时就建立索引</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> mytable(  </span><br><span class="line"> </span><br><span class="line">ID <span class="type">INT</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,   </span><br><span class="line"> </span><br><span class="line">username <span class="type">VARCHAR</span>(<span class="number">16</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,  </span><br><span class="line"> </span><br><span class="line">INDEX [indexName] (username(length))  </span><br><span class="line"> </span><br><span class="line">);  </span><br></pre></td></tr></table></figure>
+<p>也可以使用如下语句创建：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 方法1</span></span><br><span class="line"><span class="keyword">CREATE</span> INDEX indexName <span class="keyword">ON</span> table_name (column_name)</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 方法2</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">table</span> tableName <span class="keyword">ADD</span> INDEX indexName(columnName)</span><br></pre></td></tr></table></figure>
+<h1 id="练习题"><a href="#练习题" class="headerlink" title="练习题"></a>练习题</h1><h2 id="1-1"><a href="#1-1" class="headerlink" title="1.1"></a>1.1</h2><p>编写一条 CREATE TABLE 语句，用来创建一个包含表 1-A 中所列各项的表 Addressbook （地址簿），并为 regist_no （注册编号）列设置主键约束</p>
+<p>表1-A　表 Addressbook （地址簿）中的列</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220712230844459.png" alt="image-20220712230844459"></p>
+<p>答：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Addressbook(</span><br><span class="line">    regist_no <span class="type">INTEGER</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span> ,</span><br><span class="line">    name <span class="type">VARCHAR</span>(<span class="number">128</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> ,</span><br><span class="line">    tel_no <span class="type">CHAR</span>(<span class="number">10</span>) ,</span><br><span class="line">    mail_address <span class="type">CHAR</span>(<span class="number">20</span>),</span><br><span class="line">    <span class="keyword">PRIMARY</span> KEY (regist_no)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220712231249778.png" alt="image-20220712231249778"></p>
+<h2 id="1-2"><a href="#1-2" class="headerlink" title="1.2"></a>1.2</h2><p>假设在创建练习1.1中的 Addressbook 表时忘记添加如下一列 postal_code （邮政编码）了，请编写 SQL 把此列添加到 Addressbook 表中。</p>
+<p>列名 ： postal_code</p>
+<p>数据类型 ：定长字符串类型（长度为 8）</p>
+<p>约束 ：不能为 NULL</p>
+<p>答：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> Addressbook <span class="keyword">ADD</span> <span class="keyword">COLUMN</span> postal_code <span class="type">CHAR</span>(<span class="number">8</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> ;</span><br></pre></td></tr></table></figure>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20220712231436444.png" alt="image-20220712231436444"></p>
+<h2 id="1-3-填空题"><a href="#1-3-填空题" class="headerlink" title="1.3 填空题"></a>1.3 填空题</h2><p>请补充如下 SQL 语句来删除 Addressbook 表。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(  DROP  ) table Addressbook;</span><br></pre></td></tr></table></figure>
+<h2 id="1-4-判断题"><a href="#1-4-判断题" class="headerlink" title="1.4 判断题"></a>1.4 判断题</h2><p>是否可以编写 SQL 语句来恢复删除掉的 Addressbook 表？</p>
+<p>答：不可以。ALTER TABLE 语句和 DROP TABLE 语句一样，执行之后<strong>无法恢复</strong>。</p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p>wonderful-sql 教程：<a target="_blank" rel="noopener" href="https://github.com/datawhalechina/wonderful-sql/blob/main/ch01:%20%E5%88%9D%E8%AF%86%E6%95%B0%E6%8D%AE%E5%BA%93.md">https://github.com/datawhalechina/wonderful-sql/blob/main/ch01:%20%E5%88%9D%E8%AF%86%E6%95%B0%E6%8D%AE%E5%BA%93.md</a></p>
+<p>SQL语法规范：<a target="_blank" rel="noopener" href="https://github.com/datawhalechina/wonderful-sql/blob/main/materials/%E9%99%84%E5%BD%951%EF%BC%9ASQL%E8%AF%AD%E6%B3%95%E8%A7%84%E8%8C%83.md">https://github.com/datawhalechina/wonderful-sql/blob/main/materials/%E9%99%84%E5%BD%951%EF%BC%9ASQL%E8%AF%AD%E6%B3%95%E8%A7%84%E8%8C%83.md</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Datawhale%E7%BB%84%E9%98%9F%E5%AD%A6%E4%B9%A0/" rel="tag"># Datawhale组队学习</a>
+              <a href="/tags/SQL/" rel="tag"># SQL</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/05/22/CoHHN/" rel="prev" title="论文笔记：《Price DOES Matter! Modeling Price and Interest Preferences in Session-based Recommendation》">
+      <i class="fa fa-chevron-left"></i> 论文笔记：《Price DOES Matter! Modeling Price and Interest Preferences in Session-based Recommendation》
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/06/14/RecHub%E6%8E%A8%E8%8D%90%E9%A1%B9%E7%9B%AE%E5%AD%A6%E4%B9%A01/" rel="next" title="RecHub推荐项目学习1：Torch-RecHub框架">
+      RecHub推荐项目学习1：Torch-RecHub框架 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC81NDcyNC8zMTE5NQ=="></div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Task01%EF%BC%9A%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%EF%BC%8C%E5%88%9D%E8%AF%86%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">1.</span> <span class="nav-text">Task01：环境搭建，初识数据库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SQL-%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="nav-number">2.</span> <span class="nav-text">SQL 环境搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%AE%89%E8%A3%85-MySQL"><span class="nav-number">2.1.</span> <span class="nav-text">1 安装 MySQL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-DataGrip-%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E8%BF%9E%E6%8E%A5MySQL"><span class="nav-number">2.2.</span> <span class="nav-text">2 DataGrip 的安装和连接MySQL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E5%88%9B%E5%BB%BA%E5%AD%A6%E4%B9%A0%E7%94%A8%E7%9A%84%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">2.3.</span> <span class="nav-text">3 创建学习用的数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E6%89%A7%E8%A1%8C-SQL-%E6%9F%A5%E8%AF%A2"><span class="nav-number">2.3.1.</span> <span class="nav-text">3.1 执行 SQL 查询</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SQL-%E5%88%9D%E8%AF%86%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">3.</span> <span class="nav-text">SQL 初识数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-%E5%88%9D%E8%AF%86%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">3.1.</span> <span class="nav-text">1.1 初识数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-1-DBMS%E7%9A%84%E7%A7%8D%E7%B1%BB"><span class="nav-number">3.1.1.</span> <span class="nav-text">1.1.1 DBMS的种类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-2-RDBMS%E7%9A%84%E5%B8%B8%E8%A7%81%E7%B3%BB%E7%BB%9F%E7%BB%93%E6%9E%84"><span class="nav-number">3.1.2.</span> <span class="nav-text">1.1.2 RDBMS的常见系统结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-%E5%88%9D%E8%AF%86SQL"><span class="nav-number">3.2.</span> <span class="nav-text">1.2 初识SQL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-SQL%E8%AF%AD%E5%8F%A5"><span class="nav-number">3.3.</span> <span class="nav-text">1.2 SQL语句</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-1-SQL%E7%9A%84%E5%9F%BA%E6%9C%AC%E4%B9%A6%E5%86%99%E8%A7%84%E5%88%99"><span class="nav-number">3.3.1.</span> <span class="nav-text">1.2.1 SQL的基本书写规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-2-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%88%9B%E5%BB%BA%EF%BC%88CREATE-DATABASE-%E8%AF%AD%E5%8F%A5%EF%BC%89"><span class="nav-number">3.3.2.</span> <span class="nav-text">1.2.2 数据库的创建（CREATE DATABASE 语句）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-3-%E8%A1%A8%E7%9A%84%E5%88%9B%E5%BB%BA%EF%BC%88-CREATE-TABLE-%E8%AF%AD%E5%8F%A5%EF%BC%89"><span class="nav-number">3.3.3.</span> <span class="nav-text">1.2.3 表的创建（ CREATE TABLE 语句）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-4-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.3.4.</span> <span class="nav-text">1.2.4 数据类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-5-%E7%BA%A6%E6%9D%9F%E7%9A%84%E8%AE%BE%E7%BD%AE"><span class="nav-number">3.3.5.</span> <span class="nav-text">1.2.5 约束的设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-6-%E8%A1%A8%E7%9A%84%E5%88%A0%E9%99%A4%E5%92%8C%E6%9B%B4%E6%96%B0"><span class="nav-number">3.3.6.</span> <span class="nav-text">1.2.6 表的删除和更新</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-7-%E5%90%91-product-%E8%A1%A8%E4%B8%AD%E6%8F%92%E5%85%A5%E6%95%B0%E6%8D%AE"><span class="nav-number">3.3.7.</span> <span class="nav-text">1.2.7 向 product 表中插入数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-7-%E4%BB%8E%E5%85%B6%E4%BB%96%E8%A1%A8%E6%8F%92%E5%85%A5"><span class="nav-number">3.3.8.</span> <span class="nav-text">1.2.7* 从其他表插入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-8-%E7%B4%A2%E5%BC%95"><span class="nav-number">3.3.9.</span> <span class="nav-text">1.2.8 索引</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%83%E4%B9%A0%E9%A2%98"><span class="nav-number">4.</span> <span class="nav-text">练习题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1"><span class="nav-number">4.1.</span> <span class="nav-text">1.1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2"><span class="nav-number">4.2.</span> <span class="nav-text">1.2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-%E5%A1%AB%E7%A9%BA%E9%A2%98"><span class="nav-number">4.3.</span> <span class="nav-text">1.3 填空题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-4-%E5%88%A4%E6%96%AD%E9%A2%98"><span class="nav-number">4.4.</span> <span class="nav-text">1.4 判断题</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">5.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Guadzilla"
+      src="/images/touxiang.jpg">
+  <p class="site-author-name" itemprop="name">Guadzilla</p>
+  <div class="site-description" itemprop="description">大连理工大学在读硕士，研究方向为：NLP/序列推荐</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/guadzilla" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;guadzilla" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/374733751@qq.com" title="E-Mail → 374733751@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://space.bilibili.com/1567748478" title="Study → https:&#x2F;&#x2F;space.bilibili.com&#x2F;1567748478" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>Study</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.hellohank.cn/" title="https:&#x2F;&#x2F;www.hellohank.cn" rel="noopener" target="_blank">极客Hank</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://dut-lujunyu.github.io/" title="https:&#x2F;&#x2F;dut-lujunyu.github.io&#x2F;" rel="noopener" target="_blank">IR之光LJY</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://zhang-xiaokun.github.io/" title="https:&#x2F;&#x2F;zhang-xiaokun.github.io&#x2F;" rel="noopener" target="_blank">学术Star堃</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zyh</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
+
+</body>
+</html>
