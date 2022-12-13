@@ -3013,4 +3013,99 @@ p_u = p_u + \gamma (e_{ui}-\ \lambda q_i)</script><p>而对于 $p_{u}$ 和$q_{i}
         <tag>SQL</tag>
       </tags>
   </entry>
+  <entry>
+    <title>机器学习01：西瓜书概览</title>
+    <url>/2022/12/14/%5B%E5%90%83%E7%93%9C%E6%95%99%E7%A8%8B%5D%20Task01%20%E8%A5%BF%E7%93%9C%E4%B9%A6%E6%A6%82%E8%A7%88/</url>
+    <content><![CDATA[<h1 id="Task01-西瓜书概览"><a href="#Task01-西瓜书概览" class="headerlink" title="Task01 西瓜书概览"></a>Task01 西瓜书概览</h1><p>主要 follw 教程：<a href="https://datawhale.feishu.cn/docs/doccndJC2sbSfdziNcahCYCx70W#">https://datawhale.feishu.cn/docs/doccndJC2sbSfdziNcahCYCx70W#</a></p>
+<p>只记录一些印象深刻的基本概念，以及自己认为重要的点</p>
+<span id="more"></span>
+<p>第一章：</p>
+<p>1、“样本空间”：属性（特征）张成的空间，也叫样本空间。所有特征取值组合的集合。</p>
+<p>2、“标记空间”：样本 label 的集合。</p>
+<p>3、学习任务可大致分为两大类：监督学习和无监督学习，分类和回归是前者的代表，聚类是后者的代表。</p>
+<p>4、通常对样本的假设是：样本空间中的全体样本服从某个未知分布 $\mathcal{D} $ ，我们获得的每个样本都是独立地从这个分布上采样获得的，即独立同分布。</p>
+<p>5、归纳（induction）：从特殊到一般的泛化（generalization）过程。</p>
+<p>6、演绎（deduction）：从特殊到一般的特化（specialization）过程。</p>
+<p>7、我们可以把学习过程看作一个在所有假设（hypothesis）组成的空间中进行搜索的过程，搜索目标是找到与训练集”匹配“（<strong>fit</strong>）的假设。</p>
+<p><code>model.fit(train)</code>，原来是根据这样的定义来的。</p>
+<p>8、归纳偏好（inductive bias）：机器学习算法在学习过程中对某种类型假设的偏好。归纳偏好可看作学习算法自身在一个可能很庞大的假设空间中对假设进行选择的启发式或“价值观”。例如“奥卡姆剃刀”。归纳偏好对应了学习算法本身所作出的关于“什么样的模型更好”的假设。</p>
+<p>9、NFL定理的理解：<a href="https://zhuanlan.zhihu.com/p/11312671">https://zhuanlan.zhihu.com/p/11312671</a></p>
+<p>第二章：</p>
+<p>1、精度（accuracy，acc）=分类正确的样本数占样本总数的比例；误差（error）=实际预测输出与样本的真实输出之间的差异。</p>
+<p>2、从采样（sampling）的角度来看待数据集的划分过程，则保留类别比例的采样方式通常称为“分层采样”（stratified sampling）。</p>
+<p>3、p次k折交叉验证法。p次：减少了划分k折时带来的误差，k折：充分利用训练集。</p>
+<p>4、留一法（Leave-One-Out）是交叉验证法的特例，测试集数量为1。</p>
+<p>5、自助法（bootstrapping），即有放回采样，在数据集较小时很有用，也适合集成学习，但是改变了初始数据集的分布，会引入估计偏差，所以当数据量足够时，建议交叉验证法。</p>
+<p>6、给定包含m个样本的数据集D，在模型评估与选择过程中由于需要留出一部分数据进行评估测试，事实上我们只使用了一部分数据训练模型。因此在模型选择完成后，学习算法和参数配置已选定，此时应该用数据集D重新训练模型。这个模型在训练过程中使用了所有m个样本，这才是我们最终提交给用户的模型。</p>
+<p>k折交叉验证每个单独模型训练都没有使用全量数据，只用来寻找模型的最佳超参数，确定完超参数以后再全量训练一次得到最终模型。</p>
+<p><img src="https://img-blog.csdnimg.cn/3b939929716f487cbe524234494bcfa4.png" alt="二分类结果混淆矩阵" style="zoom:50%;" /></p>
+<p>7、查准率（precision）：检索出来的有多少是用户感兴趣的；查全率（recall）：用户感兴趣的有多少检索出来；</p>
+<p><strong>查准率（precision）和精度（accuracy）有区别</strong>，精度：分类正确的样本数占样本总数的比例</p>
+<script type="math/tex; mode=display">
+precision = \frac{TP}{TP+FP} \\
+recall = \frac{TP}{TP+FN} \\
+accuracy = \frac{TP+TN}{TP+FP+FN+TN}</script><p>8、关于P-R曲线</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20221213222318781.png" alt="image-20221213222318781" style="zoom:50%;" /></p>
+<p><strong>可以用来比较模型优劣</strong></p>
+<p>在进行比较时，若一个学习器的P-R曲线被另一个学习器曲线完全“包住”，则可断言后者的性能优于前者。</p>
+<p>以A、C为例，A“包住”C，则A的性能高于C，因为<strong>在相同查准率或查全率的条件下都是A优于C</strong>，可以做水平线和垂线更直观。</p>
+<p>9、macro-F1 和 micro-F1</p>
+<p>多分类场景下：</p>
+<p>macro 指标是先计算各混淆矩阵对应的 P、R、F1，对这些指标取平均得到 macro-P，macro-R，macro-F1</p>
+<p>micro 指标是对各混淆矩阵的 TP、FP、TN、FN 取完平均后，计算 P、R、F1，得到 micro-P、micro-R、micro-F1</p>
+<p>附上之前用过的 sklearn.metrics.classification_report()<a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.classification_report.html?highlight=precision_recall">[2]</a>，形如：</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20221213223442654.png" alt="image-20221213223442654" style="zoom:33%;" /></p>
+<p>10、ROC曲线与AUC</p>
+<p>AUC值衡量的是<strong>模型是否把正例都排在了负例前面</strong>。</p>
+<p>结合混淆矩阵看</p>
+<p><img src="https://img-blog.csdnimg.cn/3b939929716f487cbe524234494bcfa4.png" alt="二分类结果混淆矩阵" style="zoom: 33%;" /></p>
+<p>ROC曲线的纵坐标是“真正例率”（TPR），横坐标是“假正例率”（FPR）</p>
+<script type="math/tex; mode=display">
+TPR=\frac{TP}{TP+FN} \\
+FPR=\frac{FP}{TN+FP}</script><p>取这两个指标做横、纵坐标的原因是：ROC绘制时假设依次每个样本为<strong>正例</strong>，所以方便计算当前阈值下的<strong>真正例率</strong>和<strong>假正例率</strong>。</p>
+<p>ROC曲线的绘制过程如下：</p>
+<ul>
+<li>假设有 m+ 个正例，m- 个负例，对模型输出的预测概率按从高到低排序</li>
+<li>然后依次将每个样本的预测值作为阈值（<strong>即将该样本作为正例</strong>），假设前一个坐标为$(x,y)$，若当前为真正例，对应标记点为$(x,y + \frac{1}{m^+})$，若当前为假正例，则对应标记点为$(x,y + \frac{1}{m^-})$</li>
+<li>将所有点相连即可得到 ROC 曲线</li>
+</ul>
+<p>而AUC值就是ROC曲线下的面积，这里<a href="https://www.scholat.com/teamwork/teamwork/showPostMessage.html?id=9229">[3]</a>有AUC计算过程.</p>
+<p>看个例子：</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20221213232512000.png" alt="image-20221213232512000" style="zoom:50%;" /></p>
+<p>模型有两个预测错误的样本，分别是样本3和样本8，此时AUC=0.8，具体计算过程略过</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash">&gt;&gt; from sklearn.metrics import roc_auc_score</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">&gt;&gt; scores=[0.9,0.8,0.7,0.6,0.51,0.4,0.3,0.2,0.1,0.01]</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">&gt;&gt; lables=[1,1,0,1,1,0,0,1,0,0]</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">&gt;&gt; roc_auc_score(lables,scores)</span></span><br><span class="line">0.8</span><br></pre></td></tr></table></figure>
+<p>现在我们直接看最理想的情况下的AUC，帮助理解AUC的含义</p>
+<p>最理想情况下，模型根据预测值给样本排序的结果是：$f(1),f(2),f(4),f(5),f(8)  &gt; f(3),f(6),f(7),f(9),f(10)$ ，即把真实标签为正的都排在负的前面了。此时的AUC值一定为1，不信可以描点看看：</p>
+<ul>
+<li>依次将每个样本的预测值作为阈值（<strong>即将该样本作为正例</strong>），前五个点一定是$(1,2,4,5,8)$，后五个点一定是$(3,6,7,9,10)$，顺序不重要<ul>
+<li>第一个点，计算TPR和FPR，TPR=1/5=0.2，FPR=0/1=0，坐标$(0.2,0)$</li>
+<li>第二个点，TPR=2/5=0.4，FPR=0/2=0，坐标$(0.4,0)$</li>
+<li>第三个点，TPR=3/5=0.6，FPR=0/3=0，坐标$(0.6,0)$</li>
+<li>第四个点，TPR=4/5=0.8，FPR=0/4=0，坐标$(0.8,0)$</li>
+<li>第五个点，TPR=5/5=1，FPR=0/5=0，坐标$(1,0)$</li>
+<li>第六个点，TPR=5/5=1，FPR=1/5=0.2，坐标$(1,0.2)$</li>
+<li>第七个点，TPR=5/5=1，FPR=2/5=0.4，坐标$(1,0.4)$</li>
+<li>第八个点，TPR=5/5=1，FPR=3/5=0.6，坐标$(1,0.6)$</li>
+<li>第九个点，TPR=5/5=1，FPR=4/5=0.8，坐标$(1,0.8)$</li>
+<li>第十个点，TPR=5/5=1，FPR=5/5=1，坐标，坐标$(1,1)$</li>
+</ul>
+</li>
+<li>依次描点作图，顺次连接起来，围住了整个$1 \times 1$的矩形面积，AUC=1<ul>
+<li><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20221213235210644.png" alt="image-20221213235210644" style="zoom:33%;" /></li>
+</ul>
+</li>
+<li>再看这句话应该能理解了 “AUC值衡量的是<strong>模型是否把正例都排在了负例前面</strong>” 。</li>
+</ul>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>[1]NFL定理的理解：<a href="https://zhuanlan.zhihu.com/p/11312671">https://zhuanlan.zhihu.com/p/11312671</a></p>
+<p>[2]<a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.classification_report.html?highlight=precision_recall">https://scikit-learn.org/stable/modules/generated/sklearn.metrics.classification_report.html?highlight=precision_recall</a></p>
+<p>[3]AUC计算过程 <a href="https://www.scholat.com/teamwork/teamwork/showPostMessage.html?id=9229">https://www.scholat.com/teamwork/teamwork/showPostMessage.html?id=9229</a></p>
+]]></content>
+      <categories>
+        <category>机器学习</category>
+      </categories>
+      <tags>
+        <tag>Datawhale组队学习</tag>
+        <tag>机器学习</tag>
+      </tags>
+  </entry>
 </search>
