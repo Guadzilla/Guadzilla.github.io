@@ -198,6 +198,130 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://guadzilla.github.io/2022/12/20/[%E5%90%83%E7%93%9C%E6%95%99%E7%A8%8B]%20Task02%20%E8%A5%BF%E7%93%9C%E4%B9%A6%E7%AC%AC%E4%B8%89%E7%AB%A0%20/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+      <meta itemprop="name" content="Guadzilla">
+      <meta itemprop="description" content="大连理工大学在读硕士，研究方向为：NLP/序列推荐">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="瓜斯拉的逆袭">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/12/20/%5B%E5%90%83%E7%93%9C%E6%95%99%E7%A8%8B%5D%20Task02%20%E8%A5%BF%E7%93%9C%E4%B9%A6%E7%AC%AC%E4%B8%89%E7%AB%A0%20/" class="post-title-link" itemprop="url">机器学习02：西瓜书第三章 线性模型</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-12-20 00:12:02 / 修改时间：01:59:33" itemprop="dateCreated datePublished" datetime="2022-12-20T00:12:02+08:00">2022-12-20</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>9.6k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>24 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="线性回归"><a href="#线性回归" class="headerlink" title="线性回归"></a>线性回归</h1><p>主要 follw 教程：<a target="_blank" rel="noopener" href="https://datawhale.feishu.cn/docs/doccndJC2sbSfdziNcahCYCx70W#">https://datawhale.feishu.cn/docs/doccndJC2sbSfdziNcahCYCx70W#</a></p>
+<h2 id="机器学习三要素"><a href="#机器学习三要素" class="headerlink" title="机器学习三要素"></a>机器学习三要素</h2><ol>
+<li>模型：根据具体问题，确定假设空间</li>
+<li>策略：根据评价标准，确定选取最优模型的策略（通常会产出一个“损失函数”）</li>
+<li>算法：求解损失函数，确定最优模型</li>
+</ol>
+<h2 id="一元线性回归"><a href="#一元线性回归" class="headerlink" title="一元线性回归"></a>一元线性回归</h2><p>以一元线性回归为例：求解发际线高度x和计算机水平y的关系。</p>
+<ol>
+<li><p>模型：根据经验（或观察数据形态），呈线性关系，所以假设空间 $f(x)=wx+b$，而不是曲线关系。</p>
+<ul>
+<li>一元线性回归表达式:$ y = wx + b $</li>
+</ul>
+</li>
+<li><p>策略：所有点距离拟合的直线垂直距离最小，即均方误差小，最小二乘法。或者使用极大似然估计，假设$y=wx+b+\epsilon$，对$\epsilon$误差建模，能得出同样策略。</p>
+<ul>
+<li><p>损失函数为均方误差(最小二乘法):</p>
+</li>
+<li><script type="math/tex; mode=display">
+\begin{aligned}
+E_{(w, b)} & =\sum_{i=1}^{m}\left(y_{i}-f\left(x_{i}\right)\right)^{2} \\
+& =\sum_{i=1}^{m}\left(y_{i}-\left(w x_{i}+b\right)\right)^{2} \\
+& =\sum_{i=1}^{m}\left(y_{i}-w x_{i}-b\right)^{2}
+\end{aligned}</script></li>
+</ul>
+</li>
+<li><p>算法：可以证明 $E_{(w, b)}$是凸函数（可以求2阶偏导数，证明Hessian矩阵半正定），所以能求出闭式解。（但机器学习算法通常没有闭式解，就要用梯度下降法、牛顿法近似求解）</p>
+<ul>
+<li><p>令一阶偏导等于0，可以求出闭式解(此处省略推导):</p>
+</li>
+<li><script type="math/tex; mode=display">
+w=\frac{\sum_{i=1}^{m} y_{i}\left(x_{i}-\bar{x}\right)}{\sum_{i=1}^{m} x_{i}^{2}-\frac{1}{m}\left(\sum_{i=1}^{m} x_{i}\right)^{2}} \\
+b=\bar{y}-w \bar{x}</script></li>
+</ul>
+</li>
+</ol>
+<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/12/20/%5B%E5%90%83%E7%93%9C%E6%95%99%E7%A8%8B%5D%20Task02%20%E8%A5%BF%E7%93%9C%E4%B9%A6%E7%AC%AC%E4%B8%89%E7%AB%A0%20/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://guadzilla.github.io/2022/12/14/[%E5%90%83%E7%93%9C%E6%95%99%E7%A8%8B]%20Task01%20%E8%A5%BF%E7%93%9C%E4%B9%A6%E6%A6%82%E8%A7%88/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1064,107 +1188,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://guadzilla.github.io/2022/04/26/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%806/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-      <meta itemprop="name" content="Guadzilla">
-      <meta itemprop="description" content="大连理工大学在读硕士，研究方向为：NLP/序列推荐">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="瓜斯拉的逆袭">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/26/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%806/" class="post-title-link" itemprop="url">推荐系统基础6：Slope One</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-04-26 21:03:02" itemprop="dateCreated datePublished" datetime="2022-04-26T21:03:02+08:00">2022-04-26</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-06-22 22:02:39" itemprop="dateModified" datetime="2022-06-22T22:02:39+08:00">2022-06-22</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">推荐系统</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>5.1k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>13 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <hr>
-<h1 id="任务6：Slope-One"><a href="#任务6：Slope-One" class="headerlink" title="任务6：Slope One"></a>任务6：Slope One</h1><ul>
-<li>阅读<a target="_blank" rel="noopener" href="https://blog.csdn.net/xidianliutingting/article/details/51916578">Slope One基础原理</a></li>
-<li>编写Slope One用于电影推荐的流程</li>
-<li>比较Slope One、SVD、协同过滤的精度，哪一个模型的RMSE评分更低？</li>
-</ul>
-<p>代码地址： <a target="_blank" rel="noopener" href="https://github.com/Guadzilla/Basics-of-Recsys">https://github.com/Guadzilla/Basics-of-Recsys</a></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/04/26/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%806/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1236,7 +1259,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-count">30</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
