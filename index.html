@@ -212,7 +212,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2022/12/22/%5B%E5%90%83%E7%93%9C%E6%95%99%E7%A8%8B%5D%20Task03%20%E8%A5%BF%E7%93%9C%E4%B9%A6%E7%AC%AC%E5%9B%9B%E7%AB%A0/" class="post-title-link" itemprop="url">机器学习02：西瓜书第四章 决策树</a>
+            <a href="/2022/12/22/%5B%E5%90%83%E7%93%9C%E6%95%99%E7%A8%8B%5D%20Task03%20%E8%A5%BF%E7%93%9C%E4%B9%A6%E7%AC%AC%E5%9B%9B%E7%AB%A0/" class="post-title-link" itemprop="url">机器学习03：西瓜书第四章 决策树</a>
         </h2>
 
         <div class="post-meta">
@@ -223,7 +223,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2022-12-22 15:58:01 / 修改时间：23:02:49" itemprop="dateCreated datePublished" datetime="2022-12-22T15:58:01+08:00">2022-12-22</time>
+              <time title="创建时间：2022-12-22 15:58:01 / 修改时间：23:55:51" itemprop="dateCreated datePublished" datetime="2022-12-22T15:58:01+08:00">2022-12-22</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -277,140 +277,14 @@
 <li>条件判断的属性值是什么？</li>
 <li>什么时候停止分裂，达到我们需要的决策？</li>
 </ol>
-<h3 id="三种启发函数"><a href="#三种启发函数" class="headerlink" title="三种启发函数"></a>三种启发函数</h3><p>ID3、C4.5、CART</p>
-<h4 id="ID3"><a href="#ID3" class="headerlink" title="ID3"></a>ID3</h4><blockquote>
-<ol>
-<li>如何选择最优划分属性？<ul>
-<li>以信息增益为准则，选择信息增益最大的属性划分</li>
-</ul>
-</li>
-<li>条件判断的具体划分点是什么？<ul>
-<li>离散值穷举各个取值，$k$个取值就有$k$个节点；连续值的话先对所有取值排序，再依次取中点（$k-1$个）作为划分点，假设$t$是$a_i$和$a_{i+1}$的中点，那么$t$对应的划分点（区间）就是$a \in [a_i,a_{i+1})$。</li>
-</ul>
-</li>
-<li>什么时候停止分裂，达到我们需要的决策？<ul>
-<li>预剪枝<ul>
-<li>树到一定深度</li>
-<li>当前结点样本数小于某个阈值</li>
-<li>计算每次分裂对测试集准确率的提升，小于某个阈值时停止</li>
-</ul>
-</li>
-</ul>
-</li>
-</ol>
-</blockquote>
-<p>采用<strong>信息熵</strong>衡量样本的“纯度”，以离散型为例，将样本类别标记$y$视为随机变量，各个类别在样本集合$D$中的占比$p_k(k=1,2,…,|\mathcal{Y}|)$视作各个类别取值的概率，则全体样本$D$的信息熵为：</p>
-<script type="math/tex; mode=display">
-\operatorname{Ent}(D)=-\sum_{k=1}^{|\mathcal{Y}|} p_{k} \log _{2} p_{k}</script><p>信息熵越大，表示越混乱，纯度越低。</p>
-<p>定义每个属性作为划分属性时的<strong>信息增益</strong>，即已知属性（特征）$a$的取值后$y$的不确定性减少的量，也即纯度的提升：</p>
-<script type="math/tex; mode=display">
-\operatorname{Gain}(D, a)=\operatorname{Ent}(D)-\sum_{v=1}^{V} \frac{\left|D^{v}\right|}{|D|} \operatorname{Ent}\left(D^{v}\right)</script><p>ID3决策树<strong>以信息增益为准则</strong>来选择划分属性的决策树，<strong>每次选择信息增益最大的属性作为根节点分裂</strong>，分裂的叶子结点为该属性的若干取值，不断迭代。</p>
-<h4 id="C4-5"><a href="#C4-5" class="headerlink" title="C4.5"></a>C4.5</h4><blockquote>
-<ol>
-<li>如何选择最优划分属性？<ul>
-<li>以增益率为准则，选择增益率最大的属性划分</li>
-</ul>
-</li>
-<li>条件判断的具体划分点是什么？<ul>
-<li>离散值穷举各个取值，$k$个取值就有$k$个节点；连续值的话先对所有取值排序，再依次取中点（$k-1$个）作为划分点，假设$t$是$a_i$和$a_{i+1}$的中点，那么$t$对应的划分点（区间）就是$a \in [a_i,a_{i+1})$。</li>
-</ul>
-</li>
-<li>什么时候停止分裂，达到我们需要的决策？<ul>
-<li>预剪枝<ul>
-<li>树到一定深度</li>
-<li>当前结点样本数小于某个阈值</li>
-<li>计算每次分裂对测试集准确率的提升，小于某个阈值时停止</li>
-</ul>
-</li>
-</ul>
-</li>
-</ol>
-</blockquote>
-<h5 id="信息增益的缺点"><a href="#信息增益的缺点" class="headerlink" title="信息增益的缺点"></a>信息增益的缺点</h5><p>当某个属性取值太多时，每个划分的信息增益都很高（样本序号），所以会对取值数目较多的属性有所偏好</p>
-<h5 id="改进"><a href="#改进" class="headerlink" title="改进"></a>改进</h5><p>改用<strong>增益率</strong>作为划分准则：</p>
-<script type="math/tex; mode=display">
-\text { Gain\_ratio }(D, a)=\frac{\operatorname{Gain}(D, a)}{\operatorname{IV}(a)}</script><p>对信息增益除以<strong>取值熵</strong>[1]：</p>
-<script type="math/tex; mode=display">
-\operatorname{IV}(a)=-\sum_{v=1}^{V} \frac{\left|D^{v}\right|}{|D|} \log _{2} \frac{\left|D^{v}\right|}{|D|}</script><p>如何理解？相当于对信息增益进行了一个惩罚，如果该属性取值很多，那么取值熵$\operatorname{IV}(a)$就越大，惩罚越大，导致增益率相应减少，缓解信息增益对“对取值数目较多的属性有所偏好”的问题。</p>
-<h4 id="CART-（重要）"><a href="#CART-（重要）" class="headerlink" title="==CART==（重要）"></a>==CART==（重要）</h4><p>CART（Classification And Regression Tree），分类与回归树，是一棵<strong>二叉树</strong>！</p>
-<p>西瓜书上只给了CART作为回归树的例子，但正如其名，CART既可以作为回归树也可以作为分类树。</p>
-<h5 id="CART分类树"><a href="#CART分类树" class="headerlink" title="CART分类树"></a>CART分类树</h5><blockquote>
-<ol>
-<li>如何选择最优划分属性？<ul>
-<li>以基尼指数为准则，选择基尼指数最小的“属性-属性值”划分</li>
-</ul>
-</li>
-<li>条件判断的具体划分点是什么？<ul>
-<li>离散值穷举各个属性和属性值；连续值的话先对某一属性$a_v$下的所有$|a_v|$个属性值排序，再依次取中点（$|a_v|-1$个）作为划分点，假设$m$是$a_{v_i}$和$a_{v_{i+1}}$的中点，那么$m$对应的划分点（区间）就是$a \in [a_{v_{i}},a_{v_{i+1}})$。</li>
-</ul>
-</li>
-<li>什么时候停止分裂，达到我们需要的决策？<ul>
-<li>预剪枝<ul>
-<li>树到一定深度</li>
-<li>当前结点样本数小于某个阈值</li>
-<li>计算每次分裂对测试集准确率的提升，小于某个阈值时停止</li>
-</ul>
-</li>
-</ul>
-</li>
-</ol>
-</blockquote>
-<p>CART树使用<strong>基尼指数</strong>（Gini index）来选择划分属性，数据集$D$的基尼值定义为：</p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-\operatorname{Gini}(D) & =\sum_{k=1}^{|\mathcal{Y}|} \sum_{k^{\prime} \neq k} p_{k} p_{k^{\prime}} \\
-& =\sum_{k=1}^{|\mathcal{Y}|} p_{k}\left(1-p_{k}\right) \\
-& =1-\sum_{k=1}^{|\mathcal{Y}|} p_{k}^{2}
-\end{aligned}</script><p>基尼值可以用来表示样本的<strong>纯度</strong>：从样本集合$D$中随机抽取两个样本，其标记不一致的概率。因此，基尼值越小，碰到异类的概率就越小，纯度自然就越高。</p>
-<p>定义每个属性作为划分属性时基尼指数：</p>
-<script type="math/tex; mode=display">
-\text { Gini\_index }(D, a)=\sum_{v=1}^{V} \frac{\left|D^{v}\right|}{|D|} \operatorname{Gini}\left(D^{v}\right)</script><p>CART树<strong>以基尼指数为准则</strong>来选择划分属性的决策树，<strong>每次选择基尼指数最小（分裂后纯度最高）的属性作为根节点分裂</strong>，分裂的叶子结点为该属性的若干取值，不断迭代。</p>
-<h5 id="CART回归树"><a href="#CART回归树" class="headerlink" title="CART回归树"></a>CART回归树</h5><blockquote>
-<ol>
-<li>如何选择最优划分属性？<ul>
-<li>以<strong>平方误差</strong>为准则，选择平方误差最小的“属性-属性值”划分</li>
-</ul>
-</li>
-<li>条件判断的具体划分点是什么？<ul>
-<li>离散值穷举各个属性和属性值；连续值的话先对某一属性$a_v$下的所有$|a_v|$个属性值排序，再依次取中点（$|a_v|-1$个）作为划分点，假设$m$是$a_{v_i}$和$a_{v_{i+1}}$的中点，那么$m$对应的划分点（区间）就是$a \in [a_{v_{i}},a_{v_{i+1}})$。</li>
-</ul>
-</li>
-<li>什么时候停止分裂，达到我们需要的决策？<ul>
-<li>预剪枝<ul>
-<li>树到一定深度</li>
-<li>当前结点样本数小于某个阈值</li>
-<li>计算每次分裂对测试集准确率的提升，小于某个阈值时停止</li>
-</ul>
-</li>
-</ul>
-</li>
-</ol>
-</blockquote>
-<p>参考这里[3]以及之前整理过的xmind</p>
-<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20221222225705247.png" alt="image-20221222225705247" style="zoom:50%;" /></p>
-<h2 id="决策树的剪枝处理"><a href="#决策树的剪枝处理" class="headerlink" title="决策树的剪枝处理"></a>决策树的剪枝处理</h2><p>剪枝分为预剪枝和后剪枝。</p>
-<ul>
-<li>预剪枝，在生成决策树的过程中提前停止树的增长。</li>
-<li>后剪枝，在已生成的过拟合决策树上进行剪枝，得到简化版的剪枝决策树</li>
-</ul>
-<h3 id="预剪枝"><a href="#预剪枝" class="headerlink" title="预剪枝"></a>预剪枝</h3><p>在自顶向下的过程中，常见算法有：</p>
-<ol>
-<li>树到一定深度时停止生长</li>
-<li>当前结点样本数小于某个阈值停止生长</li>
-<li>计算每次分裂对测试集准确率的提升，小于某个阈值时停止</li>
-<li>···</li>
-</ol>
-<h3 id="后剪枝"><a href="#后剪枝" class="headerlink" title="后剪枝"></a>后剪枝</h3><p>自底向上，常见算法有：</p>
-<ol>
-<li>错误率降低剪枝（REP）</li>
-<li>代价复杂度剪枝（CCP）[1]</li>
-<li>···</li>
-</ol>
-<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><p>参考强哥[2]</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>[1]百面机器学习p64、p68</p>
-<p>[2]<a target="_blank" rel="noopener" href="https://zhongqiang.blog.csdn.net/article/details/116712254?spm=1001.2014.3001.5502">https://zhongqiang.blog.csdn.net/article/details/116712254?spm=1001.2014.3001.5502</a></p>
-<p>[3]<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1mN411Z7j1/?spm_id_from=333.999.0.0">https://www.bilibili.com/video/BV1mN411Z7j1/?spm_id_from=333.999.0.0</a></p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/12/22/%5B%E5%90%83%E7%93%9C%E6%95%99%E7%A8%8B%5D%20Task03%20%E8%A5%BF%E7%93%9C%E4%B9%A6%E7%AC%AC%E5%9B%9B%E7%AB%A0/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 

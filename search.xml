@@ -2531,7 +2531,7 @@ z=w^{T} \cdot x(=|w| \cdot|x| \cos \theta)</script><p>经过投影后，异类�
       </tags>
   </entry>
   <entry>
-    <title>机器学习02：西瓜书第四章 决策树</title>
+    <title>机器学习03：西瓜书第四章 决策树</title>
     <url>/2022/12/22/%5B%E5%90%83%E7%93%9C%E6%95%99%E7%A8%8B%5D%20Task03%20%E8%A5%BF%E7%93%9C%E4%B9%A6%E7%AC%AC%E5%9B%9B%E7%AB%A0/</url>
     <content><![CDATA[<h1 id="决策树"><a href="#决策树" class="headerlink" title="决策树"></a>决策树</h1><p>主要 follw 教程：<a href="https://datawhale.feishu.cn/docs/doccndJC2sbSfdziNcahCYCx70W#">https://datawhale.feishu.cn/docs/doccndJC2sbSfdziNcahCYCx70W#</a></p>
 <h2 id="机器学习三要素"><a href="#机器学习三要素" class="headerlink" title="机器学习三要素"></a>机器学习三要素</h2><ol>
@@ -2550,6 +2550,7 @@ z=w^{T} \cdot x(=|w| \cdot|x| \cos \theta)</script><p>经过投影后，异类�
 <li>条件判断的属性值是什么？</li>
 <li>什么时候停止分裂，达到我们需要的决策？</li>
 </ol>
+<span id="more"></span>
 <h3 id="三种启发函数"><a href="#三种启发函数" class="headerlink" title="三种启发函数"></a>三种启发函数</h3><p>ID3、C4.5、CART</p>
 <h4 id="ID3"><a href="#ID3" class="headerlink" title="ID3"></a>ID3</h4><blockquote>
 <ol>
