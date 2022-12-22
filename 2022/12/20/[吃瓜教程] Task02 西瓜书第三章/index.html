@@ -34,8 +34,9 @@
 <meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20221220015220368.png">
 <meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20221221000736827.png">
 <meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20221221000753958.png">
+<meta property="og:image" content="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20221222155347165.png">
 <meta property="article:published_time" content="2022-12-19T16:12:02.000Z">
-<meta property="article:modified_time" content="2022-12-20T16:45:59.000Z">
+<meta property="article:modified_time" content="2022-12-22T08:05:10.000Z">
 <meta property="article:author" content="Guadzilla">
 <meta property="article:tag" content="Datawhale组队学习">
 <meta property="article:tag" content="机器学习">
@@ -241,7 +242,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-12-21 00:45:59" itemprop="dateModified" datetime="2022-12-21T00:45:59+08:00">2022-12-21</time>
+                <time title="修改时间：2022-12-22 16:05:10" itemprop="dateModified" datetime="2022-12-22T16:05:10+08:00">2022-12-22</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -509,7 +510,42 @@ p(x|μ)=Bern(x|μ)=e^{\ln \left({\mu^x \left(1-\mu\right)^{1-x}}\right)}\\     =
 <p>最大熵原理是在1957 年由E.T.Jaynes 提出的，其主要思想是，在只掌握关于未知分布的部分知识时，应该选取符合这些知识但熵值最大的概率分布。因为在这种情况下，符合已知知识的<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/概率分布?fromModule=lemma_inlink">概率分布</a>可能不止一个。我们知道，熵定义的实际上是一个<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/随机变量?fromModule=lemma_inlink">随机变量</a>的不确定性，熵最大的时候，说明随机变量最不确定，换句话说，也就是随机变量最随机，对其行为做准确预测最困难。</p>
 <p>从这个意义上讲，那么最大熵原理的实质就是，在已知部分知识的前提下，关于未知分布最合理的推断就是符合已知知识最不确定或最随机的推断，这是我们可以作出的不偏不倚的选择，任何其它的选择都意味着我们增加了其它的约束和假设，这些约束和假设根据我们掌握的信息无法作出。</p>
 </blockquote>
-<h2 id="二分类线性判别分析（LDA）"><a href="#二分类线性判别分析（LDA）" class="headerlink" title="二分类线性判别分析（LDA）"></a>二分类线性判别分析（LDA）</h2><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>[1]<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/35322351">https://www.zhihu.com/question/35322351</a></p>
+<h2 id="二分类线性判别分析（LDA）"><a href="#二分类线性判别分析（LDA）" class="headerlink" title="二分类线性判别分析（LDA）"></a>二分类线性判别分析（LDA）</h2><h3 id="算法原理"><a href="#算法原理" class="headerlink" title="算法原理"></a>算法原理</h3><p>“高内聚、低耦合”的思想</p>
+<p>从几何角度，让全体样本沿着一个方向投影（高维投影到一维），经过投影后，使得：</p>
+<ul>
+<li>异类样本的中心尽可能远</li>
+<li>同类样本的方差尽可能小</li>
+</ul>
+<h3 id="损失函数推导-1"><a href="#损失函数推导-1" class="headerlink" title="损失函数推导"></a>损失函数推导</h3><h4 id="异类样本中心尽可能远"><a href="#异类样本中心尽可能远" class="headerlink" title="异类样本中心尽可能远"></a>异类样本中心尽可能远</h4><p>首先是投影，我们假定原来的数据是向量$x$，那么顺着$w$方向的投影就是标量：</p>
+<script type="math/tex; mode=display">
+z=w^{T} \cdot x(=|w| \cdot|x| \cos \theta)</script><p>经过投影后，异类样本的中心尽可能远：</p>
+<script type="math/tex; mode=display">
+\max \left\|\boldsymbol{w}^{\mathrm{T}} \boldsymbol{\mu}_{0}-\boldsymbol{w}^{\mathrm{T}} \boldsymbol{\mu}_{1}\right\|_{2}^{2} \\</script><h4 id="同类样本的方差尽可能小"><a href="#同类样本的方差尽可能小" class="headerlink" title="同类样本的方差尽可能小"></a>同类样本的方差尽可能小</h4><p>我们假设属于两类的试验样本数量分别是$N_0$和$N_1$，那么我们采用方差矩阵${Var}_i$来表征每一个类内的总体分布，这里我们使用了协方差的定义：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+{Var}_1 &=\frac{1}{N_{1}} \sum_{i=1}^{N_{1}}\left(z_{i}-\overline{z_{ 1}}\right)\left(z_{i}-\overline{z_{ 1}}\right)^{T} \\
+& =\frac{1}{N_{1}} \sum_{i=1}^{N_{1}}\left(\boldsymbol{w}^{T} \boldsymbol{x}_{i}-\frac{1}{N_{1}} \sum_{j=1}^{N_{1}} \boldsymbol{w}^{T} \boldsymbol{x}_{j}\right)\left(\boldsymbol{w}^{T} \boldsymbol{x}_{i}-\frac{1}{N_{1}} \sum_{j=1}^{N_{1}} \boldsymbol{w}^{T} \boldsymbol{x}_{j}\right)^{T} \\
+& =\boldsymbol{w}^{T} \frac{1}{N_{1}} \sum_{i=1}^{N_{1}}\left(\boldsymbol{x}_{i}-\boldsymbol{\mu}_{1}\right)\left(\boldsymbol{x}_{i}-\boldsymbol{\mu}_{1}\right)^{T} w \\
+& =\boldsymbol{w}^{T} \boldsymbol\Sigma_{1} \boldsymbol{w} \\
+{Var}_0 &=\boldsymbol{w}^{T} \boldsymbol\Sigma_{0} \boldsymbol{w}
+
+\end{aligned}</script><p>使同类样本方差尽可能小：</p>
+<script type="math/tex; mode=display">
+\min \ \boldsymbol{w}^{T} \left(\boldsymbol\Sigma_{0}+\boldsymbol\Sigma_{1}\right) \boldsymbol{w}</script><p>综合这两点，我们用将这两个值相除来得到我们的损失函数，并最大化这个值：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\max J & =\frac{\left\|\boldsymbol{w}^{\mathrm{T}} \boldsymbol{\mu}_{0}-\boldsymbol{w}^{\mathrm{T}} \boldsymbol{\mu}_{1}\right\|_{2}^{2}}{\boldsymbol{w}^{T} \left(\boldsymbol\Sigma_{0}+\boldsymbol\Sigma_{1}\right) \boldsymbol{w}} \\
+& =\frac{\left\|\left(\boldsymbol{\mu}_{0}-\boldsymbol{\mu}_{1}\right)^{\mathrm{T}} \boldsymbol{w}\right\|_{2}^{2}}{\boldsymbol{w}^{\mathrm{T}}\left(\boldsymbol{\Sigma}_{0}+\boldsymbol{\Sigma}_{1}\right) \boldsymbol{w}} \\
+& =\frac{\left[\left(\boldsymbol{\mu}_{0}-\boldsymbol{\mu}_{1}\right)^{\mathrm{T}} \boldsymbol{w}\right]^{\mathrm{T}}\left(\boldsymbol{\mu}_{0}-\boldsymbol{\mu}_{1}\right)^{\mathrm{T}} \boldsymbol{w}}{\boldsymbol{w}^{\mathrm{T}}\left(\boldsymbol{\Sigma}_{0}+\boldsymbol{\Sigma}_{1}\right) \boldsymbol{w}} \\
+& =\frac{\boldsymbol{w}^{\mathrm{T}}\left(\boldsymbol{\mu}_{0}-\boldsymbol{\mu}_{1}\right)\left(\boldsymbol{\mu}_{0}-\boldsymbol{\mu}_{1}\right)^{\mathrm{T}} \boldsymbol{w}}{\boldsymbol{w}^{\mathrm{T}}\left(\boldsymbol{\Sigma}_{0}+\boldsymbol{\Sigma}_{1}\right) \boldsymbol{w}} \\
+&=\frac{\boldsymbol{w}^{\mathrm{T}} \mathbf{S}_{b} \boldsymbol{w}}{\boldsymbol{w}^{\mathrm{T}} \mathbf{S}_{w} \boldsymbol{w}}
+\end{aligned}</script><p>注意$\mathbf{S}_{w} $和$\mathbf{S}_{b} $ 都是 $d \times d$ 的矩阵</p>
+<p>直接对$\boldsymbol{w}$求偏导[2]，因为只关心$\boldsymbol{w}$的方向：</p>
+<p><img src="https://wjm-images.oss-cn-beijing.aliyuncs.com/img-hosting/image-20221222155347165.png" alt="image-20221222155347165"></p>
+<p>于是求得 $\boldsymbol{w}$。</p>
+<p>感觉这部分主要是数学，就不撸代码了。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>[1]<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/35322351">https://www.zhihu.com/question/35322351</a></p>
+<p>[2]<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1aE411o7qd?p=16&amp;vd_source=a207b39881900fb7c1580eaaa0301073">https://www.bilibili.com/video/BV1aE411o7qd?p=16&amp;vd_source=a207b39881900fb7c1580eaaa0301073</a></p>
 
     </div>
 
@@ -532,7 +568,10 @@ p(x|μ)=Bern(x|μ)=e^{\ln \left({\mu^x \left(1-\mu\right)^{1-x}}\right)}\\     =
     <a href="/2022/12/14/%5B%E5%90%83%E7%93%9C%E6%95%99%E7%A8%8B%5D%20Task01%20%E8%A5%BF%E7%93%9C%E4%B9%A6%E6%A6%82%E8%A7%88/" rel="prev" title="机器学习01：西瓜书概览">
       <i class="fa fa-chevron-left"></i> 机器学习01：西瓜书概览
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2022/12/22/%5B%E5%90%83%E7%93%9C%E6%95%99%E7%A8%8B%5D%20Task03%20%E8%A5%BF%E7%93%9C%E4%B9%A6%E7%AC%AC%E5%9B%9B%E7%AB%A0/" rel="next" title="机器学习02：西瓜书第四章 决策树">
+      机器学习02：西瓜书第四章 决策树 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -596,7 +635,7 @@ p(x|μ)=Bern(x|μ)=e^{\ln \left({\mu^x \left(1-\mu\right)^{1-x}}\right)}\\     =
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92"><span class="nav-number">1.</span> <span class="nav-text">线性回归</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%89%E8%A6%81%E7%B4%A0"><span class="nav-number">1.1.</span> <span class="nav-text">机器学习三要素</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E5%85%83%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92"><span class="nav-number">1.2.</span> <span class="nav-text">一元线性回归</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.2.1.</span> <span class="nav-text">代码实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E5%85%83%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92"><span class="nav-number">1.3.</span> <span class="nav-text">多元线性回归</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0-1"><span class="nav-number">1.3.1.</span> <span class="nav-text">代码实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E6%95%B0%E5%87%A0%E7%8E%87%E5%9B%9E%E5%BD%92%EF%BC%88%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92-LR%EF%BC%89"><span class="nav-number">1.4.</span> <span class="nav-text">对数几率回归（逻辑回归 LR）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AF%E4%BB%A5%E7%94%A8sigmoid%EF%BC%9F"><span class="nav-number">1.4.1.</span> <span class="nav-text">为什么可以用sigmoid？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0%E6%8E%A8%E5%AF%BC"><span class="nav-number">1.4.2.</span> <span class="nav-text">损失函数推导</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E5%9D%87%E6%96%B9%E8%AF%AF%E5%B7%AE%EF%BC%9F"><span class="nav-number">1.4.2.1.</span> <span class="nav-text">优化均方误差？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9E%81%E5%A4%A7%E4%BC%BC%E7%84%B6%E4%BC%B0%E8%AE%A1%E6%B3%95"><span class="nav-number">1.4.2.2.</span> <span class="nav-text">极大似然估计法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E6%B1%82%E9%97%AD%E5%BC%8F%E8%A7%A3%EF%BC%9F"><span class="nav-number">1.4.2.3.</span> <span class="nav-text">为什么不求闭式解？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%80%E5%A4%A7%E7%86%B5%E6%B3%95"><span class="nav-number">1.4.2.4.</span> <span class="nav-text">最大熵法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0-2"><span class="nav-number">1.4.3.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E7%94%A8sigmoid%EF%BC%9F-1"><span class="nav-number">1.4.4.</span> <span class="nav-text">为什么要用sigmoid？[1]</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%88%86%E7%B1%BB%E7%BA%BF%E6%80%A7%E5%88%A4%E5%88%AB%E5%88%86%E6%9E%90%EF%BC%88LDA%EF%BC%89"><span class="nav-number">1.5.</span> <span class="nav-text">二分类线性判别分析（LDA）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">2.</span> <span class="nav-text">参考</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92"><span class="nav-number">1.</span> <span class="nav-text">线性回归</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%89%E8%A6%81%E7%B4%A0"><span class="nav-number">1.1.</span> <span class="nav-text">机器学习三要素</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E5%85%83%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92"><span class="nav-number">1.2.</span> <span class="nav-text">一元线性回归</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.2.1.</span> <span class="nav-text">代码实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E5%85%83%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92"><span class="nav-number">1.3.</span> <span class="nav-text">多元线性回归</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0-1"><span class="nav-number">1.3.1.</span> <span class="nav-text">代码实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E6%95%B0%E5%87%A0%E7%8E%87%E5%9B%9E%E5%BD%92%EF%BC%88%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92-LR%EF%BC%89"><span class="nav-number">1.4.</span> <span class="nav-text">对数几率回归（逻辑回归 LR）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AF%E4%BB%A5%E7%94%A8sigmoid%EF%BC%9F"><span class="nav-number">1.4.1.</span> <span class="nav-text">为什么可以用sigmoid？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0%E6%8E%A8%E5%AF%BC"><span class="nav-number">1.4.2.</span> <span class="nav-text">损失函数推导</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E5%9D%87%E6%96%B9%E8%AF%AF%E5%B7%AE%EF%BC%9F"><span class="nav-number">1.4.2.1.</span> <span class="nav-text">优化均方误差？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9E%81%E5%A4%A7%E4%BC%BC%E7%84%B6%E4%BC%B0%E8%AE%A1%E6%B3%95"><span class="nav-number">1.4.2.2.</span> <span class="nav-text">极大似然估计法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E6%B1%82%E9%97%AD%E5%BC%8F%E8%A7%A3%EF%BC%9F"><span class="nav-number">1.4.2.3.</span> <span class="nav-text">为什么不求闭式解？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%80%E5%A4%A7%E7%86%B5%E6%B3%95"><span class="nav-number">1.4.2.4.</span> <span class="nav-text">最大熵法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0-2"><span class="nav-number">1.4.3.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E7%94%A8sigmoid%EF%BC%9F-1"><span class="nav-number">1.4.4.</span> <span class="nav-text">为什么要用sigmoid？[1]</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%88%86%E7%B1%BB%E7%BA%BF%E6%80%A7%E5%88%A4%E5%88%AB%E5%88%86%E6%9E%90%EF%BC%88LDA%EF%BC%89"><span class="nav-number">1.5.</span> <span class="nav-text">二分类线性判别分析（LDA）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86"><span class="nav-number">1.5.1.</span> <span class="nav-text">算法原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0%E6%8E%A8%E5%AF%BC-1"><span class="nav-number">1.5.2.</span> <span class="nav-text">损失函数推导</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%82%E7%B1%BB%E6%A0%B7%E6%9C%AC%E4%B8%AD%E5%BF%83%E5%B0%BD%E5%8F%AF%E8%83%BD%E8%BF%9C"><span class="nav-number">1.5.2.1.</span> <span class="nav-text">异类样本中心尽可能远</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%8C%E7%B1%BB%E6%A0%B7%E6%9C%AC%E7%9A%84%E6%96%B9%E5%B7%AE%E5%B0%BD%E5%8F%AF%E8%83%BD%E5%B0%8F"><span class="nav-number">1.5.2.2.</span> <span class="nav-text">同类样本的方差尽可能小</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">2.</span> <span class="nav-text">参考</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -612,7 +651,7 @@ p(x|μ)=Bern(x|μ)=e^{\ln \left({\mu^x \left(1-\mu\right)^{1-x}}\right)}\\     =
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-count">31</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
